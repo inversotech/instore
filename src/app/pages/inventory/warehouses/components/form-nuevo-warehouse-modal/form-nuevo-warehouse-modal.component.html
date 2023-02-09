@@ -1,0 +1,82 @@
+<nb-card [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary" status="primary">
+  <nb-card-header>
+    <div class="text-center">
+      <span i18n>
+        NUEVO |
+      </span>
+      <span class="font-weight-light" i18n>
+        Nuevo almacén
+      </span>
+    </div>
+    <div>
+      <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer"></nb-icon>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <form [formGroup]="almacenForm">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-2">
+            <label for="empresa_id" class="label required">Empresa</label>
+            <nb-select placeholder="Empresa" size="small" formControlName="empresa_id" fullWidth name="empresa_id"
+              id="empresa_id">
+              <nb-option value="">-Seleccione-</nb-option>
+              <nb-option *ngFor="let item of misEmpresas" [value]="item.empresa_id">
+                {{ item.empresa_id }} - {{ item.empresa_nombrecomercial }}</nb-option>
+            </nb-select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-2">
+            <label for="empresa_sucursal_id" class="label required">Sucursal</label>
+            <nb-select placeholder="Empresa" size="small" formControlName="empresa_sucursal_id" fullWidth
+              name="empresa_sucursal_id" id="empresa_sucursal_id">
+              <nb-option value="">-Seleccione-</nb-option>
+              <nb-option *ngFor="let item of misEmpresasSucursales" [value]="item.empresa_sucursal_id">
+                {{ item.empresa_sucursal_id }} - {{ item.empresa_sucursal_nombre }}</nb-option>
+            </nb-select>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <label for="tipo_existencia_id" class="label required">Tipo de existencia</label>
+        <nb-select placeholder="Tipo de existencia" size="small" formControlName="tipo_existencia_id" fullWidth
+          name="tipo_existencia_id" id="tipo_existencia_id">
+          <nb-option value="">-Seleccione-</nb-option>
+          <nb-option *ngFor="let item of tipoExistencias" [value]="item.tipo_existencia_id">{{ item.codigo
+            }} -
+            {{
+            item.nombre }}</nb-option>
+        </nb-select>
+      </div>
+      <div class="mb-2">
+        <label for="nombre" class="label required">Nombre</label>
+        <input type="text" nbInput fullWidth fieldSize="small" name="nombre" id="nombre" formControlName="nombre"
+          placeholder="">
+      </div>
+      <div class="mb-2">
+        <label for="activo" class="label">Activo</label>
+        <nb-radio-group formControlName="activo" status="warning">
+          <nb-radio [value]="true">Si</nb-radio>
+          <nb-radio [value]="false">No</nb-radio>
+        </nb-radio-group>
+      </div>
+
+
+    </form>
+
+  </nb-card-body>
+  <nb-card-footer class="text-end">
+    <button nbButton class="me-1" status="basic" size="small" (click)="onClose()">
+      <nb-icon icon="close-outline"></nb-icon>
+      Cancelar
+    </button>
+
+    <button nbButton class="me-1" status="primary" size="small" (click)="onSave()">
+      <nb-icon icon="save-outline"></nb-icon>
+      Guardar
+    </button>
+
+  </nb-card-footer>
+</nb-card>

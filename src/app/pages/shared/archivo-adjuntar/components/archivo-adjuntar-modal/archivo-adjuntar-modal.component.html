@@ -1,0 +1,60 @@
+<nb-card [nbSpinner]="loadingSave" nbSpinnerStatus="primary">
+    <nb-card-header>
+        <div></div>
+        <div class="text-center">
+            <span i18n>
+                ADJUNTAR ARCHIVO
+            </span>
+        </div>
+        <div>
+            <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer; margin-left: 1rem"></nb-icon>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <nb-list status="primary">
+            <nb-list-item style="justify-content: space-between;">
+                <div>
+                    {{ formArchivo.get('archivo_name')?.value }}
+                </div>
+                <button *ngIf="uploadProgress===100" nbButton size="small" (click)="onDeleteArchivo()"
+                    nbTooltip="Eliminar archivo">
+                    <nb-icon icon="close-outline" pack="eva"> </nb-icon>
+                </button>
+            </nb-list-item>
+        </nb-list>
+        <nb-progress-bar [value]="uploadProgress" status="primary" [displayValue]="true"></nb-progress-bar>
+        <div class="container text-center">
+            <p>
+                <small i18n>(Formatos: .jpg, .png, .jpeg, tamaño máximo: 8MB)</small>
+            </p>
+            <input #inputFile style="display: none" type="file" (change)="onFileChange($event)"
+                [accept]="'image/png,image/jpg,image/jpeg,application/pdf,.docx,.doc'">
+            <button *ngIf="uploadProgress===0" nbButton outline status="primary" (click)="inputFile.click()"
+                size="small" nbTooltip="Adjuntar archivo">
+                <nb-icon nbPrefix icon="upload-outline" pack="eva">
+                </nb-icon>
+                <span>Adjuntar archivo</span>
+            </button>
+            &nbsp;
+        </div>
+    </nb-card-body>
+    <nb-card-footer class="text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="me-1" fullWidth nbButton status="basic" size="small" (click)="onClose()">
+                        <nb-icon icon="close-outline"></nb-icon>
+                        Cancelar
+                    </button>
+                </div>
+                <div class="col-md-6">
+                    <button nbButton fullWidth [disabled]="formArchivo.invalid" status="primary" size="small"
+                        (click)="onSave()">
+                        <nb-icon icon="save-outline"></nb-icon>
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nb-card-footer>
+</nb-card>

@@ -1,0 +1,41 @@
+@import 'themes';
+
+// .es-header-icon{
+//     font-size: 1.1rem;
+//     margin-right: 0.4rem;
+// }
+// .col-form-label {
+//     color: nb-theme(header-bg);
+// }
+nb-card-header{
+    display: flex;
+    justify-content: space-between;
+}
+
+
+h4 {
+    margin-bottom: 0rem;
+}
+h6 {
+    color: nb-theme(color-primary-500);
+}
+.card-header {
+    background-color: nb-theme(card-header-primary-background-color);
+    color: nb-theme(card-header-primary-text-color);
+}
+nb-radio-group {
+    display: flex;
+}
+img {
+    max-height: 20rem;
+    width: auto;
+}
+.open-button-end {
+    button {
+        margin-right: 0.3rem;
+    }
+}
+.col-form-label.required::after {
+    content: ' *';
+    color: nb-theme(color-danger);;
+}

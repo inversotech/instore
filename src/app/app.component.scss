@@ -1,0 +1,10 @@
+
+@import 'themes';
+
+@include nb-install-component() {
+  ::ng-deep table.table {
+    color: nb-theme(text-basic-color);
+    font-size: 12px;
+  }
+
+}

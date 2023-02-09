@@ -1,0 +1,48 @@
+<nb-card>
+    <nb-card-header class="text-center">
+        <span i18n>
+            CAMBIAR EMPRESA Y SUCURSAL <br> 
+            <!-- {{ empresaConfig | json }} -->
+        </span>
+    </nb-card-header>
+    <nb-card-body [nbSpinner]="loadingSave" nbSpinnerStatus="primary">
+        <form [formGroup]="enterpriseForm">
+            <div class="mb-2">
+                <label for="empresa_id" class="label form-label">Empresa</label>
+                <nb-select placeholder="Empresa" fullWidth [size]="'small'" formControlName="empresa_id"
+                    id="empresa_id">
+                    <nb-option *ngFor="let item of empresas" [value]="item.empresa_id">
+                        {{ item.empresa_id }} - {{ item.empresa_nombrecomercial }}</nb-option>
+                    <!-- <nb-option-group *ngFor="let item of empresas" [title]="item.tipo_nombre">
+                        <nb-option *ngFor="let item2 of item?.entidades" [value]="item2.empresa_id">
+                            {{ item2.id_entidad }}-{{ item2.nombre }}</nb-option>
+                    </nb-option-group> -->
+                </nb-select>
+            </div>
+
+            <div class="mb-2">
+                <label for="empresa_sucursal_id" class="label form-label">sucursal</label>
+                <nb-select placeholder="Sucursal" fullWidth [size]="'small'" formControlName="empresa_sucursal_id"
+                    id="empresa_sucursal_id">
+                    <nb-option *ngFor="let item of empresasSucursales" [value]="item.empresa_sucursal_id">
+                        {{ item.empresa_sucursal_id }} - {{ item.empresa_sucursal_nombre }}</nb-option>
+                </nb-select>
+            </div>
+        </form>
+
+    </nb-card-body>
+    <nb-card-footer class="text-center es-button-acciones">
+        <button nbButton size="small" (click)="onClose()">
+            <nb-icon icon="close-outline"></nb-icon>
+            <span i18n>
+                Cancelar
+            </span>
+        </button>
+        <button nbButton size="small" status="primary" [disabled]="enterpriseForm.invalid" (click)="onSubmit()">
+            <nb-icon icon="save-outline"></nb-icon>
+            <span i18n>
+                Guardar
+            </span>
+        </button>
+    </nb-card-footer>
+</nb-card>

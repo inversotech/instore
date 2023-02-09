@@ -1,0 +1,115 @@
+<nb-card>
+  <nb-card-header>
+    <div class="text-center">
+      <span i18n>
+        MOVIMIENTOS |
+      </span>
+      <span class="font-weight-light" i18n>
+        Lista de almacenes
+      </span>
+    </div>
+    <div>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <!-- <form (ngSubmit)="submitFormSearch()">
+
+      <div class="row">
+        <div class="col-md-8">
+          <nb-form-field>
+            <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+            <input [formControl]="textSearch" type="search" placeholder="Buscar..." nbInput fullWidth shape="round"
+              fieldSize="small">
+          </nb-form-field>
+        </div>
+        <div class="col-md-4 open-button-end">
+          <button nbButton type="submit" status="primary" size="small">
+            <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+            Buscar
+          </button>
+          <button nbButton type="button" status="primary" size="small" (click)="onRegistrarNuevo()">
+            <nb-icon icon="plus-outline"></nb-icon>
+            Agregar
+          </button>
+        </div>
+      </div>
+    </form> -->
+
+    <br>
+    <div class="row" [nbSpinner]="loadingSpinner" nbSpinnerStatus="primary">
+      <div class="col-md-12">
+
+        <!-- <table class="table table-sm">
+          <tbody *ngIf="almacenes.length > 0; else emptyList">
+            <tr *ngFor="let item of almacenes | paginate: { id: 'almacenesPaginate',
+            itemsPerPage: pagination?.pageSize,
+            currentPage: pagination?.currentPage,
+            totalItems: pagination?.totalItems}">
+              <td class="align-middle text-center">
+                <nb-icon status="primary" icon="layout-outline"></nb-icon>
+              </td>
+              <td>
+                <div class="fw-bold">
+                  Almacén: {{item.nombre}}
+                </div>
+                <div>
+                  <span class="label">Tipo existencia: {{ item.tipo_existencia_codigo }}-{{ item.tipo_existencia_nombre
+                    }}
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div class="label">{{item.empresa_id}} - {{item.empresa_nombre}}</div>
+                <div class="label">{{item.empresa_sucursal_id}} - {{item.empresa_sucursal_nombre}}</div>
+              </td>
+              <td>
+                <button nbButton style="pointer-events: none!important; background-color: inherit" *ngIf="item.activo"
+                  status="basic" size="tiny" shape="round">
+                  <nb-icon status="primary" icon="done-all-outline"></nb-icon>
+                  Activo
+                </button>
+
+                <button nbButton style="pointer-events: none!important; background-color: inherit" *ngIf="!item.activo"
+                  status="basic" size="tiny" shape="round">
+                  Desactivo
+                </button>
+              </td>
+              <td>
+                <button nbButton status="primary" size="small" nbTooltip="Configuración"
+                  (click)="onManageAlmacen(item)">
+                  <nb-icon icon="settings-outline"></nb-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+         -->
+      </div>
+    </div>
+
+    <ng-template #emptyList>
+      <div class="text-center">
+        <span i18n class="text-center label">
+          No hay registros para mostrar
+        </span>
+      </div>
+    </ng-template>
+
+    <div class="row">
+      <div class="col-md-12">
+        <nb-card>
+          <nb-card-body class="text-center">
+            <pagination-controls class="lamb-pagination" id="almacenesPaginate" (pageChange)="pageChanged($event)"
+              (pageBoundsCorrection)="pageChanged($event)" [maxSize]="paginationControls.maxSize"
+              [directionLinks]="paginationControls.directionLinks" [responsive]="paginationControls.responsive"
+              previousLabel="ANTERIOR" nextLabel="SIGUIENTE" [autoHide]="paginationControls.autoHide"
+              screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page"
+              screenReaderCurrentLabel="Estás en la página">
+            </pagination-controls>
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+
+  </nb-card-body>
+</nb-card>

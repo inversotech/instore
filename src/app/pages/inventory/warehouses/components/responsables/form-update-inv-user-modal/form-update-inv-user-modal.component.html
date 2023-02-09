@@ -1,0 +1,98 @@
+<nb-card [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary" status="primary">
+  <nb-card-header>
+    <div class="text-center">
+      <span i18n>
+        ACTUALIZAR |
+      </span>
+      <span class="font-weight-light" i18n>
+        Usuario responsable
+      </span>
+    </div>
+    <div>
+      <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer"></nb-icon>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <form [formGroup]="newForm">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="mb-2">
+            <label for="articulo_id" class="label required">Usuario</label>
+            <nb-form-field>
+              <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+              <input #idUserSearch autocomplete="off" nbInput type="search" placeholder="Buscar..." fullWidth
+                shape="round" fieldSize="small" [formControl]="textSearchUser" [nbAutocomplete]="autoControlUser" />
+            </nb-form-field>
+            <nb-autocomplete #autoControlUser size="small" [activeFirst]="true" [handleDisplayFn]="viewHandleUser"
+              (selectedChange)="selectedChangeUser($event)">
+              <nb-option *ngFor="let item of filteredUserList$ | async" [value]="item">
+                {{ item?.email }}
+              </nb-option>
+            </nb-autocomplete>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-2">
+            <label for="fecha_inicio" class="label required">Fecha inicio</label>
+            <nb-form-field>
+              <input type="text" autocomplete="off" name="fecha_inicio" placeholder="00/00/0000" id="fecha_inicio"
+                formControlName="fecha_inicio" [nbDatepicker]="nfecha2" fullWidth fieldSize="small" nbInput>
+              <nb-icon nbSuffix icon="calendar-outline" pack="eva"></nb-icon>
+            </nb-form-field>
+            <nb-datepicker #nfecha2></nb-datepicker>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-2">
+            <label for="fecha_fin" class="label required">Fecha fin</label>
+            <nb-form-field>
+              <input type="text" autocomplete="off" name="fecha_fin" placeholder="00/00/0000" id="fecha_fin"
+                formControlName="fecha_fin" [nbDatepicker]="nfecha3" fullWidth fieldSize="small" nbInput>
+              <nb-icon nbSuffix icon="calendar-outline" pack="eva"></nb-icon>
+            </nb-form-field>
+            <nb-datepicker #nfecha3></nb-datepicker>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-2">
+            <label for="asignado" class="label">Asignado (Un usuario puede tener asignado un solo almacén)</label>
+            <nb-radio-group formControlName="asignado" name="asignado" status="warning">
+              <nb-radio [value]="true">Si</nb-radio>
+              <nb-radio [value]="false">No</nb-radio>
+            </nb-radio-group>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-2">
+            <label for="activo" class="label required">Activo</label>
+            <nb-radio-group formControlName="activo" name="activo" status="warning">
+              <nb-radio [value]="true">Si</nb-radio>
+              <nb-radio [value]="false">No</nb-radio>
+            </nb-radio-group>
+          </div>
+        </div>
+      </div>
+
+    </form>
+
+  </nb-card-body>
+  <nb-card-footer class="text-end">
+    <button nbButton class="me-1" status="basic" size="small" (click)="onClose()">
+      <nb-icon icon="close-outline"></nb-icon>
+      Cancelar
+    </button>
+
+    <button nbButton class="me-1" status="primary" size="small" (click)="onSave()">
+      <nb-icon icon="save-outline"></nb-icon>
+      Guardar
+    </button>
+
+  </nb-card-footer>
+</nb-card>

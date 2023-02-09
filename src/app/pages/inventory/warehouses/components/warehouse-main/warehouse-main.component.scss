@@ -1,0 +1,14 @@
+@import 'themes';
+
+nb-radio-group {
+    display: flex;
+}
+nb-card-header{
+    display: flex;
+    justify-content: space-between;
+}
+.open-button-end {
+    button {
+        margin-right: 0.3rem;
+    }
+}

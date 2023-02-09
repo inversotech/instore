@@ -1,0 +1,5 @@
+<div (click)="onClickMenu($event)" (dblclick)="isSingleClick=!isSingleClick">
+    <ng-container *ngIf="items.length > 0">
+        <nb-menu [items]="items"></nb-menu>
+    </ng-container>
+</div>

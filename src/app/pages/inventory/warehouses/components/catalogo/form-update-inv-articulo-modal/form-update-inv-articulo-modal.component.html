@@ -1,0 +1,168 @@
+<nb-card [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary" status="primary">
+  <nb-card-header>
+    <div class="text-center">
+      <span i18n>
+        ACTUALIZAR |
+      </span>
+      <span class="font-weight-light" i18n>
+        Artìculo
+      </span>
+    </div>
+    <div>
+      <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer"></nb-icon>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <form [formGroup]="newForm">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="mb-2">
+            <label for="articulo_id" class="label required">Articulo (Buscar articulo del nivel item)</label>
+            <!-- <nb-form-field>
+              <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+              <input name="articulo_id" id="articulo_id" formControlName="articulo_id" type="search"
+                placeholder="Buscar..." nbInput fullWidth shape="round" fieldSize="small">
+            </nb-form-field> -->
+            <nb-form-field>
+              <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+              <input #idArticuloSearch autocomplete="off" nbInput type="search" placeholder="Buscar articulo..."
+                fullWidth shape="round" fieldSize="small" [formControl]="textSearchArticulo"
+                [nbAutocomplete]="autoControlArticle" />
+            </nb-form-field>
+            <nb-autocomplete #autoControlArticle size="small" [activeFirst]="true" [handleDisplayFn]="viewHandleArticle"
+              (selectedChange)="selectedChangeArticle($event)">
+              <nb-option *ngFor="let item of filteredArticuloList$ | async" [value]="item">
+                {{ item?.nombre }} ({{ item?.codigo }})
+              </nb-option>
+            </nb-autocomplete>
+
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="mb-2">
+            <label for="codigo_almacen" class="label required">Código de almacen</label>
+            <input status="info" type="text" nbInput fullWidth fieldSize="small" name="codigo_almacen"
+              id="codigo_almacen" formControlName="codigo_almacen" placeholder="">
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="mb-2">
+            <label for="anho_id" class="label required">Año</label>
+            <nb-select placeholder="Año" size="small" formControlName="anho_id" fullWidth name="anho_id"
+              id="anho_id">
+              <nb-option value="">-Seleccione-</nb-option>
+              <nb-option *ngFor="let item of anhos" [value]="item.anho_id"> {{ item.anho_id }} </nb-option>
+
+            </nb-select>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="mb-2">
+            <label for="moneda_id" class="label required">Moneda</label>
+            <nb-select placeholder="Moneda" size="small" formControlName="moneda_id" fullWidth name="moneda_id"
+              id="moneda_id">
+              <nb-option value="">-Seleccione-</nb-option>
+              <nb-option *ngFor="let item of monedas" [value]="item.moneda_id"> {{ item.currency }} ({{
+                item.currency_name }}) </nb-option>
+            </nb-select>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="mb-2">
+            <label for="tipo_igv_id" class="label required">Tipo igv</label>
+            <nb-select placeholder="Tipo igv" size="small" formControlName="tipo_igv_id" fullWidth name="tipo_igv_id"
+              id="tipo_igv_id">
+              <nb-option value="">-Seleccione-</nb-option>
+              <nb-option *ngFor="let item of tipoIgvs" [value]="item.tipo_igv_id"> {{ item.tipo_igv_id }} {{
+                item.descripcion }} ({{
+                item.gravado }}) </nb-option>
+            </nb-select>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="mb-2">
+            <label for="stock_minimo" class="label required">Stock mínimo</label>
+            <input type="text" nbInput fullWidth fieldSize="small" name="stock_minimo" id="stock_minimo"
+              formControlName="stock_minimo" placeholder="">
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="mb-2">
+            <label for="es_servicio" class="label">Es servicio</label>
+            <nb-radio-group formControlName="es_servicio" name="es_servicio" status="warning">
+              <nb-radio [value]="true">Si</nb-radio>
+              <nb-radio [value]="false">No</nb-radio>
+            </nb-radio-group>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="mb-2">
+            <label for="activo" class="label">Activo</label>
+            <nb-radio-group formControlName="activo" name="activo" status="warning">
+              <nb-radio [value]="true">Si</nb-radio>
+              <nb-radio [value]="false">No</nb-radio>
+            </nb-radio-group>
+          </div>
+        </div>
+      </div>
+
+      <!-- {{newForm.value | json }} -->
+      <label for="" class="label-group label mb-2 mt-3">
+        <nb-icon icon="book-open-outline"></nb-icon>
+        Información real según Kardex</label>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="mb-2">
+            <label for="costo" class="label required">Costo (Disabled)</label>
+            <input type="text" nbInput fullWidth fieldSize="small" name="costo" id="costo" formControlName="costo"
+              placeholder="">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="mb-2">
+            <label for="costo_total" class="label required">Costo Total (Disabled)</label>
+            <input type="text" nbInput fullWidth fieldSize="small" name="costo_total" id="costo_total"
+              formControlName="costo_total" placeholder="">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="mb-2">
+            <label for="stock_actual" class="label required">Stock actual (Disabled)</label>
+            <input type="text" nbInput fullWidth fieldSize="small" name="stock_actual" id="stock_actual"
+              formControlName="stock_actual" placeholder="">
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+    </form>
+
+  </nb-card-body>
+  <nb-card-footer class="text-end">
+    <button nbButton class="me-1" status="basic" size="small" (click)="onClose()">
+      <nb-icon icon="close-outline"></nb-icon>
+      Cancelar
+    </button>
+
+    <button nbButton class="me-1" status="primary" size="small" (click)="onSave()">
+      <nb-icon icon="save-outline"></nb-icon>
+      Guardar
+    </button>
+
+  </nb-card-footer>
+</nb-card>

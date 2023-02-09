@@ -1,0 +1,25 @@
+@import 'themes';
+
+@include nb-install-component() {
+
+  nb-card-header{
+    display: flex;
+    justify-content: space-between;
+  }
+  img {
+    width: 100%;
+    height: auto;
+  }
+  ngx-doc-viewer {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+::ng-deep nb-dialog-container {
+  width: 70rem;
+  // .col-md-6 {
+  //   padding-right: 0.2rem;
+  //   padding-left: 0.2rem;
+  // }
+}

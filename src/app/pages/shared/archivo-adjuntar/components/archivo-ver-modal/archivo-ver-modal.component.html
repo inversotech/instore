@@ -1,0 +1,50 @@
+<nb-card [nbSpinner]="loadingSave" nbSpinnerStatus="primary" size="large">
+    <!-- <nb-card-header>MENSAJE DE CONFIRMACIÓN</nb-card-header> -->
+    <nb-card-header>
+        <div></div>
+        <div class="text-center">
+            <span i18n>
+                VER ARCHIVO
+                <!-- | -->
+            </span>
+            <!-- <span class="font-weight-light" i18n>
+                Crear cuenta bancaria.
+            </span> -->
+        </div>
+        <div>
+            <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer; margin-left: 1rem"></nb-icon>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+
+        <!-- <img *ngIf="!docUrl;else existFile" [src]="'assets/default_images/doc_empty.png'" class="view-img"> -->
+
+        <img [src]="item?.url" *ngIf="esImagen">
+
+        <ngx-doc-viewer *ngIf="!esImagen" [viewerUrl]="'https://docs.google.com/viewer?url=%URL%&embedded=true'"
+            [url]="item?.url" viewer="google">
+        </ngx-doc-viewer>
+
+    </nb-card-body>
+    <nb-card-footer class="text-center">
+        <a style="display: none" #openNew target="_blank" [href]="item?.url"></a>
+
+        <button nbButton status="info" class="me-1" size="tiny"
+            nbTooltip="Descargar archivo."
+            (click)="descargarArchivo()">
+            <nb-icon nbPrefix icon="download-outline" pack="eva"></nb-icon>
+            <span>
+                Descargar
+            </span>
+        </button>
+
+        <button nbButton status="success" size="tiny"
+            nbTooltip="Si no puede visualizar bien el archivo, puede abrirlo en otra ventana."
+            (click)="openNew.click()">
+            <nb-icon nbPrefix icon="external-link-outline" pack="eva"></nb-icon>
+            <span>
+                Abrir en otra ventana
+            </span>
+        </button>
+    </nb-card-footer>
+</nb-card>

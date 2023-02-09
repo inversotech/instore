@@ -1,0 +1,64 @@
+<nb-card [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary" status="basic">
+  <nb-card-header>
+    <div class="text-center">
+      <span i18n>
+        IMPORTAR |
+      </span>
+      <span class="font-weight-light" i18n>
+        Puedes arrastrar el archivo excel
+        
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </span>
+    </div>
+    <div>
+      <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer"></nb-icon>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+
+    <label class="mb-2 label">La importación es única en el sistema, el excel puede descargarlo de: 
+      <a href="https://www.colombiacompra.gov.co/clasificador-de-bienes-y-Servicios" target="_blank">aquí</a>
+    </label>
+
+    <ngx-file-drop dropZoneLabel="Arrastre tus arquivos aquí" (onFileDrop)="dropped($event)"
+      (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)">
+      <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+        <button nbButton outline status="primary" size="small" (click)="openFileSelector()">
+          <nb-icon nbPrefix icon="upload-outline" pack="eva"> </nb-icon>
+          <span> Subir archivo</span>
+        </button>
+      </ng-template>
+    </ngx-file-drop>
+    <p class="text-center"> <small i18n>(Formato: .xlsx, tamaño máximo:8MB)</small> </p>
+    <!-- <label class="btn btn-sm btn-light">
+          <span class="fa fa-upload"></span> Examinar
+          <input #inputFileExcel type="file" hidden accept=".xlsx" (change)="onFileChangeExcel($event)">
+        </label> -->
+    <nb-list>
+      <nb-list-item *ngFor="let file of filesExcels; let i=index">
+        <span class="label">
+          {{ file.name }}
+        </span>
+        <button nbButton status="basic" size="tiny" (click)="onDeleteFile(file)" nbTooltip="Eliminar archivo">
+          <nb-icon icon="close-outline"></nb-icon>
+          Eliminar archivo
+        </button>
+      </nb-list-item>
+    </nb-list>
+
+
+  </nb-card-body>
+
+  <nb-card-footer class="text-end open-button-end">
+    <button nbButton status="basic" size="small" (click)="onClose()">
+      <nb-icon icon="close-outline"></nb-icon>
+      Cancelar
+    </button>
+
+    <button nbButton status="primary" size="small" [disabled]="filesExcels.length !== 1" (click)="onSave()">
+      <nb-icon icon="save-outline"></nb-icon>
+      Guardar
+    </button>
+
+  </nb-card-footer>
+</nb-card>

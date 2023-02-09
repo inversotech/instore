@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card accent="primary">
+      <nb-card-body>
+        <div class="row">
+          <div class="col-md-2 text-start">
+            <button nbButton ghost (click)="onBack()" size="small" status="primary"  nbTooltip="Regresar">
+              <nb-icon status="primary" nbPrefix icon="arrow-back-outline" pack="eva"></nb-icon>
+              Regresar
+            </button>
+          </div>
+          <div class="col-md-3 mb-2">
+            <div class=" mb-0 fw-bold"> Almacén: {{ almacenData?.nombre ?? '???' }} </div>
+            <div class="label mb-0">Tipo de existencia: {{ almacenData?.tipo_existencia_codigo }}-{{ almacenData?.tipo_existencia_nombre }}</div>
+          </div>
+          <div class="col-md-5 mb-2">
+            <div class="mb-0 fw-bold"> {{ almacenData?.empresa_sucursal_nombre }} </div>
+            <div class="label mb-0">{{ almacenData?.empresa_nombre }}</div>
+          </div>
+        </div>
+
+        <!-- <nb-route-tabset fullWidth [tabs]="tabs"></nb-route-tabset> -->
+        <nb-route-tabset [tabs]="tabs"></nb-route-tabset>
+
+        <!-- <nb-tabset>
+          <nb-tab tabTitle="Datos Generales" tabIcon="grid-outline" responsive>
+            <nb-card>
+              <open-datos-generales></open-datos-generales>
+            </nb-card>
+          </nb-tab>
+          <nb-tab tabTitle="Catálogo de artículos" tabIcon="grid-outline" responsive>
+            <nb-card>
+              <open-catalogo-articulos></open-catalogo-articulos>
+            </nb-card>
+          </nb-tab>
+        </nb-tabset> -->
+
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

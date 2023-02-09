@@ -1,9 +1,9 @@
 {
-  "name": "open-inventories-src",
+  "name": "open-inventory-src",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "./node_modules/@angular/cli/bin/ng.js serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -18,6 +18,16 @@
     "@angular/platform-browser": "^14.2.0",
     "@angular/platform-browser-dynamic": "^14.2.0",
     "@angular/router": "^14.2.0",
+    "@nebular/auth": "^10.0.0",
+    "@nebular/date-fns": "^10.0.0",
+    "@nebular/eva-icons": "^10.0.0",
+    "@nebular/theme": "^10.0.0",
+    "bootstrap": "^5.2.3",
+    "date-fns": "^2.29.3",
+    "eva-icons": "^1.1.3",
+    "ngx-doc-viewer": "^15.0.1",
+    "ngx-file-drop": "^14.0.2",
+    "ngx-pagination": "^6.0.3",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
@@ -26,6 +36,7 @@
     "@angular-devkit/build-angular": "^14.2.3",
     "@angular/cli": "~14.2.3",
     "@angular/compiler-cli": "^14.2.0",
+    "@angular/localize": "^14.2.12",
     "@types/jasmine": "~4.0.0",
     "jasmine-core": "~4.3.0",
     "karma": "~6.4.0",
