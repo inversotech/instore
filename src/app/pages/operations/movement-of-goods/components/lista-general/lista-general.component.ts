@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { NbDialogService } from '@nebular/theme';
 import { map, takeUntil } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { ConfirmModalComponent } from 'src/app/pages/shared/components';
 import { AlmacenesService } from 'src/app/providers/services/inventory/almacenes.service';
+import { FormNuevoMovimientoModalComponent } from '../form-nuevo-movimiento-modal/form-nuevo-movimiento-modal.component';
+import { MovimientosService } from 'src/app/providers/services/inventory/movimientos.service';
 // import { FormNuevoWarehouseModalComponent } from '../form-nuevo-warehouse-modal/form-nuevo-warehouse-modal.component';
 
 @Component({
@@ -14,15 +16,20 @@ import { AlmacenesService } from 'src/app/providers/services/inventory/almacenes
   styleUrls: ['./lista-general.component.scss']
 })
 export class ListaGeneralComponent implements OnInit, OnDestroy {
-  public almacenes: any[] = [];
+  public vouchers: any[] = [];
+  public movimientos: any[] = [];
   public loadingSpinner: boolean = false;
-  public textSearch: FormControl = new FormControl();
+  // public textSearch: FormControl = new FormControl();
+  public filterForm: FormGroup = this.formBuilder.group({
+    voucher_id: ['-1'],
+    text_search: [''],
+  });
   private destroy$: Subject<void> = new Subject<void>();
 
   public pagination: any = {
     currentPage: 1,
     pageSize: 15,
-    totalItems: 15,
+    totalItems: 0,
   };
 
   public paginationControls: any = {
@@ -37,7 +44,7 @@ export class ListaGeneralComponent implements OnInit, OnDestroy {
 
   constructor(private formBuilder: FormBuilder,
     private nbDialogService: NbDialogService,
-    private almacenesService: AlmacenesService,
+    private movimientosService: MovimientosService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
   ) { }
@@ -52,13 +59,13 @@ export class ListaGeneralComponent implements OnInit, OnDestroy {
       ).subscribe((response) => {
         if (response.text_search) {
           // setTimeout(() => {
-          this.textSearch.patchValue(response.text_search);
+          this.filterForm.get('text_search')?.patchValue(response.text_search);
           // }, 700);
         }
       });
 
     // this.loadingSpinner = false;
-    this.getAlmacenes();
+    this.getInventarioMovimientos();
     this.initPagination();
   }
 
@@ -69,7 +76,7 @@ export class ListaGeneralComponent implements OnInit, OnDestroy {
 
   public pageChanged(event: any) {
     this.pagination.currentPage = event;
-    this.getAlmacenes();
+    this.getInventarioMovimientos();
   }
 
   private initPagination() {
@@ -79,46 +86,55 @@ export class ListaGeneralComponent implements OnInit, OnDestroy {
   }
 
   public submitFormSearch() {
-    this.getAlmacenes();
+    this.getInventarioMovimientos();
   }
 
-  public getAlmacenes() {
-    const textSearch = this.textSearch.value || '';
+  public getInventarioMovimientos() {
+    const textSearch = this.filterForm.get('text_search')?.value || '';
     const params = {
       text_search: textSearch,
       page: this.pagination.currentPage,
       per_page: this.pagination.pageSize,
+      voucher_id: 10,
     };
 
     this.loadingSpinner = true;
-    this.almacenesService.getByQuery$(params)
-      .pipe(map(res => res.data),
+    this.movimientosService.getByQuery$(params)
+      .pipe(
+        // map(res => res.data),
         takeUntil(this.destroy$))
       .subscribe(response => {
-        this.almacenes = response;
+        if (response) {
+          this.pagination.currentPage = response.current_page;
+          this.pagination.pageSize = response.per_page;
+          this.pagination.totalItems = response.total;
+        } else {
+          this.initPagination();
+        }
         this.loadingSpinner = false;
+        this.movimientos = response.data;
       }, err => {
+        this.movimientos = [];
         this.loadingSpinner = false;
       });
   }
 
   public onRegistrarNuevo() {
-    // const modal = this.nbDialogService.open(FormNuevoWarehouseModalComponent);
-    // modal.onClose
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe(res => {
-    //     if (!res.cancel) {
-    //       this.getAlmacenes();
-    //     }
-    //   }, err => { });
+    const modal = this.nbDialogService.open(FormNuevoMovimientoModalComponent);
+    modal.onClose
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(res => {
+        if (!res.cancel && res.data) {
+          this.onManage(res.data);
+        }
+      }, err => { });
   }
 
+  public onManage(item: any) {
 
-  public onManageAlmacen(item: any) {
-
-    this.router.navigate(['./', item.almacen_id], {
+    this.router.navigate(['./', item.movimiento_id], {
       relativeTo: this.activatedRoute, queryParams: {
-        text_search: this.textSearch.value,
+        text_search: this.filterForm.get('text_search')?.value,
       },
     });
 
@@ -132,19 +148,21 @@ export class ListaGeneralComponent implements OnInit, OnDestroy {
   //     .pipe(takeUntil(this.destroy$))
   //     .subscribe(res => {
   //       if (!res.cancel) {
-  //         this.getAlmacenes();
+  //         this.getInventarioMovimientos();
   //       }
   //     }, err => { });
   // }
 
-  public onDelete(userId: any) {
+  public onDelete(item: any) {
+    if (!item) return;
+
     this.nbDialogService.open(ConfirmModalComponent, { context: { mensaje: '¿Estás seguro de eliminar el almacén?' } })
       .onClose.subscribe(status => {
         if (status) {
-          this.almacenesService.delete$(userId)
+          this.movimientosService.delete$(item.movimiento_id)
             .pipe(takeUntil(this.destroy$))
             .subscribe(response => {
-              this.getAlmacenes();
+              this.getInventarioMovimientos();
             });
         } else {
         }

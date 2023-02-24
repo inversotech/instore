@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AutorizationGuardService } from 'src/app/core/providers/guards';
 import { ListaGeneralComponent } from './components';
+import { MovementMainComponent } from './components/movement-main/movement-main.component';
 import { MovementOfGoodsComponent } from './movement-of-goods.component';
 
 const routes: Routes = [
@@ -23,10 +24,10 @@ const routes: Routes = [
       //   path: ':producto_id/:articulo_id',
       //   component: MainArticleComponent,
       // },
-      // {
-      //   path: ':producto_id',
-      //   component: MainArticleComponent,
-      // },
+      {
+        path: ':movimiento_id',
+        component: MovementMainComponent,
+      },
     ],
   }
 ];

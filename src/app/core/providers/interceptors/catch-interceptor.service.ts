@@ -70,6 +70,9 @@ export class CatchInterceptorService implements HttpInterceptor {
   }
 
   private catchError(err: any, req: any) {
+    console.log('err---');
+    console.log(err);
+
     switch (err.status) {
       case 422:
         if (req.method === 'GET') {
@@ -104,10 +107,15 @@ export class CatchInterceptorService implements HttpInterceptor {
           }
         }
       } else { // Otro error programado
-        // console.log(err.error.error.message);
-        const errorMsg = err.error.error.message || err.statusText;
-        // this.toast(`${err.status} ${errorMsg}`, err.statusText);
-        this.toast(`${errorMsg}`, `${err.status} ${err.statusText}`, 'warning');
+        if (err.error && err.error.error && err.error.error.message) {
+          const errorMsg = err.error.error.message || err.statusText;
+          // this.toast(`${err.status} ${errorMsg}`, err.statusText);
+          this.toast(`${errorMsg}`, `${err.status} ${err.statusText}`);
+        } else {
+          const errorMsg = err.error.message || err.statusText;
+          // this.toast(`${err.status} ${errorMsg}`, err.statusText);
+          this.toast(`${errorMsg}`, `${err.status} ${err.statusText}`, 'warning');
+        }
       }
     }
   }

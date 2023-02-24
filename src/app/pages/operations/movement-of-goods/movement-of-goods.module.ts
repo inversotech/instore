@@ -7,7 +7,7 @@ import {
 import {
   NbCardModule, NbSpinnerModule, NbDialogModule,
   NbCheckboxModule, NbRadioModule, NbButtonModule, NbIconModule, NbTooltipModule,
-  NbInputModule, NbListModule, NbFormFieldModule, NbBadgeModule, NbButtonGroupModule, NbUserModule, NbSelectModule, NbTabsetModule,
+  NbInputModule, NbListModule, NbFormFieldModule, NbBadgeModule, NbButtonGroupModule, NbUserModule, NbSelectModule, NbTabsetModule, NbDatepickerModule, NbAutocompleteModule,
 } from '@nebular/theme';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 // import { RolModulosService, RolsService } from 'src/app/providers/services';
@@ -16,6 +16,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { MovementOfGoodsComponent } from './movement-of-goods.component';
 import { MovementOfGoodsRoutingModule } from './movement-of-goods-routing.module';
+import { FormNuevoMovimientoModalComponent } from './components/form-nuevo-movimiento-modal/form-nuevo-movimiento-modal.component';
+import { MovementMainComponent } from './components/movement-main/movement-main.component';
 
 // const SERVICES: any[] = [
 //   RolsService,
@@ -25,6 +27,8 @@ import { MovementOfGoodsRoutingModule } from './movement-of-goods-routing.module
 const COMPONENTS: any[] = [
   MovementOfGoodsComponent,
   ListaGeneralComponent,
+  FormNuevoMovimientoModalComponent,
+  MovementMainComponent,
 ];
 
 const NB_MODULES: any[] = [
@@ -44,6 +48,8 @@ const NB_MODULES: any[] = [
   NbUserModule,
   NbSelectModule,
   NbTabsetModule,
+  NbDatepickerModule,
+  NbAutocompleteModule,
 ];
 
 const NG_MODULES: any[] = [

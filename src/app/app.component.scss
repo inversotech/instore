@@ -2,9 +2,23 @@
 @import 'themes';
 
 @include nb-install-component() {
-  ::ng-deep table.table {
-    color: nb-theme(text-basic-color);
-    font-size: 12px;
+  ::ng-deep {
+    table.table {
+      color: nb-theme(text-basic-color);
+      font-size: 12px;
+    }
+    .text-danger {
+      color: nb-theme(color-danger-500) !important;
+    }
+    .text-warning {
+        color: nb-theme(color-warning-500) !important;
+    }
+    .text-info {
+        color: nb-theme(color-info-500) !important;
+    }
+    .text-primary {
+      color: nb-theme(color-primary-500) !important;
+    }
   }
 
 }

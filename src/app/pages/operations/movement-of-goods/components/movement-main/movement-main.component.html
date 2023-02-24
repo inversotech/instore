@@ -1,0 +1,193 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card accent="primary" [nbSpinner]="loadingSave">
+      <nb-card-header>
+        <div class="row">
+          <div class="col-1 text-center">
+            <button nbButton ghost (click)="onBack()" size="small" status="primary" nbTooltip="Regresar">
+              <nb-icon status="primary" nbPrefix icon="arrow-back-outline" pack="eva"></nb-icon>
+              <!-- Regresar -->
+            </button>
+          </div>
+          <div class="col mb-2" style="line-height: 1rem;">
+            <div class="mb-0 fw-bold">{{ movimientoData?.tipo_movimiento == 'I' ? 'INGRESO' : 'SALIDA' }}: {{
+              movimientoData?.serie ?? '####' }}-{{ movimientoData?.numero ?? '########' }} </div>
+            <div class="fw-light mb-0">{{ movimientoData?.fecha }}</div>
+          </div>
+          <div class="col mb-2" style="line-height: 1rem;">
+            <div class="mb-0 fw-bold">{{ movimientoData?.mes_nombre | uppercase | slice:0:3 }}-{{
+              movimientoData?.anho_id }} </div>
+            <!-- <div class="fw-light mb-0">Voucher: 1-1-RC1-12/12/2022</div> -->
+            <div class="fw-light mb-0">Voucher: {{
+              movimientoData?.empresa_id+'-'+movimientoData?.empresa_sucursal_id+'-'+movimientoData?.voucher_numero+'-'+movimientoData?.voucher_fecha
+              }}</div>
+          </div>
+          <div class="col mb-2" style="line-height: 1rem;">
+            <div class="mb-0 fw-bold">ALMACÉN: {{ movimientoData?.almacen_nombre }} </div>
+            <div class="fw-light mb-0">{{ movimientoData?.tipo_operacion_nombre }}</div>
+          </div>
+          <div class="col mb-2" style="line-height: 1rem;">
+            <div class="mb-0">
+              <div *ngIf="movimientoData?.finalizado" class="d-flex">
+                <nb-icon status="primary" icon="done-all-outline"></nb-icon>
+                FINALIZADO
+              </div>
+
+              <div *ngIf="!movimientoData?.finalizado">
+                PENDIENTE
+              </div>
+            </div>
+            <div class="fw-light mb-0 d-flex">
+              <nb-icon style="height: 1rem" nbTooltip="Usuario registrador" status="primary"
+                icon="person-outline"></nb-icon>
+              {{ movimientoData?.user_name }}
+            </div>
+          </div>
+          <div class="col mb-2" style="line-height: 1rem;">
+            <button nbButton class="me-1" size="small" class="me-1" nbTooltip="Editar">
+              <nb-icon nbPrefix icon="edit-outline" statu="info" pack="eva"></nb-icon>
+            </button>
+
+            <!-- <div class="mb-0">FINALIZADO</div>
+            <div class="fw-light mb-0 d-flex">
+              cruzjhonson@gmail.com
+            </div> -->
+          </div>
+        </div>
+      </nb-card-header>
+      <nb-card-body>
+
+
+        <!-- <form [formGroup]="addForm" (ngSubmit)="submitFormAdd()" *ngIf="enable"> -->
+        <form [formGroup]="addForm" (ngSubmit)="submitFormAdd()">
+          <div class="row mb-3">
+
+            <div class="col-md-4">
+              <label for="detalle" class="label form-label">Artículo (Buscar por nombre o código)</label>
+              <nb-form-field>
+                <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+                <input #idArticuloSearch autocomplete="off" nbInput type="search" placeholder="Buscar..." fullWidth
+                  shape="round" fieldSize="small" [formControl]="textSearchArticulo"
+                  [nbAutocomplete]="autoControlArticulo" />
+              </nb-form-field>
+              <nb-autocomplete #autoControlArticulo size="small" [activeFirst]="true"
+                [handleDisplayFn]="viewHandleArticulo" (selectedChange)="selectedChangeArticulo($event)">
+                <nb-option *ngFor="let item of filteredArticuloList$ | async" [value]="item">
+                  {{ item?.i_articulo_nombre }} ({{ item?.i_articulo_codigo }})
+                </nb-option>
+              </nb-autocomplete>
+
+            </div>
+
+            <div class="col-md-2">
+              <label for="cantidad" class="label form-label">Cantidad</label>
+              <input #attrDetallecantidad type="number" formControlName="cantidad" nbInput fullWidth fieldSize="small"
+                name="cantidad" placeholder="0">
+            </div>
+
+            <div class="col-md-2">
+              <label for="costo_uni" class="label form-label">Costo Unit.</label>
+              <input type="text" formControlName="costo_uni" nbInput fullWidth fieldSize="small" name="costo_uni"
+                placeholder="0.00">
+            </div>
+
+            <div class="col-md-4">
+              <label for="" class="label  form-label" style="visibility: hidden;">.</label>
+              <div>
+                <button nbButton class="me-1" type="submit" status="primary" size="small">
+                  <nb-icon nbPrefix icon="save-outline" pack="eva"></nb-icon>
+                  <span *ngIf="fd['id_detalle']?.value">ACTUALIZAR</span>
+                  <span *ngIf="!fd['id_detalle']?.value">AGREGAR</span>
+                </button>
+
+                <button nbTooltip="Cancelar" nbButton *ngIf="fd['id_detalle']?.value" type="button"
+                  (click)="cleanFormDetalle()" status="primary" size="small">
+                  <nb-icon nbPrefix icon="corner-up-left-outline" pack="eva"></nb-icon>
+                </button>
+
+                <button nbButton class="me-1" nbTooltip="Actualizar" type="button" (click)="refreshDetalle()"
+                  size="small">
+                  <nb-icon nbPrefix icon="refresh-outline" status="info" pack="eva"></nb-icon>
+                </button>
+                <button nbButton class="me-1" nbTooltip="Eliminar todo el detalle" type="button" (click)="onDeleteAllDetalle()"
+                  size="small">
+                  <nb-icon nbPrefix icon="close-outline" status="danger" pack="eva"></nb-icon>
+                </button>
+
+              </div>
+            </div>
+          </div>
+        </form>
+        <!-- </div> -->
+
+        <table class="table table-sm text-small" style="font-size: 12px;">
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th>Detalle</th>
+              <th class="text-center">Cantidad</th>
+              <th class="text-end">Costo Unit.</th>
+              <th class="text-end">Sub Total</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="movimientoDetalles.length>0;else emptyListDetails">
+            <tr *ngFor="let item of movimientoDetalles; let i=index">
+              <td class="text-center">{{ (i+1) }}</td>
+              <td>
+                {{ item?.i_articulo_nombre }} ({{ item?.i_articulo_codigo }})
+              </td>
+              <td class="text-center">{{ item.unidad_medida_codigo_sunat }} {{ item.cantidad }} </td>
+              <td class="text-end">{{ item.costo_uni | number : '1.2-2' }}</td>
+              <td class="text-end">{{ item.importe | number : '1.2-2' }}</td>
+              <td class="text-center">
+                <button class="me-1" nbButton size="small" nbTooltip="Editar" (click)="onEditDetalle(item)">
+                  <nb-icon icon="edit-outline" status="info" pack="eva"></nb-icon>
+                </button>
+                <button class="me-1" nbButton size="small" nbTooltip="Eliminar" (click)="onDeleteDetalle(item)">
+                  <nb-icon icon="close-outline" status="danger" pack="eva"></nb-icon>
+                </button>
+              </td>
+            </tr>
+            <!-- <tr>
+              <td class="text-center">2</td>
+              <td class="text-center">2</td>
+              <td>Cuadernos</td>
+              <td class="text-end">25.00</td>
+              <td class="text-end">50.00</td>
+              <td class="text-center">
+                <button class="me-1" nbButton size="small" nbTooltip="Editar">
+                  <nb-icon icon="edit-outline" pack="eva"></nb-icon>
+                </button>
+                <button class="me-1" nbButton size="small" nbTooltip="Eliminar">
+                  <nb-icon icon="close-outline" pack="eva"></nb-icon>
+                </button>
+              </td>
+            </tr> -->
+          </tbody>
+          <ng-template #emptyListDetails>
+            <tbody>
+              <tr>
+                <td colspan="6" class="text-center label">No se encontraron resultados.</td>
+              </tr>
+            </tbody>
+          </ng-template>
+          <tfoot>
+            <tr>
+              <th colspan="4" class="text-end">Total</th>
+              <th class="text-end">{{movimimentoDetallesTotal | number : '1.2-2' }}</th>
+            </tr>
+          </tfoot>
+        </table>
+
+
+      </nb-card-body>
+      <nb-card-footer class="text-center">
+        <button nbButton class="me-1" status="primary" size="small">
+          <nb-icon nbPrefix icon="checkmark-circle-outline" pack="eva"></nb-icon>
+          <span>FINALIZAR</span>
+        </button>
+      </nb-card-footer>
+    </nb-card>
+  </div>
+</div>

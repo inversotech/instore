@@ -5,101 +5,155 @@
         MOVIMIENTOS |
       </span>
       <span class="font-weight-light" i18n>
-        Lista de almacenes
+        Lista de movimientos
       </span>
     </div>
     <div>
     </div>
   </nb-card-header>
   <nb-card-body>
-    <!-- <form (ngSubmit)="submitFormSearch()">
 
+    <form [formGroup]="filterForm" (ngSubmit)="submitFormSearch()">
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-3">
+          <label for="voucher_id" class="label form-label">Voucher</label>
+          <nb-select placeholder="Seleccionar voucher" fullWidth [size]="'small'" formControlName="voucher_id"
+            id="voucher_id">
+            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option *ngFor="let item of vouchers" [value]="item.voucher_id">
+              {{ item.voucher_id }}</nb-option>
+          </nb-select>
+        </div>
+        <div class="col-md-3">
+          <label for="text_search" class="label form-label">Buscar</label>
           <nb-form-field>
             <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
-            <input [formControl]="textSearch" type="search" placeholder="Buscar..." nbInput fullWidth shape="round"
+            <input formControlName="text_search" type="search" placeholder="Buscar..." nbInput fullWidth shape="round"
               fieldSize="small">
           </nb-form-field>
         </div>
-        <div class="col-md-4 open-button-end">
-          <button nbButton type="submit" status="primary" size="small">
-            <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
-            Buscar
-          </button>
-          <button nbButton type="button" status="primary" size="small" (click)="onRegistrarNuevo()">
-            <nb-icon icon="plus-outline"></nb-icon>
-            Agregar
-          </button>
+        <div class="col-md-6">
+          <label for="" class="label  form-label" style="visibility: hidden;">.</label>
+          <div>
+            <button nbButton class="me-1" type="submit" status="primary" size="small">
+              <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+              Buscar
+            </button>
+            <button nbButton class="me-1" type="button" status="primary" size="small" (click)="onRegistrarNuevo()">
+              <nb-icon icon="plus-outline"></nb-icon>
+              Agregar Ingreso
+            </button>
+            <button nbButton class="me-1" type="button" status="primary" size="small" (click)="onRegistrarNuevo()">
+              <nb-icon icon="plus-outline"></nb-icon>
+              Agregar Salida
+            </button>
+          </div>
         </div>
       </div>
-    </form> -->
+    </form>
 
     <br>
     <div class="row" [nbSpinner]="loadingSpinner" nbSpinnerStatus="primary">
       <div class="col-md-12">
 
-        <!-- <table class="table table-sm">
-          <tbody *ngIf="almacenes.length > 0; else emptyList">
-            <tr *ngFor="let item of almacenes | paginate: { id: 'almacenesPaginate',
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>N</th>
+              <th>SÉRIE & NÚMERO</th>
+              <th>MES & VOUCHER</th>
+              <th>TIPO</th>
+              <th>ALMACEN & TIPO OPERACIÓN</th>
+              <th>GLOSA</th>
+              <th>USUARIO</th>
+              <th class="text-center">Estado</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="movimientos.length > 0; else emptyList">
+            <tr *ngFor="let item of movimientos | paginate: { id: 'movimientosPaginate',
             itemsPerPage: pagination?.pageSize,
             currentPage: pagination?.currentPage,
-            totalItems: pagination?.totalItems}">
-              <td class="align-middle text-center">
-                <nb-icon status="primary" icon="layout-outline"></nb-icon>
-              </td>
+            totalItems: pagination?.totalItems}; let i=index">
               <td>
-                <div class="fw-bold">
-                  Almacén: {{item.nombre}}
-                </div>
+                {{ (i+1) }}
+              </td>
+              <td style="line-height: 0.8rem;">
+                <div>{{ item.serie ?? '####' }}-{{ item.serie ?? '########'}}</div>
                 <div>
-                  <span class="label">Tipo existencia: {{ item.tipo_existencia_codigo }}-{{ item.tipo_existencia_nombre
-                    }}
-                  </span>
+                  <small>{{ item.fecha }}</small>
+                </div>
+              </td>
+              <td style="line-height: 0.8rem;">
+                <div>{{ item.mes_nombre }}-{{ item.anho_id }}</div>
+                <div>
+                  <small>Voucher: {{ item.voucher_empresa_id }}-{{ item.voucher_empresa_sucursal_id }}-{{ item.voucher_numero }}-{{ item.voucher_fecha }}</small>
                 </div>
               </td>
               <td>
-                <div class="label">{{item.empresa_id}} - {{item.empresa_nombre}}</div>
-                <div class="label">{{item.empresa_sucursal_id}} - {{item.empresa_sucursal_nombre}}</div>
+                <div class="d-flex">
+                  <span *ngIf="item.tipo_movimiento === 'I'" class="text-success fw-bold">INGRESO</span>
+                  <span *ngIf="item.tipo_movimiento === 'S'" class="text-danger fw-bold">SALIDA</span>
+                </div>
+              </td>
+              <td style="line-height: 0.8rem;">
+                <div>ALMACÉN: {{ item.almacen_nombre }}</div>
+                <div>
+                  <small>{{ item.tipo_operacion_nombre }}</small>
+                </div>
               </td>
               <td>
-                <button nbButton style="pointer-events: none!important; background-color: inherit" *ngIf="item.activo"
-                  status="basic" size="tiny" shape="round">
+                {{ item.detalle }}
+              </td>
+              <td>
+                <div class="d-flex">
+                  <nb-icon status="primary" icon="person-outline"></nb-icon>
+                  {{ item.user_name }}
+                </div>
+              </td>
+              <td >
+                <div *ngIf="item.finalizado" class="d-flex">
                   <nb-icon status="primary" icon="done-all-outline"></nb-icon>
-                  Activo
+                  FINALIZADO
+                </div>
+
+                <div *ngIf="!item.finalizado" >
+                  PENDIENTE
+                </div>
+              </td>
+              <td class="text-center">
+                <button nbButton class="me-1" size="small" nbTooltip="Configuración" (click)="onManage(item)">
+                  <nb-icon status="info" icon="edit-outline"></nb-icon>
                 </button>
 
-                <button nbButton style="pointer-events: none!important; background-color: inherit" *ngIf="!item.activo"
-                  status="basic" size="tiny" shape="round">
-                  Desactivo
+                <button nbButton class="me-1" size="small" class="me-1" nbTooltip="Eliminar" (click)="onDelete(item)">
+                  <nb-icon nbPrefix icon="trash-2-outline" status="danger" pack="eva"></nb-icon>
                 </button>
-              </td>
-              <td>
-                <button nbButton status="primary" size="small" nbTooltip="Configuración"
-                  (click)="onManageAlmacen(item)">
-                  <nb-icon icon="settings-outline"></nb-icon>
-                </button>
+
               </td>
             </tr>
           </tbody>
         </table>
-         -->
+
       </div>
     </div>
 
     <ng-template #emptyList>
-      <div class="text-center">
-        <span i18n class="text-center label">
-          No hay registros para mostrar
-        </span>
-      </div>
+      <tbody>
+        <tr>
+          <td colspan="8" class="text-center label">
+            No hay registros para mostrar
+          </td>
+        </tr>
+      </tbody>
     </ng-template>
 
     <div class="row">
       <div class="col-md-12">
         <nb-card>
           <nb-card-body class="text-center">
-            <pagination-controls class="lamb-pagination" id="almacenesPaginate" (pageChange)="pageChanged($event)"
+            <pagination-controls class="lamb-pagination" id="movimientosPaginate" (pageChange)="pageChanged($event)"
               (pageBoundsCorrection)="pageChanged($event)" [maxSize]="paginationControls.maxSize"
               [directionLinks]="paginationControls.directionLinks" [responsive]="paginationControls.responsive"
               previousLabel="ANTERIOR" nextLabel="SIGUIENTE" [autoHide]="paginationControls.autoHide"

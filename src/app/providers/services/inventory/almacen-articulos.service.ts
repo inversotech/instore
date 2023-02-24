@@ -10,6 +10,10 @@ export class AlmacenArticulosService extends EntityDataService<any> {
         super(httpClient, `${environment.apiUrls.openAccounting}/api/almacen-articulos`);
     }
 
+    public getArticulosToSearchByQuery$(params: any): Observable<any> {
+        return this.httpClient.get<any>(`${this.endPoint}/to-search`, { params });
+    }
+
     public deleteCustom$(anhoId: any, almacenId: any, articuloId: any): Observable<any> {
         return this.httpClient.delete<any>(`${this.endPoint}/${anhoId}/${almacenId}/${articuloId}`);
     }
