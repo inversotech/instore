@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, ChangeDetectionStrategy, ViewChild, ElementRef } from '@angular/core';
-import { NbDialogRef } from '@nebular/theme';
+import { NbDialogRef, NbDialogService } from '@nebular/theme';
 import { debounceTime, finalize, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { Observable, of, Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,6 +9,7 @@ import { ArticulosService } from 'src/app/providers/services/inventory/articulos
 import { AlmacenArticulosService } from 'src/app/providers/services/inventory/almacen-articulos.service';
 import { MovimientosService } from 'src/app/providers/services/inventory/movimientos.service';
 import { MovimientoDetallesService } from 'src/app/providers/services/inventory/movimiento-detalles.service';
+import { FormUpdateMovimientoModalComponent } from '../form-update-movimiento-modal/form-update-movimiento-modal.component';
 
 @Component({
   selector: 'open-movement-main',
@@ -34,7 +35,7 @@ export class MovementMainComponent implements OnInit, OnDestroy {
   });
   public movimientoDetalles: any[] = [];
   public movimimentoDetallesTotal: any = 0;
-  // @ViewChild('attrDetallecantidad') attrDetallecantidad!: ElementRef;
+  @ViewChild('attrDetallecantidad') attrDetallecantidad!: ElementRef;
 
   public textSearchArticulo: FormControl = new FormControl('');
   @ViewChild('idArticuloSearch') idArticuloSearch!: ElementRef;
@@ -45,6 +46,7 @@ export class MovementMainComponent implements OnInit, OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
+    private nbDialogService: NbDialogService,
     private movimientosService: MovimientosService,
     private movimientoDetallesService: MovimientoDetallesService,
     private almacenArticulosService: AlmacenArticulosService,
@@ -82,6 +84,21 @@ export class MovementMainComponent implements OnInit, OnDestroy {
           return items;
         })
       );
+  }
+
+
+  public onUpdate() {
+    if (!this.movimientoData) return;
+
+    const modal = this.nbDialogService.open(FormUpdateMovimientoModalComponent);
+    modal.componentRef.instance.inventarioMovimiento = this.movimientoData;
+    modal.onClose
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(res => {
+        if (!res.cancel && res.data) {
+          this.getMovimiento();
+        }
+      }, err => { });
   }
 
   private loadArticulos(term: string): Observable<any> {
@@ -170,10 +187,21 @@ export class MovementMainComponent implements OnInit, OnDestroy {
     }
   }
 
+  public finalize() {
+    if (!confirm('¿Seguro?')) return;
+    this.movimientosService.finalize$(this.movimientoId, {})
+      .pipe(map(res => res.data), finalize(() => this.loadingSave = false))
+      .subscribe(response => {
+        this.getMovimientoDetalle();
+        this.cleanFormDetalle();
+      });
+  }
+
   public cleanFormDetalle() {
     this.addForm.patchValue({ movimiento_detalle_id: '', articulo_id: '', cantidad: 1, costo_uni: '' });
-    this.idArticuloSearch.nativeElement.focus();
     this.textSearchArticulo.patchValue('');
+    this.textSearchArticulo.enable();
+    this.idArticuloSearch.nativeElement.focus();
   }
 
   get fe() {
@@ -187,10 +215,20 @@ export class MovementMainComponent implements OnInit, OnDestroy {
     this.getMovimientoDetalle();
   }
 
-  public onEditDetalle(item: any) { }
+  public onEditDetalle(item: any) {
+    this.addForm.patchValue({
+      movimiento_detalle_id: item.movimiento_detalle_id,
+      articulo_id: item.articulo_id,
+      cantidad: item.cantidad,
+      costo_uni: item.costo_uni
+    });
+    this.attrDetallecantidad.nativeElement.focus();
+    this.textSearchArticulo.patchValue(`${item.i_articulo_nombre} (${item.i_articulo_codigo})`);
+    this.textSearchArticulo.disable();
+  }
 
   public onDeleteDetalle(item: any) {
-    if(!confirm('¿Seguro?')) return;
+    if (!confirm('¿Seguro?')) return;
 
     this.loadingSave = true;
     this.movimientoDetallesService.delete$(item.movimiento_detalle_id)
@@ -204,7 +242,7 @@ export class MovementMainComponent implements OnInit, OnDestroy {
   public onDeleteAllDetalle() {
     if (!this.movimientoData) return;
     if (!this.movimientoData.movimiento_id) return;
-    if(!confirm('¿Seguro?')) return;
+    if (!confirm('¿Seguro?')) return;
 
     this.loadingSave = true;
     this.movimientoDetallesService.deleteAll$(this.movimientoData.movimiento_id)

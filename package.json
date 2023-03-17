@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "./node_modules/@angular/cli/bin/ng.js serve",
-    "build": "ng build",
+    "build": "ng build --configuration=production --base-href /inventory/ --output-path /Users/vitmaraliaga/develop/vopen/dists/open-inventory-dist/dist",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

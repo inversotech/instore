@@ -24,6 +24,10 @@ const routes: Routes = [
         loadChildren: () => import('./operations/operations.module').then(m => m.OperationsModule),
       },
       {
+        path: 'reports',
+        loadChildren: () => import('./reports/reports.module').then(m => m.ReportsModule),
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: 'dashboard',

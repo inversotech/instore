@@ -1,39 +1,74 @@
-<nb-card>
+<nb-card accent="primary">
   <nb-card-header>
-    <div class="text-center">
-      <span i18n>
-        MOVIMIENTOS |
-      </span>
-      <span class="font-weight-light" i18n>
-        Lista de movimientos
-      </span>
-    </div>
-    <div>
+
+    <div style="line-height: 1rem;">
+      <table>
+        <tr>
+          <td>
+            <nb-icon status="primary" style="font-size: 1.6rem;" icon="book-open-outline" pack="eva"></nb-icon> &nbsp;
+          </td>
+          <td>
+            <div>
+              <span i18n>
+                INGRESOS Y SALIDAS 
+              </span>
+            </div>
+            <div class="fw-light">Lista y generación de movimientos de ingreso y salida</div>
+          </td>
+        </tr>
+      </table>
     </div>
   </nb-card-header>
   <nb-card-body>
 
     <form [formGroup]="filterForm" (ngSubmit)="submitFormSearch()">
       <div class="row">
-        <div class="col-md-3">
-          <label for="voucher_id" class="label form-label">Voucher</label>
+        <div class="col-md-2">
+          <label for="anho_id" class="label">Año</label>
+          <nb-select placeholder="Seleccionar año" fullWidth [size]="'small'" formControlName="anho_id" id="anho_id">
+            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option *ngFor="let item of anhos" [value]="item.anho_id"> {{ item.anho_id }} </nb-option>
+          </nb-select>
+        </div>
+
+        <div class="col-md-2">
+          <label for="mes_id" class="label">Mes</label>
+          <nb-select placeholder="Seleccionar mes" fullWidth [size]="'small'" formControlName="mes_id" id="mes_id">
+            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option *ngFor="let item of meses" [value]="item.mes_id"> {{ item.nombre }} </nb-option>
+          </nb-select>
+        </div>
+
+        <div class="col-md-2">
+          <label for="voucher_id" class="label">Voucher</label>
           <nb-select placeholder="Seleccionar voucher" fullWidth [size]="'small'" formControlName="voucher_id"
             id="voucher_id">
             <nb-option value="-1">-Seleccione-</nb-option>
-            <nb-option *ngFor="let item of vouchers" [value]="item.voucher_id">
-              {{ item.voucher_id }}</nb-option>
+            <nb-option style="line-height: 1rem;" *ngFor="let item of vouchers" [value]="item.voucher_id">
+              <table>
+                <tr>
+                    <td>
+                        <div>{{item?.empresa_id+'-'+item?.empresa_sucursal_id+'-['+item?.numero+']-'+item?.fecha }}
+                        </div>
+                        <small>({{ item.user_email }})
+                        </small>
+                    </td>
+                </tr>
+            </table>
+
+            </nb-option>
           </nb-select>
         </div>
         <div class="col-md-3">
-          <label for="text_search" class="label form-label">Buscar</label>
+          <label for="text_search" class="label">Buscar</label>
           <nb-form-field>
             <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
             <input formControlName="text_search" type="search" placeholder="Buscar..." nbInput fullWidth shape="round"
               fieldSize="small">
           </nb-form-field>
         </div>
-        <div class="col-md-6">
-          <label for="" class="label  form-label" style="visibility: hidden;">.</label>
+        <div class="col-md-3">
+          <label for="" class="label" style="visibility: hidden;">.</label>
           <div>
             <button nbButton class="me-1" type="submit" status="primary" size="small">
               <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
@@ -41,12 +76,12 @@
             </button>
             <button nbButton class="me-1" type="button" status="primary" size="small" (click)="onRegistrarNuevo()">
               <nb-icon icon="plus-outline"></nb-icon>
-              Agregar Ingreso
+              Agregar
             </button>
-            <button nbButton class="me-1" type="button" status="primary" size="small" (click)="onRegistrarNuevo()">
+            <!-- <button nbButton class="me-1" type="button" status="primary" size="small" (click)="onRegistrarNuevo()">
               <nb-icon icon="plus-outline"></nb-icon>
               Agregar Salida
-            </button>
+            </button> -->
           </div>
         </div>
       </div>
@@ -80,7 +115,7 @@
                 {{ (i+1) }}
               </td>
               <td style="line-height: 0.8rem;">
-                <div>{{ item.serie ?? '####' }}-{{ item.serie ?? '########'}}</div>
+                <div>{{ item.serie ?? '####' }}-{{ item.numero ?? '########'}}</div>
                 <div>
                   <small>{{ item.fecha }}</small>
                 </div>
@@ -88,7 +123,8 @@
               <td style="line-height: 0.8rem;">
                 <div>{{ item.mes_nombre }}-{{ item.anho_id }}</div>
                 <div>
-                  <small>Voucher: {{ item.voucher_empresa_id }}-{{ item.voucher_empresa_sucursal_id }}-{{ item.voucher_numero }}-{{ item.voucher_fecha }}</small>
+                  <small>Voucher: {{ item.voucher_empresa_id }}-{{ item.voucher_empresa_sucursal_id }}-{{
+                    item.voucher_numero }}-{{ item.voucher_fecha }}</small>
                 </div>
               </td>
               <td>
@@ -112,22 +148,33 @@
                   {{ item.user_name }}
                 </div>
               </td>
-              <td >
+              <td>
                 <div *ngIf="item.finalizado" class="d-flex">
-                  <nb-icon status="primary" icon="done-all-outline"></nb-icon>
-                  FINALIZADO
+                  <nb-icon status="success" icon="done-all-outline"></nb-icon>
+                  Finalizado
                 </div>
-
-                <div *ngIf="!item.finalizado" >
-                  PENDIENTE
+                
+                <div *ngIf="!item.finalizado">
+                  <nb-icon status="warning" icon="done-all-outline"></nb-icon>
+                  Pendiente
                 </div>
               </td>
               <td class="text-center">
-                <button nbButton class="me-1" size="small" nbTooltip="Configuración" (click)="onManage(item)">
-                  <nb-icon status="info" icon="edit-outline"></nb-icon>
+
+
+
+                <button nbButton class="me-1" size="small" nbTooltip="Ver" (click)="onManage(item)">
+                  <nb-icon status="info" icon="expand-outline"></nb-icon>
                 </button>
 
-                <button nbButton class="me-1" size="small" class="me-1" nbTooltip="Eliminar" (click)="onDelete(item)">
+                <button nbButton *ngIf="item.finalizado == '1'" status="basic" size="small" class="me-1"
+                  nbTooltip="Habilitar" (click)="onEnable(item)">
+                  <nb-icon status="warning" nbPrefix icon="toggle-right-outline" pack="eva">
+                  </nb-icon>
+                </button>
+
+                <button nbButton *ngIf="item.finalizado == '0'" class="me-1" size="small" class="me-1"
+                  nbTooltip="Eliminar" (click)="onDelete(item)">
                   <nb-icon nbPrefix icon="trash-2-outline" status="danger" pack="eva"></nb-icon>
                 </button>
 

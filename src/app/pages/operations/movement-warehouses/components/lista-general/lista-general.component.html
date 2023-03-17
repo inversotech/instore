@@ -1,0 +1,216 @@
+<nb-card accent="primary">
+  <nb-card-header>
+
+    <div style="line-height: 1rem;">
+      <table>
+        <tr>
+          <td>
+            <nb-icon status="primary" style="font-size: 1.6rem;" icon="book-open-outline" pack="eva"></nb-icon> &nbsp;
+          </td>
+          <td>
+            <div>
+              <span i18n>
+                MOVIMIENTOS ENTRE ALMACENES 
+              </span>
+            </div>
+            <div class="fw-light">Lista de movimientos entre almacenes</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+
+    <form [formGroup]="filterForm" (ngSubmit)="submitFormSearch()">
+      <div class="row">
+        <div class="col-md-2">
+          <label for="anho_id" class="label">Año</label>
+          <nb-select placeholder="Seleccionar año" fullWidth [size]="'small'" formControlName="anho_id" id="anho_id">
+            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option *ngFor="let item of anhos" [value]="item.anho_id"> {{ item.anho_id }} </nb-option>
+          </nb-select>
+        </div>
+
+        <div class="col-md-2">
+          <label for="mes_id" class="label">Mes</label>
+          <nb-select placeholder="Seleccionar mes" fullWidth [size]="'small'" formControlName="mes_id" id="mes_id">
+            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option *ngFor="let item of meses" [value]="item.mes_id"> {{ item.nombre }} </nb-option>
+          </nb-select>
+        </div>
+
+        <div class="col-md-2">
+          <label for="voucher_id" class="label">Voucher</label>
+          <nb-select placeholder="Seleccionar voucher" fullWidth [size]="'small'" formControlName="voucher_id"
+            id="voucher_id">
+            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option style="line-height: 1rem;" *ngFor="let item of vouchers" [value]="item.voucher_id">
+              <table>
+                <tr>
+                    <td>
+                        <div>{{item?.empresa_id+'-'+item?.empresa_sucursal_id+'-['+item?.numero+']-'+item?.fecha }}
+                        </div>
+                        <small>({{ item.user_email }})
+                        </small>
+                    </td>
+                </tr>
+            </table>
+
+            </nb-option>
+          </nb-select>
+        </div>
+        <div class="col-md-3">
+          <label for="text_search" class="label">Buscar</label>
+          <nb-form-field>
+            <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+            <input formControlName="text_search" type="search" placeholder="Buscar..." nbInput fullWidth shape="round"
+              fieldSize="small">
+          </nb-form-field>
+        </div>
+        <div class="col-md-3">
+          <label for="" class="label" style="visibility: hidden;">.</label>
+          <div>
+            <button nbButton class="me-1" type="submit" status="primary" size="small">
+              <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+              Buscar
+            </button>
+            <button nbButton class="me-1" type="button" status="primary" size="small" (click)="onRegistrarNuevo()">
+              <nb-icon icon="plus-outline"></nb-icon>
+              Agregar
+            </button>
+            <!-- <button nbButton class="me-1" type="button" status="primary" size="small" (click)="onRegistrarNuevo()">
+              <nb-icon icon="plus-outline"></nb-icon>
+              Agregar Salida
+            </button> -->
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <br>
+    <div class="row" [nbSpinner]="loadingSpinner" nbSpinnerStatus="primary">
+      <div class="col-md-12">
+
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>N</th>
+              <th>SÉRIE & NÚMERO</th>
+              <th>MES & VOUCHER</th>
+              <th>TIPO</th>
+              <th>ALMACEN & TIPO OPERACIÓN</th>
+              <th>GLOSA</th>
+              <th>USUARIO</th>
+              <th class="text-center">Estado</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="movimientos.length > 0; else emptyList">
+            <tr *ngFor="let item of movimientos | paginate: { id: 'movimientosPaginate',
+            itemsPerPage: pagination?.pageSize,
+            currentPage: pagination?.currentPage,
+            totalItems: pagination?.totalItems}; let i=index">
+              <td>
+                {{ (i+1) }}
+              </td>
+              <td style="line-height: 0.8rem;">
+                <div>{{ item.serie ?? '####' }}-{{ item.numero ?? '########'}}</div>
+                <div>
+                  <small>{{ item.fecha }}</small>
+                </div>
+              </td>
+              <td style="line-height: 0.8rem;">
+                <div>{{ item.mes_nombre }}-{{ item.anho_id }}</div>
+                <div>
+                  <small>Voucher: {{ item.voucher_empresa_id }}-{{ item.voucher_empresa_sucursal_id }}-{{
+                    item.voucher_numero }}-{{ item.voucher_fecha }}</small>
+                </div>
+              </td>
+              <td>
+                <div class="d-flex">
+                  <span *ngIf="item.tipo_movimiento === 'I'" class="text-success fw-bold">INGRESO</span>
+                  <span *ngIf="item.tipo_movimiento === 'S'" class="text-danger fw-bold">SALIDA</span>
+                </div>
+              </td>
+              <td style="line-height: 0.8rem;">
+                <div>ALMACÉN: {{ item.almacen_nombre }}</div>
+                <div>
+                  <small>{{ item.tipo_operacion_nombre }}</small>
+                </div>
+              </td>
+              <td>
+                {{ item.detalle }}
+              </td>
+              <td>
+                <div class="d-flex">
+                  <nb-icon status="primary" icon="person-outline"></nb-icon>
+                  {{ item.user_name }}
+                </div>
+              </td>
+              <td>
+                <div *ngIf="item.finalizado" class="d-flex">
+                  <nb-icon status="success" icon="done-all-outline"></nb-icon>
+                  Finalizado
+                </div>
+                
+                <div *ngIf="!item.finalizado">
+                  <nb-icon status="warning" icon="done-all-outline"></nb-icon>
+                  Pendiente
+                </div>
+              </td>
+              <td class="text-center">
+
+
+
+                <button nbButton class="me-1" size="small" nbTooltip="Ver" (click)="onManage(item)">
+                  <nb-icon status="info" icon="expand-outline"></nb-icon>
+                </button>
+
+                <button nbButton *ngIf="item.finalizado == '1'" status="basic" size="small" class="me-1"
+                  nbTooltip="Habilitar" (click)="onEnable(item)">
+                  <nb-icon status="warning" nbPrefix icon="toggle-right-outline" pack="eva">
+                  </nb-icon>
+                </button>
+
+                <button nbButton *ngIf="item.finalizado == '0'" class="me-1" size="small" class="me-1"
+                  nbTooltip="Eliminar" (click)="onDelete(item)">
+                  <nb-icon nbPrefix icon="trash-2-outline" status="danger" pack="eva"></nb-icon>
+                </button>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+    <ng-template #emptyList>
+      <tbody>
+        <tr>
+          <td colspan="8" class="text-center label">
+            No hay registros para mostrar
+          </td>
+        </tr>
+      </tbody>
+    </ng-template>
+
+    <div class="row">
+      <div class="col-md-12">
+        <nb-card>
+          <nb-card-body class="text-center">
+            <pagination-controls class="lamb-pagination" id="movimientosPaginate" (pageChange)="pageChanged($event)"
+              (pageBoundsCorrection)="pageChanged($event)" [maxSize]="paginationControls.maxSize"
+              [directionLinks]="paginationControls.directionLinks" [responsive]="paginationControls.responsive"
+              previousLabel="ANTERIOR" nextLabel="SIGUIENTE" [autoHide]="paginationControls.autoHide"
+              screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page"
+              screenReaderCurrentLabel="Estás en la página">
+            </pagination-controls>
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+
+  </nb-card-body>
+</nb-card>

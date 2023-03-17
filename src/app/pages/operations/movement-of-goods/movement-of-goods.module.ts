@@ -18,6 +18,7 @@ import { MovementOfGoodsComponent } from './movement-of-goods.component';
 import { MovementOfGoodsRoutingModule } from './movement-of-goods-routing.module';
 import { FormNuevoMovimientoModalComponent } from './components/form-nuevo-movimiento-modal/form-nuevo-movimiento-modal.component';
 import { MovementMainComponent } from './components/movement-main/movement-main.component';
+import { FormUpdateMovimientoModalComponent } from './components/form-update-movimiento-modal/form-update-movimiento-modal.component';
 
 // const SERVICES: any[] = [
 //   RolsService,
@@ -29,6 +30,7 @@ const COMPONENTS: any[] = [
   ListaGeneralComponent,
   FormNuevoMovimientoModalComponent,
   MovementMainComponent,
+  FormUpdateMovimientoModalComponent,
 ];
 
 const NB_MODULES: any[] = [

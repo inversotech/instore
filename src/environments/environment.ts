@@ -23,9 +23,9 @@ export const environment = {
   },
   shellApp: `${window.location.origin}`,
   apiUrls: {
-    openAccounting: API.openAccounting.linux173,
-    openFacturation: API.openFacturation.linux173,
-    openMain: API.openMain.linux173,
+    openAccounting: API.openAccounting.linux32,
+    openFacturation: API.openFacturation.linux32,
+    openMain: API.openMain.linux32,
   },
 };
 

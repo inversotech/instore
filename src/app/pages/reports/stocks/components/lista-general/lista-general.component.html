@@ -1,0 +1,259 @@
+<nb-card accent="primary">
+  <nb-card-header>
+
+    <div style="line-height: 1rem;">
+      <table>
+        <tr>
+          <td>
+            <nb-icon status="primary" style="font-size: 1.6rem;" icon="bar-chart-outline" pack="eva"></nb-icon> &nbsp;
+          </td>
+          <td>
+            <div>
+              <span i18n>
+                STOCK
+              </span>
+            </div>
+            <div class="fw-light">Reporte de stock</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+
+    <form [formGroup]="filterForm" (ngSubmit)="submitFormSearch()">
+
+      <div class="row">
+        <div class="col-md-2">
+          <nb-radio-group formControlName="modo" status="warning">
+            <nb-radio [value]="0">Todos</nb-radio>
+            <nb-radio [value]="1">Por mes</nb-radio>
+          </nb-radio-group>
+        </div>
+
+        <div class="col-md-2">
+          <label for="anho_id" class="label">Año</label>
+          <nb-select placeholder="Seleccionar año" fullWidth [size]="'small'" formControlName="anho_id" id="anho_id">
+            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option *ngFor="let item of anhos" [value]="item.anho_id"> {{ item.anho_id }} </nb-option>
+          </nb-select>
+        </div>
+
+        <div class="col-md-2" *ngIf="filterForm.get('modo')?.value == 1">
+          <label for="mes_id" class="label">Mes</label>
+          <nb-select placeholder="Seleccionar mes" fullWidth [size]="'small'" formControlName="mes_id" id="mes_id">
+            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option *ngFor="let item of meses" [value]="item.mes_id"> {{ item.nombre }} </nb-option>
+          </nb-select>
+        </div>
+
+        <div class="col-md-2">
+          <label for="almacen_id" class="label">Almacén</label>
+          <nb-select placeholder="Seleccionar almacén" fullWidth [size]="'small'" formControlName="almacen_id"
+            id="almacen_id">
+            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option *ngFor="let item of almacenes" [value]="item.almacen_id">
+              {{ item.almacen_nombre }}
+            </nb-option>
+          </nb-select>
+        </div>
+
+        <!-- <div class="col-md-2" *ngIf="filterForm.get('modo')?.value == 1">
+          <label for="detalle" class="label">Artículo</label>
+          <nb-form-field>
+            <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+            <input #idArticuloSearch autocomplete="off" nbInput type="search" placeholder="Buscar..." fullWidth
+              shape="round" fieldSize="small" [formControl]="textSearchArticulo"
+              [nbAutocomplete]="autoControlArticulo" />
+          </nb-form-field>
+          <nb-autocomplete #autoControlArticulo size="small" [activeFirst]="true" [handleDisplayFn]="viewHandleArticulo"
+            (selectedChange)="selectedChangeArticulo($event)">
+            <nb-option *ngFor="let item of filteredArticuloList$ | async" [value]="item">
+              {{ item?.i_articulo_nombre }} ({{ item?.i_articulo_codigo }})
+            </nb-option>
+          </nb-autocomplete>
+        </div> -->
+
+        <div class="col-md-2 text-start">
+          <label for="" class="label" style="visibility: hidden;">.</label>
+          <div>
+            <button nbButton class="me-1" type="submit" status="primary" size="small">
+              <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+              Buscar
+            </button>
+            <button nbButton (click)="onDownloadExcel()" nbTooltip="Descargar en excel" class="me-1" status="basic" type="button" size="small">
+              <nb-icon status="success" icon="download-outline" pack="eva"></nb-icon>
+            </button>
+            <button nbButton nbTooltip="Descargar en PDF" class="me-1" status="basic" type="button" size="small">
+              <nb-icon status="danger" icon="download-outline" pack="eva"></nb-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- <div class="row">
+      <div class="col-md-12 text-end">
+        <button nbButton nbTooltip="Descargar en excel" class="me-1" status="basic" type="button" size="tiny">
+          <nb-icon status="success" icon="download-outline" pack="eva"></nb-icon>
+          Excel
+        </button>
+        <button nbButton nbTooltip="Descargar en PDF" class="me-1" status="basic" type="button" size="tiny">
+          <nb-icon status="danger" icon="download-outline" pack="eva"></nb-icon>
+          Pdf
+        </button>
+      </div>
+    </div> -->
+
+    <div class="row mt-1" [nbSpinner]="loadingSpinner" nbSpinnerStatus="primary">
+      <div class="col-md-12">
+
+
+
+        <!-- <table class="table table-sm table-bordered table-borderless">
+          <thead>
+            <tr>
+              <th>GRUPO</th>
+              <th>SEGMENTO / FAMILIA / CLASE / PRODUCTO</th>
+              <th>ARTÍCULO O ITEM</th>
+              <th>DETALLE</th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="stocks.length > 0; else emptyList">
+            <tr *ngFor="let item of stocks; let i=index">
+              <td style="line-height: 1rem;">
+                <div>
+                  <span [nbTooltip]="item.g_articulo_nombre" class="fw-bold">[{{item.g_articulo_codigo}}]</span>
+                </div>
+              </td>
+              <td style="line-height: 0.9rem;">
+                <div>
+                  [S] {{item.s_articulo_codigo}} - {{item.s_articulo_nombre}}
+                </div>
+                <div>
+                  [F] {{item.f_articulo_codigo}} - {{item.f_articulo_nombre}}
+                </div>
+                <div>
+                  [C] {{item.c_articulo_codigo}} - {{item.c_articulo_nombre}}
+                </div>
+                <div>
+                  [P] {{item.p_articulo_codigo}} - {{item.p_articulo_nombre}}
+                </div>
+              </td>
+              <td style="line-height: 0.9rem;">
+                <div class="fw-bold">
+                  [I] {{item.i_articulo_codigo}} - {{item.i_articulo_nombre}}
+                </div>
+                <div>
+                  <span>Código de almacén: {{item.codigo_almacen}}</span>
+                </div>
+                <div>
+                  <span>Tipo: {{item.es_servicio ? 'Servicio' : 'Producto'}}</span>
+                </div>
+                <div>
+                </div>
+              </td>
+              <td style="line-height: 0.9rem;">
+                <div>
+                  <strong><nb-icon status="success" icon="done-all-outline"></nb-icon> Stock Actual:
+                    {{item.stock_actual}}</strong>
+                </div>
+                <div>
+                  <nb-icon status="success" icon="done-all-outline"></nb-icon> Costo unitario: {{item.costo_unitario}}
+                </div>
+                <div>
+                  <nb-icon status="success" icon="done-all-outline"></nb-icon> Costo total: {{item.costo_total}}
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table> -->
+
+        <table class="table table-sm table-bordered table-borderless">
+          <thead>
+            <tr>
+              <th>N</th>
+              <th class="text-center">GRUPO</th>
+              <th>ARTÍCULO O ITEM</th>
+              <th>CÓDIGO DE ALMACÉN</th>
+              <th>U. MEDIDA</th>
+              <th class="text-center">STOCK ACTUAL</th>
+              <th class="text-end">COSTO UNITARIO</th>
+              <th class="text-end">COSTO TOTAL</th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="stocks.length > 0; else emptyList">
+            <tr *ngFor="let item of stocks; let i=index">
+              <td>{{ (i+1) }}</td>
+              <td style="line-height: 1rem;" class="text-center">
+                <div>
+                  <span [nbTooltip]="item.g_articulo_nombre" class="fw-bold">[{{item.g_articulo_codigo}}]</span>
+                </div>
+              </td>
+              <td>
+                [I] {{item.i_articulo_codigo}} - {{item.i_articulo_nombre}}
+              </td>
+              <td>
+                {{item.codigo_almacen}}
+              </td>
+              <td>
+                {{item.unidad_medida}}
+              </td>
+              <td class="text-center">
+                {{item.stock_actual}}
+              </td>
+              <td class="text-end">
+                {{item.costo_unitario}}
+              </td>
+              <td class="text-end">
+                {{item.costo_total}}
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="5" class="text-end">TOTAL</th>
+              <th class="text-center">
+                {{stocksTotal?.stock_actual}}
+              </th>
+              <th></th>
+              <th class="text-end">
+                {{stocksTotal?.costo_total}}
+              </th>
+            </tr>
+          </tfoot>
+        </table>
+
+      </div>
+    </div>
+
+    <ng-template #emptyList>
+      <tbody>
+        <tr>
+          <td colspan="13" class="text-center label">
+            No hay registros para mostrar
+          </td>
+        </tr>
+      </tbody>
+    </ng-template>
+
+    <!-- <div class="row">
+      <div class="col-md-12">
+        <nb-card>
+          <nb-card-body class="text-center">
+            <pagination-controls class="lamb-pagination" id="movimientosPaginate" (pageChange)="pageChanged($event)"
+              (pageBoundsCorrection)="pageChanged($event)" [maxSize]="paginationControls.maxSize"
+              [directionLinks]="paginationControls.directionLinks" [responsive]="paginationControls.responsive"
+              previousLabel="ANTERIOR" nextLabel="SIGUIENTE" [autoHide]="paginationControls.autoHide"
+              screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page"
+              screenReaderCurrentLabel="Estás en la página">
+            </pagination-controls>
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div> -->
+
+  </nb-card-body>
+</nb-card>

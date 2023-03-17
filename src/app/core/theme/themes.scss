@@ -1,11 +1,10 @@
-// @import '~lamb-web-lib/lib/styles/themes/corporate';
-// @import '~lamb-web-lib/lib/styles/themes/default';
 @import '@nebular/theme/styles/theming';
 @import '@nebular/theme/styles/themes/default';
 @import '@nebular/theme/styles/themes/dark';
+// @import '@nebular/theme/styles/themes/corporate';
 
 // @import '~lamb-web-lib/lib/styles/themes';
-$open-primary: (
+$open_theme_light: (
     // layout-padding: 2.25rem 2.25rem 0.75rem,
     layout-padding: 0.75rem 0.75rem 0.75rem,
     // text-subtitle-font-size: 0.9375rem,
@@ -44,18 +43,10 @@ $open-primary: (
     header-background-color: color-primary-700,
 );
 
-// $nb-enabled-themes: (
-    // default
-    // lamb-default, lamb-corporate,
-    // lamb-emperor, lamb-grapevine, lamb-campfire,
-    // lamb-denim, lamb-earth, lamb-earth,
-    // lamb-ming, lamb-tree-frog
-    // open-primary
-// );
 $nb-enabled-themes: (
     default,
     dark,
-    open-primary
+    open_theme_light
 );
 
 // $nb-themes: nb-register-theme((
@@ -82,13 +73,24 @@ $nb-themes: nb-register-theme((
 
 ), dark, dark);
 
-$nb-themes: nb-register-theme($open-primary, open-primary, default);
+$nb-themes: nb-register-theme((
+    layout-padding: 0.75rem 0.75rem 0.75rem,
+    text-subtitle-font-size: 0.8375rem,
+    card-padding: 0.7rem 0.95rem,
+    list-item-padding: 0.7rem,
+    card-border-width: 0rem,
+    context-menu-text-align: left,
+
+    // header-background-color: color-primary-700,
+), default, default);
+
+$nb-themes: nb-register-theme($open_theme_light, open_theme_light, default);
 
 // $nb-themes: nb-register-theme((
 //     layout-padding: 1.25rem 1.25rem 0.75rem,
 // ), default, default);
 
-// $nb-themes: nb-register-theme($sehs-primary, open-primary, lamb-default);
+// $nb-themes: nb-register-theme($sehs-primary, open_theme_light, lamb-default);
 
 // $nb-themes: nb-register-theme((), lamb-default, lamb-default);
 // $nb-themes: nb-register-theme((), lamb-corporate, lamb-default);

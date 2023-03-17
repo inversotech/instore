@@ -11,10 +11,10 @@ const routes: Routes = [
         path: 'movement-of-goods',
         loadChildren: () => import('./movement-of-goods/movement-of-goods.module').then(m => m.MovementOfGoodsModule),
       },
-      // {
-      //   path: 'warehouses',
-      //   loadChildren: () => import('./warehouses/warehouses.module').then(m => m.WarehousesModule),
-      // },
+      {
+        path: 'movement-warehouses',
+        loadChildren: () => import('./movement-warehouses/movement-warehouses.module').then(m => m.MovementWarehousesModule),
+      },
     ]
   }
 ];

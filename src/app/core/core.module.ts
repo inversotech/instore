@@ -6,21 +6,18 @@ import {
     IdentityIasdLogoComponent,
 } from './';
 import {
-    NbThemeModule, NbLayoutModule, NbCardModule,
+    NbLayoutModule, NbCardModule,
     NbSidebarModule, NbMenuModule, NbUserModule, NbActionsModule,
-    NbContextMenuModule, NbDialogModule, NbIconModule, NbButtonModule, NbSelectModule, NbSpinnerModule, NbDatepickerModule, NbToastrModule,
+    NbContextMenuModule, NbDialogModule, NbIconModule, NbButtonModule, NbSelectModule, NbSpinnerModule, NbDatepickerModule, NbToastrModule, NbThemeModule,
 } from '@nebular/theme';
 
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { StateService } from './providers/state.service';
-// import { SharedModule } from '../modules/shared/shared.module';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { ChangeEnterpriseModalComponent } from './main-page/header/change-enterprise-modal/change-enterprise-modal.component';
 import { NbDateFnsDateModule } from '@nebular/date-fns';
 import { registerLocaleData } from '@angular/common';
-// import { TOKEN_OPEN_OAUTH_STORE, TOKEN_OPEN_CREDENTIALS_APP, TOKEN_OPEN_SHELL_APP_URL } from '../oauth/shared/utils';
-// import { TOKEN_OPEN_OAUTH_STORE } from '../oauth/shared/utils';
 import localePt from '@angular/common/locales/es-PE';
 import { SharedModule } from '../pages/shared/shared.module';
 import { AuthService } from './providers/auth.service';
@@ -35,10 +32,7 @@ const BASE_MODULES: any[] = [
 ];
 
 const NB_MODULES: any[] = [
-    // NbThemeModule.forRoot({ name: 'lamb-default' }),
-    // NbThemeModule.forRoot({ name: 'open-primary' }),
     // NbThemeModule.forRoot({ name: 'default' }),
-    // NbThemeModule.forRoot({ name: 'dark' }),
     NbLayoutModule,
     NbCardModule,
     NbSidebarModule.forRoot(),
@@ -74,11 +68,6 @@ const CORE_COMPONENTS: any[] = [
     ChangeEnterpriseModalComponent,
 ];
 
-const LAMB_MODULES: any[] = [
-    // LambMenuModule,
-    // LambTitleModule.forRoot({ appName: 'Lamb Compras' }),
-];
-
 const PROVIDERS: any[] = [
     // { provide: TOKEN_OPEN_CREDENTIALS_APP, useValue: environment.openClientCredentials },
 
@@ -94,7 +83,6 @@ const PROVIDERS: any[] = [
     imports: [
         ...BASE_MODULES,
         ...NB_MODULES,
-        ...LAMB_MODULES,
         // ToastrModule.forRoot(),
     ],
     exports: [

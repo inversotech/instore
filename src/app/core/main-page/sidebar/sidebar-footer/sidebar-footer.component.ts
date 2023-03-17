@@ -25,7 +25,7 @@ export class SidebarFooterComponent implements OnInit {
     return new Date().getFullYear();
   }
   get devTeam() {
-    return 'OPEN';
+    return 'vOpen';
   }
 
   get version() {
