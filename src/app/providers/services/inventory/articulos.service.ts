@@ -11,7 +11,7 @@ export class ArticulosService extends EntityDataService<any> {
     }
 
     public addImport$(entity: any): Observable<any> {
-        return this.httpClient.post<any>(`${this.endPoint}/import`, entity);
+        return this.httpClient.post<any>(`${this.endPoint}-import`, entity);
     }
 
     public getItems$(params: any): Observable<any> {

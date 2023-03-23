@@ -1,4 +1,5 @@
 import {
+  HttpErrorResponse,
   HttpEvent, HttpHandler, HttpInterceptor,
   HttpRequest, HttpResponse,
 } from '@angular/common/http';
@@ -6,6 +7,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { NbToastrService } from '@nebular/theme';
+import { Router } from '@angular/router';
 
 export const statusCodes = [400, 500, 403, 404, 202, 422];
 
@@ -13,7 +15,8 @@ export const statusCodes = [400, 500, 403, 404, 202, 422];
 export class CatchInterceptorService implements HttpInterceptor {
   private started: any;
 
-  constructor(private toastrService: NbToastrService) { }
+  constructor(private toastrService: NbToastrService,
+    private router: Router) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.started = Date.now();
@@ -31,11 +34,11 @@ export class CatchInterceptorService implements HttpInterceptor {
       //             if (req.method === 'GET') {
       //                 this.showErrors(err);
       //             } else {
-      //                 this.showErrosDefaults(err);
+      //                 this.showErros(err);
       //             }
       //             break;
       //         default:
-      //             this.showErrosDefaults(err);
+      //             this.showErros(err);
       //             break;
       //     }
       //     return throwError(err);
@@ -70,23 +73,86 @@ export class CatchInterceptorService implements HttpInterceptor {
   }
 
   private catchError(err: any, req: any) {
-    console.log('err---');
-    console.log(err);
+    if (err instanceof HttpErrorResponse) {
+      this.catchHttpError(err);
+    } else {
+      console.error(err.message);
+    }
+    setTimeout(() => {
+      this.showErros(err);
+    }, 0);
 
+
+    // switch (err.status) {
+    //   case 422:
+    //     if (req.method === 'GET') {
+    //       this.showErrors(err);
+    //     } else {
+    //       this.showErros(err);
+    //     }
+    //     break;
+    //   default:
+    //     this.showErros(err);
+    //     break;
+    // }
+    // return throwError(err);
+  }
+
+  private catchHttpError(err: HttpErrorResponse) {
     switch (err.status) {
-      case 422:
-        if (req.method === 'GET') {
-          this.showErrors(err);
-        } else {
-          this.showErrosDefaults(err);
-        }
+      // case 422:
+      //     // if (req.method === 'GET') {
+      //     //     this.showErrors(err);
+      //     // } else {
+      //     this.showErros(err);
+      //     // }
+      //     break;
+      case 401:
+        this.catchUnauthorized();
+        break;
+      case 403:
+        this.manageError403(err);
         break;
       default:
-        this.showErrosDefaults(err);
+        console.warn(err.statusText);
         break;
     }
-    return throwError(err);
   }
+
+  private manageError403(err: HttpErrorResponse) {
+    if (err.error && err.error.error && err.error.error.email_notverified) {
+      console.log('send-email-verify-page');
+      this.router.navigate(['/pages/extra/send-email-verify-page'])
+    }
+    if (err.error.error && err.error.error.user_notactived) {
+      console.log('send-email-desactive-page');
+      this.router.navigate(['/pages/extra/user-desactive-page'])
+    }
+    if (err.error.error && err.error.error.email_notcompany) {
+      console.log('send-email-uncompany-page');
+      this.router.navigate(['/pages/extra/user-uncompany-page'])
+    }
+  }
+
+  private catchUnauthorized() {
+    this.cleanAuthData();
+    this.setRedirectUrl();
+    this.navigateToLogin();
+  }
+
+  private cleanAuthData() {
+    // this.openOAuthStoreService.clearAll();
+  }
+
+  private setRedirectUrl() {
+    // Esto es temporal en la realidad debe de pedir un accesToken no un Code Authorization
+    // this.oauthLambService.getAccessToken();
+  }
+
+  private navigateToLogin() {
+    this.router.navigateByUrl('/oauth');
+  }
+
 
   private capitalize(text: string) {
     return text && text.length
@@ -94,7 +160,7 @@ export class CatchInterceptorService implements HttpInterceptor {
       : text;
   }
 
-  private showErrosDefaults(err: any) {
+  private showErros(err: any) {
     if (statusCodes.includes(err.status)) {
       if (err.error && err.error.errors !== undefined) { // Es un error de validación
         const errors = Object.keys(err.error.errors).map(key => ({ key, errs: err.error.errors[key] }));
@@ -120,14 +186,14 @@ export class CatchInterceptorService implements HttpInterceptor {
     }
   }
 
-  private showErrors(e: any) {
-    const errors = e.error.data;
-    for (const iterator in errors) {
-      for (const err of errors[iterator]) {
-        this.toast(`${e.status} ${e.statusText}`, err);
-      }
-    }
-  }
+  // private showErrors(e: any) {
+  //   const errors = e.error.data;
+  //   for (const iterator in errors) {
+  //     for (const err of errors[iterator]) {
+  //       this.toast(`${e.status} ${e.statusText}`, err);
+  //     }
+  //   }
+  // }
 
   private toast(msg: any, title: any, status = "danger") {
     return this.toastrService.show(msg, title, { icon: 'alert-circle-outline', status: status });
