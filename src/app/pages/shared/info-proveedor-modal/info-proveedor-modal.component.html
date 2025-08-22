@@ -1,0 +1,47 @@
+<nb-card [accent]="proveedorStatus" [nbSpinner]="loadingMoreInfoProveedor">
+  <nb-card-header style="display: flex;justify-content: space-between;">
+    <div></div>
+    <div class="text-center" style="font-size: large; font-weight: 900;">
+      Más información
+    </div>
+    <div>
+      <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer; margin-left: 1rem"></nb-icon>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <table class="table table-sm">
+      <tbody>
+
+        <tr>
+          <td class="text-end">RUC</td>
+          <th colspan="3">{{ contribuyente?.ruc_id }}</th>
+        </tr>
+        <tr>
+          <td class="text-end">Razón social</td>
+          <th>{{ contribuyente?.razon_social }}</th>
+          <td class="text-end">Nombre comercial</td>
+          <th>{{ contribuyente?.nombre_comercial }}</th>
+        </tr>
+        <tr>
+          <td class="text-end">Dirección</td>
+          <th colspan="3">{{ contribuyente?.direccion }}</th>
+        </tr>
+        <tr>
+          <td class="text-end">Condición</td>
+          <th>{{ contribuyente?.tipo_condicion_nombre }}</th>
+          <td class="text-end">Estado</td>
+          <th>{{ contribuyente?.tipo_estado_nombre }}</th>
+        </tr>
+        <tr>
+          <td class="text-end">Tipo</td>
+          <th>{{ contribuyente?.tipo_actividadeconomica_ciiu4 }} - {{ contribuyente?.tipo_actividadeconomica_nombre }}</th>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-end mb-2 text-info">
+      <small>
+        Información actualizada al {{ contribuyente?.fecha_sunat_validate | date: "medium" }}
+      </small>
+    </div>
+  </nb-card-body>
+</nb-card>

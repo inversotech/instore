@@ -1,10 +1,10 @@
 {
-  "name": "open-inventory-src",
+  "name": "open-sales-src",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "./node_modules/@angular/cli/bin/ng.js serve",
-    "build": "ng build --configuration=production --base-href /inventory/ --output-path /Users/vitmaraliaga/develop/vopen/dists/open-inventory-dist/dist",
+    "build": "ng build --configuration=production --base-href /sales/ --output-path /Users/vitmaraliaga/develop/vopen/dists/open-sales-dist/dist",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

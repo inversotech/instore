@@ -1,0 +1,267 @@
+<nb-card>
+  <nb-card-header>
+    <div style="line-height: 1rem">
+      <div class="row">
+        <div class="col-auto">
+          <div>REPORTE - VENTAS</div>
+          <div class="fw-light" style="opacity: 0.7;">Reporte de ventas realizadas.</div>
+        </div>
+      </div>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="row" [nbSpinner]="loading" nbSpinnerStatus="primary">
+      <div class="col-12">
+        <form [formGroup]="filterForm">
+          <div class="row mb-3">
+            <div class="col-2">
+              <label for="text_search" class="label">Almacenes</label>
+              <nb-select multiple placeholder="Seleccione" fullWidth size="small" formControlName="ids_almacen">
+                <nb-option value="" disabled> -Seleccionar- </nb-option>
+                <nb-option *ngFor="let item of misAlmacenes" [value]="item.id_almacen">{{ item.almacen_nombre
+                  }}</nb-option>
+              </nb-select>
+            </div>
+            <div class="col-2">
+              <label for="text_search" class="label">Año</label>
+              <nb-select placeholder="Seleccione" fullWidth size="small" formControlName="id_anho">
+                <nb-option value="" disabled> -Seleccionar- </nb-option>
+                <nb-option *ngFor="let item of anhos" [value]="item.id_anho">{{ item.id_anho }}</nb-option>
+              </nb-select>
+            </div>
+            <div class="col-2">
+              <label for="text_search" class="label">Mes</label>
+              <div>
+                <nb-select placeholder="Seleccione" fullWidth size="small" formControlName="id_mes">
+                  <nb-option value="" disabled> -Seleccionar- </nb-option>
+                  <nb-option *ngFor="let item of meses" [value]="item.id_mes">{{ item.nombre }}</nb-option>
+                </nb-select>
+              </div>
+            </div>
+            <!-- <div class="col-md-2">
+              <label for="id_voucher" class="label">Voucher</label>
+              <nb-select placeholder="Seleccionar voucher" fullWidth [size]="'small'" formControlName="id_voucher"
+                id="id_voucher">
+                <nb-option value="-1">-Seleccione-</nb-option>
+                <nb-option style="line-height: 1rem;" *ngFor="let item of vouchers" [value]="item.id_voucher">
+                  <table>
+                    <tr>
+                      <td>
+                        <div>{{item?.id_empresa+':'+item?.id_empresa_sucursal+'-['+item?.id_tipo_asiento+item?.numero+']-'+item?.fecha }}
+                        </div>
+                        <small>({{ item.user_email }})
+                        </small>
+                      </td>
+                    </tr>
+                  </table>
+                </nb-option>
+              </nb-select>
+            </div> -->
+
+            <!-- <div class="col-2">
+              <label class="label">Usuario</label>
+              <div>
+                <nb-form-field>
+                  <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+                  <input autocomplete="off" [status]="filterForm.controls['search_user'].errors ? 'danger' : 'basic'"
+                    type="search" name="search_user" id="search_user" formControlName="search_user" fullWidth
+                    fieldSize="small" nbInput [nbAutocomplete]="autoControlUser" placeholder="Buscar usuario" />
+                </nb-form-field>
+
+                <nb-autocomplete #autoControlUser [activeFirst]="true" [handleDisplayFn]="viewHandleUser.bind(this)"
+                  (selectedChange)="selectedChangeUser($event)">
+                  <nb-option *ngFor="let item of filteredUser$ | async" [value]="item">
+                    <table>
+                      <tr>
+                        <td>
+                          <nb-icon icon="person-outline" status="basic" pack="eva">
+                          </nb-icon>
+                          &nbsp;
+                        </td>
+                        <td>
+                          <div>
+                            <span>{{ item.email }}</span>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </nb-option>
+                </nb-autocomplete>
+              </div>
+            </div> -->
+            <div class="col">
+              <label for="text_search" class="label">Buscar</label>
+              <nb-form-field>
+                <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+                <input formControlName="text_search" type="search" placeholder="Buscar" nbInput fullWidth shape="round"
+                  fieldSize="small">
+              </nb-form-field>
+            </div>
+            <div class="col-auto">
+              <label for="" class="label" style="visibility: hidden;">.</label>
+              <div>
+                <button nbButton type="button" size="small" class="me-1" (click)="onBuscar()">
+                  <nb-icon nbPrefix icon="search-outline" status="info" pack="eva"></nb-icon>
+                  Buscar
+                </button>
+                <!--               <button nbButton type="button" status="primary" size="small" (click)="onGoToNew()">
+                <nb-icon nbPrefix icon="plus-outline" pack="eva"></nb-icon>
+                Nuevo
+              </button> -->
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="table-responsive">
+          <table class="table table-sm tabla-bordered table-hover">
+            <thead>
+              <tr>
+                <th class="text-nowrap" rowspan="2">N°</th>
+                <th class="text-nowrap" rowspan="2">USUARIO</th>
+                <th class="text-nowrap" rowspan="2">FECHA</th>
+                <th class="text-nowrap" rowspan="2">TIPO</th>
+                <th class="text-nowrap" rowspan="2">SERIE</th>
+                <th class="text-nowrap" rowspan="2">NÚMERO</th>
+                <th colspan="3" class="text-nowrap text-center">CLIENTE</th>
+                <th rowspan="2" class="text-nowrap text-end">GRAVADA</th>
+                <th rowspan="2" class="text-nowrap text-end">INAFECTA</th>
+                <th rowspan="2" class="text-nowrap text-end">EXONERADA</th>
+                <th rowspan="2" class="text-nowrap text-end">EXPORTACION</th>
+                <th rowspan="2" class="text-nowrap text-end">IGV</th>
+                <th rowspan="2" class="text-nowrap text-end">DESCUENTO</th>
+                <th rowspan="2" class="text-nowrap text-end">TOTAL</th>
+                <th rowspan="2" class="text-nowrap text-center">ESTADO</th>
+                <!-- <th rowspan="2" class="text-nowrap text-center">ESTADO F.E.</th> -->
+                <th rowspan="2" class="text-nowrap text-center">ACCIONES</th>
+              </tr>
+              <tr>
+                <th class="text-nowrap">TIPO</th>
+                <th class="text-nowrap">NÚMERO</th>
+                <th class="text-nowrap">RAZÓN SOCIAL</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="ventas.length>0; else emptyList">
+              <ng-container *ngFor="let item of ventas | paginate: { id: 'fmrPaginate',
+                itemsPerPage: paginate?.pageSize,
+                currentPage: paginate?.currentPage,
+                totalItems: paginate?.totalItems}; let i=index">
+                <tr style="border-width: 1px 0;">
+                  <td class="text-nowrap text-start">{{ item.rn }}</td>
+                  <td class="text-nowrap text-start">{{ item.user_created_email }}</td>
+                  <td class="text-nowrap text-start">{{ item.fecha_emision | date : 'dd/MM/yyyy HH:mm' }}</td>
+                  <td class="text-nowrap text-start">{{ item.id_tipo_comprobante }}</td>
+                  <td class="text-nowrap text-start">{{ item.serie }}</td>
+                  <td class="text-nowrap text-start">{{ item.numero }}</td>
+                  <td class="text-nowrap text-start">{{ item.id_tipo_documento_cli }}</td>
+                  <td class="text-nowrap text-start">{{ item.num_doc_cli }}</td>
+                  <td class="text-nowrap text-start">{{ item.razon_social_cli }}</td>
+                  <td class="text-nowrap text-end">{{ item.bi_gravada | number : '1.2-2' }}</td>
+                  <td class="text-nowrap text-end">{{ item.mto_inafecto | number : '1.2-2' }}</td>
+                  <td class="text-nowrap text-end">{{ item.mto_exonerado | number : '1.2-2' }}</td>
+                  <td class="text-nowrap text-end">{{ item.valor_exportacion | number : '1.2-2' }}</td>
+                  <td class="text-nowrap text-end">{{ item.igv | number : '1.2-2' }}</td>
+                  <td class="text-nowrap text-end">{{ item.descuento_bi | number : '1.2-2' }}</td>
+                  <td class="text-nowrap text-end">{{ item.importe | number : '1.2-2' }}</td>
+                  <td class="text-nowrap text-center align-middle">
+                    <nb-tag size="tiny" [text]="item.estado_descripcion" [status]="tagEstado(item)" class="paso-estado"
+                      [nbTooltip]="item.estado_descripcion"></nb-tag>
+                  </td>
+                  <!-- <td class="text-center align-middle">
+                    <nb-tag *ngIf="item.estado_facturacion == 'ER'" size="tiny" [text]="item.estado_descripcion_fe"
+                      status="danger" class="paso-estado" [nbTooltip]="item.estado_descripcion_fe"></nb-tag>
+                    <span *ngIf="item.estado_facturacion != 'ER'">{{item.estado_descripcion_fe}}</span>
+                  </td> -->
+                  <td class="text-nowrap text-center align-middle">
+                    <button nbButton size="tiny" status="primary" class="ml-1 me-1" [nbPopover]="templateRefActions"
+                      nbPopoverPlacement="left" [nbPopoverContext]="item" *ngIf="item.id_venta">
+                      <nb-icon icon="more-vertical-outline" nbTooltip="Mas acciones" nbTooltipStatus="primary">
+                      </nb-icon>
+                      Más
+                    </button>
+
+                    <!-- <button nbButton size="tiny" status="danger" class="ml-1" nbTooltip="Eliminar venta"
+                    *ngIf="item.id_venta && item.estado == 1" (click)="onAnular(item.id_venta)">
+                    <nb-icon icon="trash-2-outline">
+                    </nb-icon>
+                  </button> -->
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <pagination-controls class="lamb-pagination" id="fmrPaginate" (pageChange)="pageChanged($event)"
+              (pageBoundsCorrection)="pageChanged($event)" [maxSize]="paginationControls.maxSize"
+              [directionLinks]="paginationControls.directionLinks" [responsive]="paginationControls.responsive"
+              previousLabel="ANTERIOR" nextLabel="SIGUIENTE" [autoHide]="paginationControls.autoHide"
+              screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page"
+              screenReaderCurrentLabel="Estás en la página">
+            </pagination-controls>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #emptyList>
+      <tbody>
+        <tr>
+          <td colspan="18" class="text-center"><span i18n class="label">No hay
+              registros para mostrar.</span></td>
+        </tr>
+      </tbody>
+    </ng-template>
+
+
+    <ng-template #templateRefActions let-data class="dlp">
+      <nb-card class="mb-0">
+        <nb-card-header class="text-center">Acciones</nb-card-header>
+        <nb-list>
+          <!--                 <nb-list-item>
+                        <button *ngIf="saleDetail.id_venta && saleDetail.activo == 'S'  && acctions.canAnular "
+                                nbButton fullWidth class="align-content-between" size="tiny"
+                                (click)="onActionProcess({codigo:'REFUSE'},saleDetail)"
+                                i18n-nbTooltip nbTooltip="Anular">
+                          <nb-icon icon="file-outline"></nb-icon>
+                          Anular
+                        </button>
+                      </nb-list-item> -->
+          <!-- <nb-list-item *ngIf="data.estado == 1">
+            <button nbButton fullWidth class=" align-content-between" size="tiny"
+              (click)="onActionProcess({codigo:'SEATS'},data)" i18n-nbTooltip nbTooltip="Regenerar asientos">
+              <nb-icon icon="file-outline"></nb-icon>
+              Regenerar asientos (Regularizar movimientos)
+            </button>
+          </nb-list-item> -->
+
+          <!--                       <nb-list-item *ngIf="data.estado == 1">
+                        <button *ngIf="data.id_venta && (data.activo == 'S' || data.activo == '1')"
+                                nbButton fullWidth class="align-content-between" size="tiny"
+                                (click)="onActionProcess({codigo:'GUIA'},data)"
+                                i18n-nbTooltip nbTooltip="Emitir Guía de Remisión Remitente">
+                          <nb-icon icon="file-outline"></nb-icon>
+                          GUIA DE REMISIÓN
+                        </button>
+                      </nb-list-item> -->
+
+          <nb-list-item *ngIf="data.estado == 1">
+            <button nbButton status="danger" fullWidth size="tiny" (click)="anularVenta(data)" nbTooltip="Anular">
+              <nb-icon icon="file-outline"></nb-icon>
+              Anular
+            </button>
+          </nb-list-item>
+
+          <!-- <nb-list-item *ngFor="let doc of data.outputDocuments">
+            <button [nbSpinner]="doc.loading" nbSpinnerSize="tiny" nbSpinnerStatus="primary" nbButton fullWidth
+              size="tiny" (click)="onActionProcess(doc,data)" i18n [nbTooltip]="doc.nombre">
+              <nb-icon [icon]="doc.icon || 'file-outline'"></nb-icon>
+              {{doc.nombre}}
+            </button>
+          </nb-list-item> -->
+        </nb-list>
+      </nb-card>
+    </ng-template>
+
+
+  </nb-card-body>
+</nb-card>

@@ -1,3 +1,29 @@
+<nb-card class="mb-1">
+  <!-- <nb-card-header>
+  </nb-card-header> -->
+  <nb-card-body>
+    <div class="row">
+      <div class="col-md-12 mt-2 mb-2">
+        <button nbButton nbTooltip="Agregar ingresos o salida" class="me-1" type="button" status="primary" size="small"
+          (click)="onRegistrarNuevoRecei()">
+          <nb-icon icon="plus-outline"></nb-icon>
+          Ingreso
+        </button>
+        <button nbButton nbTooltip="Agregar ingresos o salida" class="me-1" type="button" status="primary" size="small"
+          (click)="onRegistrarNuevoDepar()">
+          <nb-icon icon="plus-outline"></nb-icon>
+          Salida
+        </button>
+        <button nbButton nbTooltip="Agregar movimiento entre almacenes" class="me-1" type="button" status="primary"
+          size="small" (click)="onRegistrarNuevoBw()">
+          <nb-icon icon="plus-outline"></nb-icon>
+          Entre almacenes
+        </button>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>
+
 <nb-card accent="primary">
   <nb-card-header>
 
@@ -10,7 +36,7 @@
           <td>
             <div>
               <span i18n>
-                INGRESOS Y SALIDAS 
+                INGRESOS Y SALIDAS
               </span>
             </div>
             <div class="fw-light">Lista y generación de movimientos de ingreso y salida</div>
@@ -47,14 +73,14 @@
             <nb-option style="line-height: 1rem;" *ngFor="let item of vouchers" [value]="item.voucher_id">
               <table>
                 <tr>
-                    <td>
-                        <div>{{item?.empresa_id+'-'+item?.empresa_sucursal_id+'-['+item?.numero+']-'+item?.fecha }}
-                        </div>
-                        <small>({{ item.user_email }})
-                        </small>
-                    </td>
+                  <td>
+                    <div>{{item?.empresa_id+'-'+item?.empresa_sucursal_id+'-['+item?.numero+']-'+item?.fecha }}
+                    </div>
+                    <small>({{ item.user_email }})
+                    </small>
+                  </td>
                 </tr>
-            </table>
+              </table>
 
             </nb-option>
           </nb-select>
@@ -74,10 +100,7 @@
               <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
               Buscar
             </button>
-            <button nbButton class="me-1" type="button" status="primary" size="small" (click)="onRegistrarNuevo()">
-              <nb-icon icon="plus-outline"></nb-icon>
-              Agregar
-            </button>
+
             <!-- <button nbButton class="me-1" type="button" status="primary" size="small" (click)="onRegistrarNuevo()">
               <nb-icon icon="plus-outline"></nb-icon>
               Agregar Salida
@@ -86,7 +109,6 @@
         </div>
       </div>
     </form>
-
     <br>
     <div class="row" [nbSpinner]="loadingSpinner" nbSpinnerStatus="primary">
       <div class="col-md-12">
@@ -129,6 +151,8 @@
               </td>
               <td>
                 <div class="d-flex">
+                  <nb-icon *ngIf="item.almacen_destino_id || item.parent_id" class="fs-6 me-1" status="basic"
+                    icon="flip-2-outline" nbTooltip="Movimiento entre almacenes"></nb-icon>
                   <span *ngIf="item.tipo_movimiento === 'I'" class="text-success fw-bold">INGRESO</span>
                   <span *ngIf="item.tipo_movimiento === 'S'" class="text-danger fw-bold">SALIDA</span>
                 </div>
@@ -153,7 +177,7 @@
                   <nb-icon status="success" icon="done-all-outline"></nb-icon>
                   Finalizado
                 </div>
-                
+
                 <div *ngIf="!item.finalizado">
                   <nb-icon status="warning" icon="done-all-outline"></nb-icon>
                   Pendiente
@@ -163,7 +187,7 @@
 
 
 
-                <button nbButton class="me-1" size="small" nbTooltip="Ver" (click)="onManage(item)">
+                <button nbButton class="me-1" size="small" nbTooltip="Ver" (click)="onEditar(item)">
                   <nb-icon status="info" icon="expand-outline"></nb-icon>
                 </button>
 

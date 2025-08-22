@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "open-inventory-src": {
+    "open-sales-src": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/open-inventory-src",
+            "outputPath": "dist/open-sales-src",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -39,7 +39,6 @@
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/@nebular/theme/styles/prebuilt/default.css",
               "src/app/core/theme/styles.scss"
             ],
             "scripts": []
@@ -89,10 +88,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "open-inventory-src:build:production"
+              "browserTarget": "open-sales-src:build:production"
             },
             "development": {
-              "browserTarget": "open-inventory-src:build:development"
+              "browserTarget": "open-sales-src:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -100,7 +99,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "open-inventory-src:build"
+            "browserTarget": "open-sales-src:build"
           }
         },
         "test": {

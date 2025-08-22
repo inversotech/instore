@@ -10,11 +10,30 @@ export class MovimientosService extends EntityDataService<any> {
         super(httpClient, `${environment.apiUrls.openAccounting}/api/movimientos`);
     }
 
+    public addIngreso$(data: any): Observable<any> {
+        return this.httpClient.post<any>(`${this.endPoint}/ingreso`, data);
+    }
+
+    public addSalida$(data: any): Observable<any> {
+        return this.httpClient.post<any>(`${this.endPoint}/salida`, data);
+    }
+
+    public updateIngreso$(movimientoId: any, data: any): Observable<any> {
+        return this.httpClient.put<any>(`${this.endPoint}/ingreso/${movimientoId}`, data);
+    }
+
+    public updateSalida$(movimientoId: any, data: any): Observable<any> {
+        return this.httpClient.put<any>(`${this.endPoint}/salida/${movimientoId}`, data);
+    }
+
     public addBetweenWarehouses$(data: any): Observable<any> {
         return this.httpClient.post<any>(`${this.endPoint}/between-warehouses`, data);
     }
 
-   
+    public updateBetweenWarehouses$(movimientoId: any, data: any): Observable<any> {
+        return this.httpClient.put<any>(`${this.endPoint}/between-warehouses/${movimientoId}`, data);
+    }
+
     public finalizeBetweenWarehouses$(movimientoId: any, data: any): Observable<any> {
         return this.httpClient.post<any>(`${this.endPoint}/between-warehouses/${movimientoId}/finalize`, data);
     }

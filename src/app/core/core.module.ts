@@ -86,7 +86,6 @@ const PROVIDERS: any[] = [
         // ToastrModule.forRoot(),
     ],
     exports: [
-        // ...NB_MODULES,
         HeaderComponent,
         MainPageComponent,
     ],
@@ -95,9 +94,6 @@ const PROVIDERS: any[] = [
     ],
     providers: [
         ...PROVIDERS,
-    ],
-    entryComponents: [
-        // ChangeEnterpriseModalComponent,
     ],
 })
 export class CoreModule { }

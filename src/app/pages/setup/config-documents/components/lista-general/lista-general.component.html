@@ -1,0 +1,114 @@
+<nb-card>
+  <nb-card-header>
+
+    <div style="line-height: 1rem;">
+      <table>
+        <tr>
+          <td>
+            <nb-icon status="primary" style="font-size: 1.6rem;" icon="settings-outline" pack="eva"></nb-icon> &nbsp;
+          </td>
+          <td class="border-start ps-2">
+            <div>
+              <span i18n>
+                ASIGNACIÓN DE DOCUMENTOS PARA VENTAS
+              </span>
+            </div>
+            <div class="fw-light">Asignación de documentos para el emisión de ventas</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+  </nb-card-header>
+  <nb-card-body>
+    <form [formGroup]="searchForm" (ngSubmit)="submitFormSearch()">
+
+      <div class="row g-1">
+        <div class="col-md-3">
+          <label for="id_empresa" class="label form-label">Empresa</label>
+          <nb-select placeholder="Empresa" fullWidth [size]="'small'" formControlName="id_empresa" id="id_empresa">
+            <nb-option *ngFor="let item of empresas$ | async" [value]="item.id_empresa">
+              {{ item.id_empresa }} - {{ item.empresa_nombrecomercial }}</nb-option>
+          </nb-select>
+        </div>
+
+        <div class="col-md-3">
+          <label for="text_search" class="label form-label">Buscar</label>
+          <nb-form-field>
+            <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+            <input formControlName="text_search" type="search" placeholder="Buscar..." nbInput fullWidth shape="round"
+              fieldSize="small">
+          </nb-form-field>
+        </div>
+        <div class="col-md-4 mt-md-auto">
+          <button nbButton class="me-1" type="submit" status="primary" size="small">
+            <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+            Buscar
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <br>
+    <div class="row" [nbSpinner]="loadingSpinner" nbSpinnerStatus="primary">
+      <div class="col-md-12">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>N</th>
+              <th>EMPRESA</th>
+              <!-- <th>SUCURSAL</th> -->
+              <th>TIPO COMPROBANTE</th>
+              <th>NOMBRE</th>
+              <th>SERIE</th>
+              <th>SERIE REF</th>
+              <th>CONTADOR</th>
+              <th>ASIGNADO</th>
+              <th class="text-center">ACCIONES</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="documentos.length > 0; else emptyList">
+            <tr *ngFor="let item of documentos; let i=index" [ngClass]="{'fw-bold': item.id_assigned}">
+              <td> {{ (i+1) }} </td>
+              <td> {{ item.id_empresa }}-{{ item.empresa_nombrecomercial }}</td>
+              <td> {{ item.id_tipo_comprobante }}-{{ item.tipo_comprobante_siglas }} </td>
+              <td> {{ item.nombre }}</td>
+              <td> {{ item.serie }}</td>
+              <td> {{ item.parent_serie }}</td>
+              <td> {{ item.contador }}</td>
+              <td style="position: absolute;" class="text-center">
+                <span *ngIf="item.id_assigned" class="text-success fw-bold">
+                  <nb-icon icon="done-all-outline" status="success" pack="eva"></nb-icon>
+                  Asignado
+                </span>
+                <span *ngIf="!item.id_assigned" class="">Desasignado</span>
+              </td>
+              <td class="text-center">
+                <button *ngIf="!item.id_assigned" class="me-1" nbButton size="small" nbTooltip="Asignarme"
+                  (click)="onAssignMe(item)">
+                  <nb-icon icon="bookmark-outline" status="success" pack="eva"></nb-icon>
+                </button>
+                <button *ngIf="item.id_assigned" class="me-1" nbButton size="small" nbTooltip="Desasignarme"
+                  (click)="onUnassignMe(item)">
+                  <nb-icon icon="minus-outline" status="warning" pack="eva"></nb-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <ng-template #emptyList>
+      <tbody>
+        <tr>
+          <td colspan="7" class="text-center">
+            <span i18n class="label">
+              No hay registros para mostrar
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </ng-template>
+  </nb-card-body>
+</nb-card>
