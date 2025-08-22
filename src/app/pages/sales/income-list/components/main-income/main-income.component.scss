@@ -1,0 +1,8 @@
+@import 'themes';
+
+@include nb-install-component() {
+
+::ng-deep nb-select .select-button {
+    min-width: initial !important;
+  }
+}

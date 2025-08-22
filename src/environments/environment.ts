@@ -6,7 +6,8 @@ import { API } from "./vhost";
 
 export const environment = {
   production: false,
-  moduleCode: '01060000',
+  moduleCode: '01030000',
+  // moduleCode: '01030000',
   // payonline: {
   //   matricula: '22',
   //   cuotaingreso: '33',
@@ -23,9 +24,9 @@ export const environment = {
   },
   shellApp: `${window.location.origin}`,
   apiUrls: {
-    openAccounting: API.openAccounting.linux32,
-    openFacturation: API.openFacturation.linux32,
-    openMain: API.openMain.linux32,
+    openAccounting: API.openAccounting.linux175,
+    openFacturation: API.openFacturation.linux175,
+    openMain: API.openMain.linux175,
   },
 };
 

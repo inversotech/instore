@@ -5,13 +5,13 @@ import { finalize, map, takeUntil } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { ConfirmModalComponent } from 'src/app/pages/shared/components';
-import { AlmacenesService } from 'src/app/providers/services/inventory/almacenes.service';
-import { FormNuevoMovimientoModalComponent } from '../form-nuevo-movimiento-modal/form-nuevo-movimiento-modal.component';
 import { MovimientosService } from 'src/app/providers/services/inventory/movimientos.service';
 import { VouchersService } from 'src/app/providers/services/accounting/vouchers.service';
 import { AnhosService } from 'src/app/providers/services/accounting/anhos.service';
 import { MesesService } from 'src/app/providers/services/accounting/meses.service';
-// import { FormNuevoWarehouseModalComponent } from '../form-nuevo-warehouse-modal/form-nuevo-warehouse-modal.component';
+import { FormBwNuevoMovimientoModalComponent } from '../form-bw-nuevo-movimiento-modal/form-bw-nuevo-movimiento-modal.component';
+import { FormDeparNuevoMovimientoModalComponent } from '../form-depar-nuevo-movimiento-modal/form-depar-nuevo-movimiento-modal.component';
+import { FormReceiNuevoMovimientoModalComponent } from '../form-recei-nuevo-movimiento-modal/form-recei-nuevo-movimiento-modal.component';
 
 @Component({
   selector: 'open-lista-general',
@@ -240,26 +240,77 @@ export class ListaGeneralComponent implements OnInit, OnDestroy {
       });
   }
 
-  public onRegistrarNuevo() {
-    const modal = this.nbDialogService.open(FormNuevoMovimientoModalComponent);
+  public onRegistrarNuevoRecei() {
+    const modal = this.nbDialogService.open(FormReceiNuevoMovimientoModalComponent);
     modal.onClose
       .pipe(takeUntil(this.destroy$))
       .subscribe(res => {
         if (!res.cancel && res.data) {
-          this.onManage(res.data);
+          this.onManageRecei(res.data);
         }
       }, err => { });
   }
 
-  public onManage(item: any) {
+  public onRegistrarNuevoDepar() {
+    const modal = this.nbDialogService.open(FormDeparNuevoMovimientoModalComponent);
+    modal.onClose
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(res => {
+        if (!res.cancel && res.data) {
+          this.onManageDepar(res.data);
+        }
+      }, err => { });
+  }
 
-    this.router.navigate(['./', item.movimiento_id], {
+  
+  public onRegistrarNuevoBw() {
+    const modal = this.nbDialogService.open(FormBwNuevoMovimientoModalComponent);
+    modal.onClose
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(res => {
+        if (!res.cancel && res.data) {
+          this.onManageBw(res.data);
+        }
+      }, err => { });
+  }
+
+  public onEditar(item: any) {
+    if (item.almacen_destino_id) {
+      this.onManageBw(item);
+    } else {
+      if(item.tipo_movimiento === 'I') {
+        this.onManageRecei(item);
+      } else {
+        this.onManageDepar(item);
+      }
+    }
+  }
+
+  public onManageBw(item: any) {
+    this.router.navigate(['./bw', item.movimiento_id], {
       relativeTo: this.activatedRoute, queryParams: {
         text_search: this.filterForm.get('text_search')?.value,
         voucher_id: this.filterForm.get('voucher_id')?.value,
       },
     });
+  }
 
+  public onManageDepar(item: any) {
+    this.router.navigate(['./depar', item.movimiento_id], {
+      relativeTo: this.activatedRoute, queryParams: {
+        text_search: this.filterForm.get('text_search')?.value,
+        voucher_id: this.filterForm.get('voucher_id')?.value,
+      },
+    });
+  }
+
+  public onManageRecei(item: any) {
+    this.router.navigate(['./recei', item.movimiento_id], {
+      relativeTo: this.activatedRoute, queryParams: {
+        text_search: this.filterForm.get('text_search')?.value,
+        voucher_id: this.filterForm.get('voucher_id')?.value,
+      },
+    });
   }
 
   // public onManageRols(userId: any, userNombre: any) {

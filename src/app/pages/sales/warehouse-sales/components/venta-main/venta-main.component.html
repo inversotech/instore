@@ -1,0 +1,502 @@
+<nb-card class="mb-1">
+
+  <nb-card accent="primary" class="mb-0">
+    <nb-card-header>
+
+      <div style="line-height: 1rem;">
+        <table>
+          <tr>
+            <td>
+              <button nbButton type="button" size="small" class="me-1" ghost nbTooltip="Regresar" (click)="onBack()">
+                <nb-icon status="primary" style="font-size: 1.6rem;" icon="arrow-ios-back-outline" pack="eva"></nb-icon>
+                &nbsp;
+              </button>
+            </td>
+            <td>
+              <nb-icon status="primary" style="font-size: 1.6rem;" icon="book-open-outline" pack="eva"></nb-icon> &nbsp;
+            </td>
+            <td class="border-start ps-2">
+              <div>
+                <span i18n>
+                  ALMACEN PRINCIPAL
+                </span>
+              </div>
+              <div class="fw-light">Generar ventas diarias</div>
+            </td>
+            <td class="border-start ps-2">
+              <div>
+                <span i18n>
+                  VENTAS DE BODEGA
+                </span>
+              </div>
+              <div class="fw-light">Generar ventas diarias</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </nb-card-header>
+    <nb-card-body>
+      <!-- {{ documentoForm.value | json }} -->
+      <form [formGroup]="documentoForm">
+        <div class="row g-1">
+
+          <div class="col-md-3">
+            <label for="id_conta_documento" class="label">Tipo de comprobante</label>
+            <nb-select placeholder="Seleccionar tipo de comprobante" fullWidth [size]="'small'"
+              formControlName="id_conta_documento" id="id_conta_documento">
+              <nb-option value="-1">-Seleccione-</nb-option>
+              <nb-option *ngFor="let item of contaDocumentos" [value]="item.id_conta_documento"> {{
+                item.id_tipo_comprobante }}-{{ item.nombre }} ({{ item.serie }})</nb-option>
+            </nb-select>
+          </div>
+
+          <div class="col-md-3">
+            <label for="ruc" i18n class="label">
+              Documento del cliente (Ruc/Dni) </label>
+            <div>
+              <nb-form-field>
+                <!-- <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon> -->
+
+                <input #inputCliente [status]="clienteStatus" autocomplete="off" type="search" name="ruc" id="ruc"
+                  [formControl]="rucCliente" fullWidth fieldSize="small" nbInput [nbAutocomplete]="autoClienteRuc">
+                <!-- [formControl]="rucCliente" fullWidth fieldSize="small" nbInput> -->
+                <button type="button" (click)="onSearchCliente()" outline [nbSpinner]="clienteLoading"
+                  nbSpinnerStatus="primary" nbSuffix [status]="clienteStatus" type="submit" nbButton size="small"
+                  nbTooltip="Buscar">
+                  <nb-icon icon="search-outline"></nb-icon>
+                </button>
+
+              </nb-form-field>
+              <nb-autocomplete #autoClienteRuc [activeFirst]="true" [handleDisplayFn]="clienteHandle"
+                (selectedChange)="clienteSelect($event)">
+                <nb-option *ngFor="let item of filteredOptionsClientes$ | async" [value]="item">
+                  <nb-user shape="rectangle" [name]="item.numero_documento" [title]="item.razon_social"></nb-user>
+                </nb-option>
+              </nb-autocomplete>
+            </div>
+          </div>
+
+          <!-- <div class="col-md-1 mt-xxl-auto">
+            <button nbButton type="button" (click)="onSearchCliente()" class="me-1" fullWidth type="submit"
+              status="primary" size="small">
+              <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+            </button>
+          </div> -->
+
+          <div class="col-md-3">
+            <label for="cliente_razon_social" i18n class="label">
+              Ap. y nombres/Razón social del cliente
+            </label>
+            <div [nbSpinner]="clienteLoading">
+              <nb-form-field>
+                <input readonly type="text" formControlName="cliente_razon_social" name="cliente_razon_social"
+                  id="cliente_razon_social" nbInput fullWidth fieldSize="small">
+              </nb-form-field>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <label for="cliente_direccion" i18n class="label">
+              Dirección del cliente
+            </label>
+            <div [nbSpinner]="clienteLoading">
+              <nb-form-field>
+                <input type="text" formControlName="cliente_direccion" name="cliente_direccion" id="cliente_direccion"
+                  nbInput fullWidth fieldSize="small">
+              </nb-form-field>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <label for="cliente_email" i18n class="label">
+              E-mail del cliente
+            </label>
+            <div [nbSpinner]="clienteLoading">
+              <nb-form-field>
+                <input type="text" formControlName="cliente_email" name="cliente_email" id="cliente_email" nbInput
+                  fullWidth fieldSize="small">
+              </nb-form-field>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <label for="fecha_emision" i18n class="label"> Fecha emisión</label>
+            <nb-form-field>
+              <input type="text" autocomplete="off" name="fecha_emision" placeholder="00/00/0000" id="fecha_emision"
+                formControlName="fecha_emision" [nbDatepicker]="nfecha22" fullWidth fieldSize="small" nbInput>
+              <nb-icon nbSuffix icon="calendar-outline" pack="eva"></nb-icon>
+            </nb-form-field>
+            <nb-datepicker #nfecha22></nb-datepicker>
+          </div>
+
+          <div class="col-md-3">
+            <label class="label"> Tipo de transacción</label>
+            <div>
+              <nb-radio-group class="d-flex" name="es_credito" formControlName="es_credito" status="warning">
+                <!-- <nb-radio value="0"> Al contado</nb-radio>
+                <nb-radio value="1"> Al crédito (1 cuota)</nb-radio> -->
+                <nb-radio value="0"> Contado</nb-radio>
+                <nb-radio value="1"> Crédito</nb-radio>
+              </nb-radio-group>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <label for="fecha_vencimiento" i18n class="label"> Fecha vencimiento cuota</label>
+            <nb-form-field>
+              <input type="text" autocomplete="off" name="fecha_vencimiento" placeholder="00/00/0000"
+                id="fecha_vencimiento" formControlName="fecha_vencimiento" [nbDatepicker]="nfecha33" fullWidth
+                fieldSize="small" nbInput>
+              <nb-icon nbSuffix icon="calendar-outline" pack="eva"></nb-icon>
+            </nb-form-field>
+            <nb-datepicker #nfecha33></nb-datepicker>
+          </div>
+        </div>
+      </form>
+
+    </nb-card-body>
+  </nb-card>
+
+  <nb-card accent="basic" class="mb-0">
+    <nb-card-body>
+      <!-- {{ documentoDetalleForm.value | json }} -->
+      <form [formGroup]="documentoDetalleForm">
+        <div class="row g-1" [nbSpinner]="articuloAddLoading" nbSpinnerStatus="primary">
+          <div class="col-md-4 mt-2">
+            <label for="text_search" class="label">Buscar producto o servicio</label>
+            <nb-form-field>
+              <!-- <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon> -->
+              <input #inputArticulo type="search" [formControl]="articuloSearch" placeholder="Buscar..." nbInput
+                fullWidth fieldSize="small" [nbAutocomplete]="autoSearchArticulo">
+
+              <button type="button" (click)="onSearchArticulo()" outline [nbSpinner]="articuloSearchLoading"
+                nbSpinnerStatus="primary" nbSuffix [status]="articuloStatus" type="submit" nbButton size="small"
+                nbTooltip="Buscar">
+                <nb-icon icon="search-outline"></nb-icon>
+              </button>
+
+            </nb-form-field>
+
+            <nb-autocomplete #autoSearchArticulo [activeFirst]="true" [handleDisplayFn]="articuloHandle"
+              (selectedChange)="articuloSelect($event)">
+              <nb-option *ngFor="let item of filteredOptionsArticulo$ | async" [value]="item">
+                <nb-user shape="rectangle" [name]="item.articulo_nombre" [title]="item.codigo_almacen"></nb-user>
+              </nb-option>
+            </nb-autocomplete>
+
+          </div>
+          <div class="col-md-1 mt-2">
+            <label class="label">Stock</label>
+            <input type="number" formControlName="stock_actual" readonly placeholder="00.00" nbInput fullWidth
+              fieldSize="small">
+          </div>
+          <div class="col-md-2 mt-2">
+            <label class="label">Precio</label>
+            <input type="number" formControlName="precio_inicial" placeholder="00.00" nbInput fullWidth
+              fieldSize="small">
+          </div>
+          <div class="col-md-1 mt-2">
+            <label class="label">Cantidad</label>
+            <input type="number" formControlName="cantidad" placeholder="00.00" nbInput fullWidth fieldSize="small">
+          </div>
+          <div class="col-md-1 mt-2">
+            <label class="label">Descuento</label>
+            <input type="number" formControlName="descuento_total_item" placeholder="00.00" nbInput fullWidth
+              fieldSize="small">
+          </div>
+          <div class="col-md-3 mt-md-auto gap-1">
+            <button nbButton class="me-1" type="button" (click)="submitDocumentoDetalle()" status="primary"
+              size="small">
+              <nb-icon nbPrefix icon="shopping-cart-outline" pack="eva"></nb-icon>
+              Agregar
+            </button>
+            <button nbButton class="me-1" type="button" (click)="onActualizarDetalle()" outline status="basic"
+              size="small" nbTooltip="Actualizar">
+              <nb-icon nbPrefix icon="refresh-outline" pack="eva"></nb-icon>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <div class="row g-1" [nbSpinner]="loadingSpinner" nbSpinnerStatus="primary">
+        <div class="col-md-12 mt-2">
+          <table class="table table-bordered table-sm mb-0">
+            <thead>
+              <tr class="text-center">
+                <th>N</th>
+                <th>PRODUCTO/SERVICIO</th>
+                <th>CANTIDAD</th>
+                <th>PRECIO UNITARIO</th>
+                <th>B.I.</th>
+                <th>I.G.V</th>
+                <th>DESCUENTO</th>
+                <th>SUBTOTAL</th>
+                <th>ACCIONES</th>
+              </tr>
+            </thead>
+
+            <tbody *ngIf="ventaDetalles.length > 0; else emptyList">
+              <!-- <tbody> -->
+              <tr *ngFor="let item of ventaDetalles; let i=index">
+                <td class="text-center"> {{ (i+1) }}</td>
+                <td>{{ item.detalle }}
+                  <nb-icon style="font-size: medium;" *ngIf="item.id_articulo" nbPrefix icon="checkmark-circle-outline"
+                    status="success" pack="eva" nbTooltip="ID Articulo: {{ item.id_articulo }}"></nb-icon>
+                  <span class="fst-italic">({{ item.tipo_igv_descripcion }})</span>
+                </td>
+                <td class="text-center">{{ item.cantidad }}</td>
+                <td class="text-end">{{ item.precio_inicial }}</td>
+                <td class="text-end">{{ item.valor_uni_item }}</td>
+                <td class="text-end">{{ item.igv }}</td>
+                <td class="text-end">{{ item.descuento_total_item }}</td>
+                <td class="text-end">{{ item.importe_total }}</td>
+                <td class="text-center">
+                  <button nbButton *ngIf="item.finalizado == '0'" class="me-1" size="tiny" class="me-1"
+                    nbTooltip="Eliminar" (click)="onDeleteVentaDetalle(item)">
+                    <nb-icon nbPrefix icon="trash-2-outline" status="danger" pack="eva"></nb-icon>
+                  </button>
+                  <button nbButton class="me-1" size="tiny" nbTooltip="Editar operación"
+                    (click)="onEditarOperacion(item)">
+                    <nb-icon status="info" icon="edit-outline"></nb-icon>
+                  </button>
+                </td>
+              </tr>
+
+            </tbody>
+            <tfoot>
+              <tr>
+                <th colspan="6" style="border-style: none;"></th>
+                <th class="text-end">OP. GRAVADA</th>
+                <th class="text-end">{{ ventaTotales?.bi_gravada }}</th>
+              </tr>
+              <tr>
+                <th colspan="6" style="border-style: none;"></th>
+                <th class="text-end">OP. INAFECTA</th>
+                <th class="text-end">{{ ventaTotales?.mto_inafecto }}</th>
+              </tr>
+              <tr>
+                <th colspan="6" style="border-style: none;"></th>
+                <th class="text-end">OP. EXONERADA</th>
+                <th class="text-end">{{ ventaTotales?.mto_exonerado }}</th>
+              </tr>
+              <tr>
+                <th colspan="6" style="border-style: none;"></th>
+                <th class="text-end">OP. GRATUITA</th>
+                <th class="text-end">{{ ventaTotales?.valor_op_gratuitas }}</th>
+              </tr>
+              <tr>
+                <th colspan="6" style="border-style: none;"></th>
+                <th class="text-end">BI DESCUENTO</th>
+                <th class="text-end">{{ ventaTotales?.descuento_bi }}</th>
+              </tr>
+              <tr>
+                <th colspan="6" style="border-style: none;"></th>
+                <th class="text-end">I.G.V.</th>
+                <th class="text-end">{{ ventaTotales?.igv }}</th>
+              </tr>
+              <tr>
+                <th colspan="6" style="border-style: none;"></th>
+                <th class="text-end">TOTAL</th>
+                <th class="text-end">{{ ventaTotales?.importe }}</th>
+              </tr>
+            </tfoot>
+          </table>
+
+        </div>
+      </div>
+
+      <ng-template #emptyList>
+        <tbody>
+          <tr>
+            <td colspan="9" class="text-center label">
+              No hay registros para mostrar
+            </td>
+          </tr>
+        </tbody>
+      </ng-template>
+    </nb-card-body>
+  </nb-card>
+
+  <div class="text-center g-1">
+    <nb-toggle status="warning" [formControl]="esCreditoInterno">
+      Venta al crédito (Crédito interno que se le da al cliente)
+    </nb-toggle>
+  </div>
+
+  <nb-tabset>
+    <nb-tab tabTitle="Modalidad de pago" tabIcon="bell-outline" class="p-0">
+      <nb-card class="m-0">
+        <nb-card-body>
+
+
+          <form [formGroup]="saleDepositoForm">
+
+            <div class="row g-1">
+              <!-- PAGO EFECTIVO -->
+              <div class="col-md-4">
+                <div class="mb-1 row">
+                  <label class="col-md-5 text-md-end label form-label" i18n>Pago con efectivo</label>
+                  <div class="col-md-7">
+                    <input fieldSize="small" status="primary" nbInput fullWidth class="text-end" placeholder="00.00"
+                      formControlName="efectivo">
+                  </div>
+                </div>
+                <div class="mb-1 row">
+                  <label class="col-md-5 text-md-end label form-label" i18n>Glosa adicional</label>
+                  <div class="col-md-7">
+                    <input fieldSize="small" formControlName="glosa" nbInput fullWidth class="text-start"
+                      placeholder="Glosa">
+                  </div>
+                </div>
+              </div>
+
+              <!-- PAGO YAPE -->
+              <div class="col-md-4">
+                <div class="mb-1 row">
+                  <label class="col-md-5 text-md-end label form-label" i18n>Pago con YAPE</label>
+                  <div class="col-md-7">
+                    <input fieldSize="small" status="primary" nbInput fullWidth class="text-end" placeholder="00.00"
+                      formControlName="yape">
+                  </div>
+                </div>
+                <div class="mb-1 row">
+                  <label class="col-md-5 text-md-end label form-label" i18n>Glosa adicional</label>
+                  <div class="col-md-7">
+                    <input fieldSize="small" formControlName="glosa_yape" nbInput fullWidth class="text-start"
+                      placeholder="Glosa">
+                  </div>
+                </div>
+              </div>
+
+              <!-- PAGO DEPOSITO EN CUENTA -->
+              <div class="col-md-4">
+                <div class="mb-1 row">
+                  <label class="col-md-5 text-md-end label form-label" i18n>Pago a cuenta-cte</label>
+                  <div class="col-md-7">
+                    <input fieldSize="small" status="primary" nbInput fullWidth class="text-end" placeholder="00.00"
+                      formControlName="deposito_cuenta">
+                  </div>
+                </div>
+                <div class="mb-1 row">
+                  <label class="col-md-5 text-md-end label form-label" i18n>Cuenta bancaria</label>
+                  <div class="col-md-7">
+                    <nb-select formControlName="id_ctabancaria" placeholder="Cuenta bancaria" fullWidth
+                      [size]="'small'">
+                      <nb-option *ngFor="let item of bankAccounts" [value]="item.id_ctabancaria">
+                        {{ item.nombre }} - {{ item.banco }}
+                      </nb-option>
+                    </nb-select>
+                  </div>
+                </div>
+                <div class="mb-1 row">
+                  <label class="col-md-5 text-end label form-label" i18n>Nro de operación</label>
+                  <div class="col-md-7">
+                    <input fieldSize="small" formControlName="nro_operacion_dep" nbInput fullWidth class="text-start"
+                      placeholder="####">
+                  </div>
+                </div>
+                <div class="mb-1 row">
+                  <label class="col-md-5 text-end label form-label" i18n>Fecha de
+                    operación</label>
+                  <div class="col-md-7">
+                    <nb-form-field>
+                      <input type="text" autocomplete="off" name="fecha_operacion_dep" placeholder="00/00/0000"
+                        id="fecha_operacion_dep" formControlName="fecha_operacion_dep" [nbDatepicker]="nfecha2"
+                        fullWidth fieldSize="small" nbInput>
+                      <nb-icon nbSuffix icon="calendar-outline" pack="eva"></nb-icon>
+                    </nb-form-field>
+                    <nb-datepicker #nfecha2></nb-datepicker>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PAGO TARJETA DE CREDITO -->
+              <div class="col-md-4">
+                <div class="mb-1 row">
+                  <label class="col-md-5 text-md-end label form-label" i18n>Pago con tarjeta</label>
+                  <div class="col-md-7">
+                    <input fieldSize="small" status="primary" formControlName="tarjeta" nbInput fullWidth
+                      class="text-end" placeholder="00.00">
+                  </div>
+                </div>
+                <div class="mb-1 row">
+                  <label class="col-md-5 text-md-end label form-label" i18n>Tipo de tarjeta</label>
+                  <div class="col-md-7">
+                    <nb-select formControlName="id_tipotarjeta" placeholder="Tipo de tarjeta" fullWidth
+                      [size]="'small'">
+                      <nb-option *ngFor="let item of cardTypes" [value]="item.id_tipotarjeta">{{ item.nombre }}
+                      </nb-option>
+                    </nb-select>
+                  </div>
+                </div>
+                <div class="mb-1 row">
+                  <label class="col-md-5 text-md-end label form-label" i18n>Nro de operación</label>
+                  <div class="col-md-7">
+                    <input formControlName="operacion" fieldSize="small" nbInput fullWidth placeholder="####">
+                  </div>
+                </div>
+              </div>
+
+              <!-- PAGOS ANTICIPADOS -->
+              <div class="col-md-4">
+                <div class="mb-1 row">
+                  <label class="col-md-5 text-md-end label form-label" i18n>Pagos anticipados</label>
+                  <div class="col-md-7">
+                    <button nbButton status="primary" ghost size="tiny">
+                      <nb-icon nbPrefix icon="plus-outline" pack="eva"></nb-icon>
+                      Agregar pago anticipado
+                    </button>
+                  </div>
+                </div>
+                <div class="mb-1 row">
+                  <div class="offset-md-1 col-md-11">
+                    <nb-list>
+                      <nb-list-item class="d-flex justify-content-between py-1">
+                        <small>BCP 1234 - 12/12/2020</small>
+                        <small class="fw-bold">100.00</small>
+                      </nb-list-item>
+                      <nb-list-item class="d-flex justify-content-between py-1">
+                        <small>BCP 1234 - 12/12/2020</small>
+                        <small class="fw-bold">100.00</small>
+                      </nb-list-item>
+                      <nb-list-item class="d-flex justify-content-end py-1">
+                        <small>Total anticipos: </small>
+                        <small class="fw-bold ms-2">100.00</small>
+                      </nb-list-item>
+                    </nb-list>
+                  </div>
+                </div>
+
+                <!-- <div class="mb-1 row">
+                  <label class="col-md-5 text-end label form-label" i18n>Tipo de tarjeta</label>
+                  <div class="col-md-7">
+                    <nb-select formControlName="id_tipotarjeta" placeholder="Tipo de tarjeta" fullWidth
+                      [size]="'small'">
+                      <nb-option *ngFor="let item of cardTypes" [value]="item.id_tipotarjeta">{{ item.nombre }}
+                      </nb-option>
+                    </nb-select>
+                  </div>
+                </div>
+                <div class="mb-1 row">
+                  <label class="col-md-5 text-end label form-label" i18n>Nro de operación</label>
+                  <div class="col-md-7">
+                    <input formControlName="operacion" fieldSize="small" nbInput fullWidth placeholder="####">
+                  </div>
+                </div> -->
+              </div>
+
+            </div>
+          </form>
+        </nb-card-body>
+      </nb-card>
+    </nb-tab>
+  </nb-tabset>
+
+  <div class="text-center mt-3 mb-4">
+    <button nbButton type="button" size="small" class="me-1" status="primary" nbTooltip="Fin" (click)="onFinalizar()">
+      <nb-icon nbPrefix icon="checkmark-circle-outline" pack="eva"></nb-icon>
+      FINALIZAR VENTA
+    </button>
+
+  </div>
+</nb-card>

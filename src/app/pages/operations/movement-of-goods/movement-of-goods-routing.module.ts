@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AutorizationGuardService } from 'src/app/core/providers/guards';
 import { ListaGeneralComponent } from './components';
-import { MovementMainComponent } from './components/movement-main/movement-main.component';
 import { MovementOfGoodsComponent } from './movement-of-goods.component';
 
 const routes: Routes = [
@@ -20,13 +19,17 @@ const routes: Routes = [
         path: '',
         component: ListaGeneralComponent,
       },
-      // {
-      //   path: ':producto_id/:articulo_id',
-      //   component: MainArticleComponent,
-      // },
       {
-        path: ':movimiento_id',
-        component: MovementMainComponent,
+        path: 'bw',
+        loadChildren: () => import('./bw-movements/bw-movements.module').then(m => m.BwMovementsModule)
+      },
+      {
+        path: 'depar',
+        loadChildren: () => import('./depar-movements/depar-movements.module').then(m => m.DeparMovementsModule)
+      },
+      {
+        path: 'recei',
+        loadChildren: () => import('./recei-movements/recei-movements.module').then(m => m.ReceiMovementsModule)
       },
     ],
   }

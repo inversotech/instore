@@ -1,0 +1,12 @@
+@import 'themes';
+
+nb-card-header{
+    display: flex;
+    justify-content: space-between;
+}
+
+nb-select ::ng-deep {
+    .select-button {
+        min-width: 0;
+    }
+}

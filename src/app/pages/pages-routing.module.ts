@@ -15,18 +15,26 @@ const routes: Routes = [
         path: 'dashboard',
         loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule),
       },
+      // {
+      //   path: 'inventory',
+      //   loadChildren: () => import('./inventory/inventory.module').then(m => m.InventoryModule),
+      // },
       {
-        path: 'inventory',
-        loadChildren: () => import('./inventory/inventory.module').then(m => m.InventoryModule),
+        path: 'sales',
+        loadChildren: () => import('./sales/sales.module').then(m => m.SalesModule),
       },
       {
-        path: 'operations',
-        loadChildren: () => import('./operations/operations.module').then(m => m.OperationsModule),
+        path: 'setup',
+        loadChildren: () => import('./setup/setup.module').then(m => m.SetupModule),
       },
-      {
-        path: 'reports',
-        loadChildren: () => import('./reports/reports.module').then(m => m.ReportsModule),
-      },
+      // {
+      //   path: 'operations',
+      //   loadChildren: () => import('./operations/operations.module').then(m => m.OperationsModule),
+      // },
+      // {
+      //   path: 'reports',
+      //   loadChildren: () => import('./reports/reports.module').then(m => m.ReportsModule),
+      // },
       {
         path: '',
         pathMatch: 'full',

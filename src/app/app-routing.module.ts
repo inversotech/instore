@@ -11,6 +11,11 @@ const routes: Routes = [
     redirectTo: 'pages',
     pathMatch: 'full'
   },
+  {
+    path: '**',
+    // pathMatch: 'full',
+    redirectTo: 'pages',
+  },
 ];
 
 @NgModule({

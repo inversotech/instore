@@ -7,7 +7,7 @@ import {
 import {
   NbCardModule, NbSpinnerModule, NbDialogModule,
   NbCheckboxModule, NbRadioModule, NbButtonModule, NbIconModule, NbTooltipModule,
-  NbInputModule, NbListModule, NbFormFieldModule, NbBadgeModule, NbButtonGroupModule, NbUserModule, NbSelectModule, NbTabsetModule, NbDatepickerModule, NbAutocompleteModule,
+  NbInputModule, NbListModule, NbFormFieldModule, NbBadgeModule, NbButtonGroupModule, NbUserModule, NbSelectModule, NbTabsetModule, NbDatepickerModule, NbAutocompleteModule, NbAlertModule,
 } from '@nebular/theme';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 // import { RolModulosService, RolsService } from 'src/app/providers/services';
@@ -16,9 +16,9 @@ import { SharedModule } from '../../shared/shared.module';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { MovementOfGoodsComponent } from './movement-of-goods.component';
 import { MovementOfGoodsRoutingModule } from './movement-of-goods-routing.module';
-import { FormNuevoMovimientoModalComponent } from './components/form-nuevo-movimiento-modal/form-nuevo-movimiento-modal.component';
-import { MovementMainComponent } from './components/movement-main/movement-main.component';
-import { FormUpdateMovimientoModalComponent } from './components/form-update-movimiento-modal/form-update-movimiento-modal.component';
+import { FormBwNuevoMovimientoModalComponent } from './components/form-bw-nuevo-movimiento-modal/form-bw-nuevo-movimiento-modal.component';
+import { FormDeparNuevoMovimientoModalComponent } from './components/form-depar-nuevo-movimiento-modal/form-depar-nuevo-movimiento-modal.component';
+import { FormReceiNuevoMovimientoModalComponent } from './components/form-recei-nuevo-movimiento-modal/form-recei-nuevo-movimiento-modal.component';
 
 // const SERVICES: any[] = [
 //   RolsService,
@@ -28,9 +28,9 @@ import { FormUpdateMovimientoModalComponent } from './components/form-update-mov
 const COMPONENTS: any[] = [
   MovementOfGoodsComponent,
   ListaGeneralComponent,
-  FormNuevoMovimientoModalComponent,
-  MovementMainComponent,
-  FormUpdateMovimientoModalComponent,
+  FormReceiNuevoMovimientoModalComponent,
+  FormBwNuevoMovimientoModalComponent,
+  FormDeparNuevoMovimientoModalComponent,
 ];
 
 const NB_MODULES: any[] = [
@@ -52,6 +52,7 @@ const NB_MODULES: any[] = [
   NbTabsetModule,
   NbDatepickerModule,
   NbAutocompleteModule,
+  NbAlertModule,
 ];
 
 const NG_MODULES: any[] = [

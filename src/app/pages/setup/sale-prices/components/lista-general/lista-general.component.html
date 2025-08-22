@@ -1,0 +1,117 @@
+<nb-card>
+  <nb-card-header>
+    <div class="lh-sm">
+      <table>
+        <tr>
+          <td>
+            <nb-icon status="primary" style="font-size: 1.6rem;" icon="settings-outline" pack="eva"></nb-icon> &nbsp;
+          </td>
+          <td class="border-start ps-2">
+            <div>
+              <span i18n>
+                LISTA DE PRECIOS
+              </span>
+            </div>
+            <div class="fw-light">Asignación de precios a los artículos de venta</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <!-- {{ searchForm.value | json }} -->
+    <form [formGroup]="searchForm" (ngSubmit)="submitFormSearch()">
+
+      <div class="row g-1">
+        <div class="col-md-3">
+          <label for="id_almacen" class="label form-label">Mis centros de venta</label>
+          <nb-select placeholder="Almacen" fullWidth [size]="'small'" formControlName="id_almacen" id="id_almacen">
+            <nb-option *ngFor="let item of misAlmacenes$ | async" [value]="item.id_almacen">
+              {{ item.id_almacen }} - {{ item.almacen_nombre }}</nb-option>
+          </nb-select>
+        </div>
+        <div class="col-md-3">
+          <label for="id_anho" class="label form-label">Año</label>
+          <nb-select placeholder="Año" fullWidth [size]="'small'" formControlName="id_anho" id="id_anho">
+            <nb-option *ngFor="let item of anhos$ | async" [value]="item.id_anho">
+              {{ item.id_anho }} </nb-option>
+          </nb-select>
+        </div>
+        <!-- <div class="col-md-3">
+          <label for="id_moneda" class="label form-label">Moneda</label>
+          <nb-select placeholder="Moneda" fullWidth [size]="'small'" formControlName="id_moneda" id="id_moneda">
+            <nb-option *ngFor="let item of monedas$ | async" [value]="item.id_moneda">
+              {{ item.currency }} - {{ item.currency_name }} ({{ item.country_name }})</nb-option>
+          </nb-select>
+        </div> -->
+
+        <div class="col-md-3">
+          <label for="text_search" class="label form-label">Buscar</label>
+          <nb-form-field>
+            <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+            <input formControlName="text_search" type="search" placeholder="Buscar..." nbInput fullWidth shape="round"
+              fieldSize="small">
+          </nb-form-field>
+        </div>
+        <div class="col-md-3 mt-md-auto">
+          <button nbButton class="me-1" type="submit" status="primary" size="small">
+            <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+            Buscar
+          </button>
+          <button nbButton class="me-1" type="button" (click)="onGuardarAll()" status="primary" size="small">
+            <nb-icon nbPrefix icon="save-outline" pack="eva"></nb-icon>
+            Guardar cambios
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <div class="row mt-3" [nbSpinner]="loadingSpinner" nbSpinnerStatus="primary">
+      <div class="col-md-12">
+        <table class="table table-sm table-hover">
+          <thead>
+            <tr class="text-center">
+              <th>N</th>
+              <th>ALMACÉN</th>
+              <th>AÑO</th>
+              <th>CÓDIGO-ALMACÉN</th>
+              <th>ARTÍCULO</th>
+              <th>PRECIO DE VENTA (PEN)</th>
+              <th>PRECIO DE VENTA (USD)</th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="ventaPrecios.length > 0; else emptyList">
+            <tr *ngFor="let item of ventaPrecios; let i=index" [ngClass]="{'fw-bold': item.id_assigned}">
+              <td class="text-center"> {{ (i+1) }} </td>
+              <td> {{ item.almacen_nombre }}</td>
+              <td> {{ item.id_anho }}</td>
+              <td class="fw-bold text-center"> {{ item.codigo_almacen }}</td>
+              <td> <span class="fw-bold">{{ item.nombre }}</span> - ({{ item.codigo }})</td>
+              <td>
+                <input type="text" fullWidth class="text-end" fieldSize="small" nbInput
+                  [(ngModel)]="item.precio_inicial_pen">
+              </td>
+              <td>
+                <input type="text" fullWidth class="text-end" fieldSize="small" nbInput
+                  [(ngModel)]="item.precio_inicial_usd">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <ng-template #emptyList>
+      <tbody>
+        <tr>
+          <td colspan="7" class="text-center">
+            <span i18n class="label">
+              No hay registros para mostrar
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </ng-template>
+  </nb-card-body>
+</nb-card>

@@ -1,0 +1,15 @@
+
+
+@import 'themes';
+@include nb-install-component() {
+  .status-basic:disabled, input:disabled {
+    color: inherit !important;
+    opacity: 0.8 !important;
+  }
+}
+
+
+::ng-deep nb-dialog-container{
+  width: 50rem!important;
+}
+

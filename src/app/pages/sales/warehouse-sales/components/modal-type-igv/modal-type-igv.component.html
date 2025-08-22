@@ -1,0 +1,44 @@
+<nb-card [nbSpinner]="loadingSpinner" nbSpinnerStatus="primary" lambWindow [widthSize]="'TN'">
+    <nb-card-header class="d-block">
+        <div class="text-center">
+            Actualizar el tipo de IGV
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="tipoIgvForm">
+            <div class="row">
+                <div class="col-md-12 mb-1">
+                    <label for="id_tipo_igv" class="col-form-label label required">Tipo IGV </label>
+                    <div>
+                        <nb-select [status]="f['id_tipo_igv'].errors ? 'danger' : 'basic'" size="small" fullWidth
+                            formControlName="id_tipo_igv" id="id_tipo_igv">
+                            <nb-option value=""> Seleccionar </nb-option>
+                            <nb-option *ngFor="let item of typesIgv" [value]="item.id_tipo_igv">
+                                {{ item.descripcion }}
+                            </nb-option>
+                        </nb-select>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mb-1">
+                    <label for="aplicar_detalles" class="col-form-label label required">Aplicar a todos los detalles
+                    </label>
+                    <div>
+                        <nb-toggle status="warning" formControlName="aplicar_detalles"></nb-toggle>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </nb-card-body>
+    <nb-card-footer class="text-center">
+        <button class="me-1" nbButton status="basic" size="small" (click)="onClose()">
+            <nb-icon icon="close-outline"></nb-icon>
+            Cancelar
+        </button>
+        <!-- <button class="me-1" nbButton [disabled]="tipoCambioForm.invalid" status="primary" size="small" -->
+        <button class="me-1" nbButton status="primary" size="small" (click)="onAceptar()">
+            <nb-icon icon="save-outline"></nb-icon>
+            Guardar
+        </button>
+    </nb-card-footer>
+</nb-card>

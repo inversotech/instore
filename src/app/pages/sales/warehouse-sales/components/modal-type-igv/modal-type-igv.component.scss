@@ -1,0 +1,7 @@
+@import 'themes';
+@include nb-install-component() {
+    nb-card-header{
+      display: flex;
+      justify-content: space-between;
+    }
+}

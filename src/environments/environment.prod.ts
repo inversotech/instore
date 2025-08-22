@@ -17,8 +17,8 @@ export const environment = {
   },
   shellApp: 'https://vopen.org',
   apiUrls: {
-    openAccounting: 'https://open-accounting-api.vopen.org',
-    openFacturation: 'https://open-accounting-api.vopen.org',
-    openMain: 'https://open-accounting-api.vopen.org',
+    openAccounting: 'https://vopen.org/vopen/backs/accounting',
+    openFacturation: 'https://vopen.org/vopen/backs/accounting',
+    openMain: 'https://vopen.org/vopen/backs/accounting',
   },
 };

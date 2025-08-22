@@ -8,12 +8,12 @@ const routes: Routes = [
   {
     path: '',
     component: KardexComponent,
-    data: {
+    // data: {
       // module: '01010203',
-    },
-    canActivate: [
-      AutorizationGuardService,
-    ],
+    // },
+    // canActivate: [
+    //   AutorizationGuardService,
+    // ],
     children: [
       {
         path: '',

@@ -67,8 +67,8 @@ export const config = {
                 endpoint: '/api/auth/login',
                 method: 'post',
                 redirect: {
-                    // success: '/pages/dashboard',
-                    success: '/dashboard',
+                    success: '/pages/dashboard',
+                    // success: '/dashboard',
                     failure: null,
                 },
                 defaultErrors: ['La combinación de Usuario/Contraseña no es correcta, inténtelo de nuevo.'],
