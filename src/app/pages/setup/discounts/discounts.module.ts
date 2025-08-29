@@ -19,11 +19,13 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SharedModule } from '../../shared/shared.module';
 import { FormNuevoDescuentoModalComponent } from './components/form-nuevo-descuento-modal/form-nuevo-descuento-modal.component';
+import { ListaBeneficiadosComponent } from './components/lista-beneficiados/lista-beneficiados.component';
 
 const COMPONENTS: any[] = [
   DiscountsComponent,
   ListaGeneralComponent,
-  FormNuevoDescuentoModalComponent
+  FormNuevoDescuentoModalComponent,
+  ListaBeneficiadosComponent,
 ];
 
 const NB_MODULES: any[] = [

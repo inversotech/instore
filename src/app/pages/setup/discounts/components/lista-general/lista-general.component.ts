@@ -8,6 +8,7 @@ import { AlmacenUsuariosService } from 'src/app/providers/services/inventory/alm
 import { VentaPreciosService } from 'src/app/providers/services/sales/venta-precios.service';
 import { NbDialogService } from '@nebular/theme';
 import { FormNuevoDescuentoModalComponent } from '../form-nuevo-descuento-modal/form-nuevo-descuento-modal.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'open-lista-general',
@@ -36,6 +37,8 @@ export class ListaGeneralComponent implements OnInit, OnDestroy {
     private almacenUsuariosService: AlmacenUsuariosService,
     private ventaPreciosService: VentaPreciosService,
     private nbDialogService: NbDialogService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
   ) { }
 
   ngOnInit() {
@@ -45,6 +48,10 @@ export class ListaGeneralComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  public verBeneficiados(id_descuento: any) {
+    this.router.navigate(['./', id_descuento], { relativeTo: this.activatedRoute });
   }
 
   private setDefaultValues() {
@@ -78,13 +85,13 @@ export class ListaGeneralComponent implements OnInit, OnDestroy {
   }
 
   public crearNuevoDescuento() {
-     const modal = this.nbDialogService.open(FormNuevoDescuentoModalComponent);
-        modal.onClose
-          .pipe(takeUntil(this.destroy$))
-          .subscribe(res => {
-            if (!res.cancel && res.data) {
-            }
-          }, err => { });
+    const modal = this.nbDialogService.open(FormNuevoDescuentoModalComponent);
+    modal.onClose
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(res => {
+        if (!res.cancel && res.data) {
+        }
+      }, err => { });
   }
 
   public getPrecios() {

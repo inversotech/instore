@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DiscountsComponent } from './discounts.component';
 import { ListaGeneralComponent } from './components';
+import { ListaBeneficiadosComponent } from './components/lista-beneficiados/lista-beneficiados.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,10 @@ const routes: Routes = [
         path: '',
         component: ListaGeneralComponent
       },
+      {
+        path: ':id_descuento',
+        component: ListaBeneficiadosComponent
+      }
     ],
   }
 ];
