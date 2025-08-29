@@ -89,7 +89,7 @@ export class FormNuevoDescuentoModalComponent implements OnInit, OnDestroy {
   public onSave() {
     const value = this.formularioDescuento.value;
     const invalid = this.formularioDescuento.invalid;
-
+    
     console.log(value);
     
 
