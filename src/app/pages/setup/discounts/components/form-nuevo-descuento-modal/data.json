@@ -1,0 +1,19 @@
+{
+    "almacen_id": "",
+    "nombre": "",
+    "tipo_descuento": 1,
+    "valor": "",
+    "fecha_inicio": "",
+    "fecha_fin": "",
+    "codigo_promocional": "",
+    "tipo_aplicacion": {
+        "id": 3,
+        "nombre": "Personalizado"
+    },
+    "activo": false,
+    "aplica_limite": false,
+    "monto_minimo": "",
+    "monto_maximo": "",
+    "tiene_limite": false,
+    "limite_uso": ""
+}

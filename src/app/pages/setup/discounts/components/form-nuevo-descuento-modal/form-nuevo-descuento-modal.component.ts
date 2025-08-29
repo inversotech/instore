@@ -14,17 +14,36 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./form-nuevo-descuento-modal.component.scss']
 })
 export class FormNuevoDescuentoModalComponent implements OnInit, OnDestroy {
-  aplicaSectorizado: boolean = false;
-  aplicaLimiteMonto: boolean = false;
-  tiene_limite: boolean = false;
-  limite_uso: boolean = false;
-  aplica_limite: boolean = false;
-  montoMinimo: number = 0;
-  montoMaximo: number = 0;
   private destroy$: Subject<void> = new Subject<void>();
-  public newForm: FormGroup = this.buildForm();
+  public formularioDescuento: FormGroup = this.formBuilder.group({
+    almacen_id: ['', [Validators.required]],
+    nombre: ['', [Validators.required]],
+    tipo_descuento: ['', [Validators.required]],
+    valor: ['', [Validators.required]],
+    fecha_inicio: ['', [Validators.required]],
+    fecha_fin: ['', [Validators.required]],
+    codigo_promocional: [''],
+    tipo_aplicacion: ['', [Validators.required]],
+    activo: [false, [Validators.required]],
+    aplica_limite: [false, [Validators.required]],
+    monto_minimo: ['', [Validators.required]],
+    monto_maximo: ['', [Validators.required]],
+    tiene_limite: [false, [Validators.required]],
+    limite_uso: ['', [Validators.required]],
+  });
+
   public loadingSpinnerSave: boolean = false;
   public misAlmacenes: any[] = [];
+  public tiposAplicacion = [
+    { id: 1, nombre: 'General' },
+    { id: 2, nombre: 'Sectorizado' },
+    { id: 3, nombre: 'Personalizado' }
+  ];
+  public tipoDescuento = [
+    { id: 1, nombre: 'General' },
+    { id: 2, nombre: 'Sectorizado' },
+    { id: 3, nombre: 'Personalizado' }
+  ];
 
   constructor(private dialogRef: NbDialogRef<FormNuevoDescuentoModalComponent>,
     // private almacenUsuariosService: AlmacenUsuariosService,
@@ -33,20 +52,10 @@ export class FormNuevoDescuentoModalComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
   ) { }
-tiposAplicacion = [
-  { id: 1, nombre: 'General' },
-  { id: 2, nombre: 'Sectorizado' },
-  { id: 3, nombre: 'Personalizado' }
-];
-tipoDescuento = [
-  { id: 1, nombre: 'General' },
-  { id: 2, nombre: 'Sectorizado' },
-  { id: 3, nombre: 'Personalizado' }
-];
 
 
 
-activo: boolean = true;
+  // activo: boolean = true;
   ngOnInit() {
     this.getMasters();
   }
@@ -67,18 +76,8 @@ activo: boolean = true;
     //   });
   }
 
-  private buildForm() {
-    const controls = {
-      almacen_origen_id: ['', [Validators.required]],
-      almacen_destino_id: ['', [Validators.required]],
-      fecha: [new Date(), [Validators.required]],
-      detalle: ['', [Validators.required]],
-    };
-    return this.formBuilder.group(controls);
-  }
-
   get f() {
-    return this.newForm.controls;
+    return this.formularioDescuento.controls;
   }
 
   public onClose() {
@@ -88,17 +87,22 @@ activo: boolean = true;
   }
 
   public onSave() {
-    const value = this.newForm.value;
-    const invalid = this.newForm.invalid;
-    if (invalid) return;
-    const aFecha = this.datePipe.transform(value.fecha, 'yyyy-MM-dd');
-    if (confirm('¿Estás seguro de crear el item?')) {
-      const data = {
-        almacen_origen_id: value.almacen_origen_id,
-        almacen_destino_id: value.almacen_destino_id,
-        fecha: aFecha,
-        detalle: value.detalle,
-      };
+    const value = this.formularioDescuento.value;
+    const invalid = this.formularioDescuento.invalid;
+
+    console.log(value);
+    
+
+
+    // if (invalid) return;
+    // const aFecha = this.datePipe.transform(value.fecha, 'yyyy-MM-dd');
+    // if (confirm('¿Estás seguro de crear el item?')) {
+    //   const data = {
+    //     almacen_origen_id: value.almacen_origen_id,
+    //     almacen_destino_id: value.almacen_destino_id,
+    //     fecha: aFecha,
+    //     detalle: value.detalle,
+    //   };
       // this.loadingSpinnerSave = true;
       // this.movimientosService.addBetweenWarehouses$(data)
       //   .pipe(map(res => res.data),
@@ -109,7 +113,7 @@ activo: boolean = true;
       //   }, err => {
       //     this.loadingSpinnerSave = false;
       //   });
-    }
+    // }
 
   }
 

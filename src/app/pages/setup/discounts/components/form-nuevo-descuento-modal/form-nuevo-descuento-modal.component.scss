@@ -15,14 +15,14 @@ nb-card-header{
 .label-group {
     color: nb-theme(color-primary-500);
 }
-::ng-deep .toggle-azul nb-toggle .toggle-switch {
-  background-color: #003399 !important;
-  border-color: #003399 !important;
-}
+// ::ng-deep .toggle-azul nb-toggle .toggle-switch {
+//   background-color: #003399 !important;
+//   border-color: #003399 !important;
+// }
 
-::ng-deep .toggle-azul nb-toggle .toggle-switch.checked {
-  background-color: #003399 !important;
-}
-::ng-deep .toggle-azul nb-toggle .toggle-switch:not(.checked) {
-  background-color: #e0e0e0 !important; // gris claro cuando está apagado
-}
+// ::ng-deep .toggle-azul nb-toggle .toggle-switch.checked {
+//   background-color: #003399 !important;
+// }
+// ::ng-deep .toggle-azul nb-toggle .toggle-switch:not(.checked) {
+//   background-color: #e0e0e0 !important; // gris claro cuando está apagado
+// }

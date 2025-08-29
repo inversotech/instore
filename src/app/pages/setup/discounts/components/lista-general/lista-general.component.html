@@ -81,26 +81,32 @@
               <th>ACCIONES</th>
             </tr>
           </thead>
-          
-          <tbody >
+
+          <tbody>
             <tr class="text-center">
-    <td>1</td>
-    <td>Almacén Central</td>
-    <td>Descuento de prueba</td>
-    <td>2025-08-22</td>
-    <td>2025-08-31</td>
-    <td>Todos</td>
-    <td>15</td>
-    <td>
-      <button class="btn btn-sm btn-primary" (click)="crearNuevoDescuento">Eliminar</button>
-      <button class="btn btn-sm btn-primary" (click)="crearNuevoDescuento">Editar</button>
-      
-    </td>
-  </tr>
+              <td>1</td>
+              <td>Almacén Central</td>
+              <td>Descuento de prueba</td>
+              <td>2025-08-22</td>
+              <td>2025-08-31</td>
+              <td>Todos</td>
+              <td>15</td>
+              <td>
 
+                <button nbButton class="me-1" type="button" status="primary" size="tiny">
+                  <nb-icon icon="edit-outline"></nb-icon>
+                  Editar
+                </button>
 
-            
-          <!-- <tbody *ngIf="ventaPrecios.length > 0; else emptyList"> -->
+                <button nbButton type="button" status="danger" size="tiny">
+                  <nb-icon icon="trash-outline"></nb-icon>
+                  Eliminar
+                </button>
+
+              </td>
+            </tr>
+
+            <!-- <tbody *ngIf="ventaPrecios.length > 0; else emptyList"> -->
             <!-- <tr *ngFor="let item of ventaPrecios; let i=index" [ngClass]="{'fw-bold': item.id_assigned}">
               <td class="text-center"> {{ (i+1) }} </td>
               <td> {{ item.almacen_nombre }}</td>
