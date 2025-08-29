@@ -1,0 +1,176 @@
+<nb-card [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary" status="primary">
+  <nb-card-header>
+    <div class="text-center">
+      <span i18n>
+        NUEVO DESCUENTO
+      </span>
+      <span class="font-weight-light" i18n>
+       Formulario
+      </span>
+    </div>
+    <div>
+      <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer"></nb-icon>
+    </div>
+  </nb-card-header>
+<nb-card-body>    
+    <form [formGroup]="newForm">
+<div class="row">
+  <div class="col-md-6 mb-1">
+    <label for="almacen_id" class="label required">Almacén</label>
+    <nb-select placeholder="Seleccionar" fullWidth [size]="'small'" formControlName="almacen_id" id="almacen_id">
+      <nb-option value="-1">-Seleccione-</nb-option>
+      <nb-option *ngFor="let item of misAlmacenes" [value]="item.almacen_id">
+        {{ item.almacen_nombre }}
+      </nb-option>
+    </nb-select>
+  </div>
+
+  <div class="col-md-6 mb-1">
+    <label for="nombre" class="label required">Nombre</label>
+    <nb-form-field>
+      <input type="text" name="nombre" id="nombre" formControlName="nombre"
+        placeholder="Ingrese el nombre" nbInput fullWidth>
+    </nb-form-field>
+  </div>
+</div>
+      
+
+<div class="row">
+  <div class="col-md-6 mb-1">
+    <label for="tipo_descuento" class="label required">Tipo Descuento</label>
+    <nb-select placeholder="Seleccionar" fullWidth [size]="'small'" formControlName="tipo_descuento" id="tipo_descuento">
+      <nb-option value="-1">-Seleccione-</nb-option>
+      <nb-option *ngFor="let tipo of tipoDescuento" [value]="tipo.id">
+        {{ tipo.nombre }}
+      </nb-option>
+    </nb-select>
+
+  </div>
+
+  <div class="col-md-6 mb-1">
+    <label for="valor" class="label required">Valor</label>
+    <nb-form-field>
+      <input type="text" autocomplete="off" name="valor" id="valor"
+        formControlName="valor" placeholder="G" nbInput fullWidth fieldSize="small">
+    </nb-form-field>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col-md-6 mb-1">
+        <label for="fecha_inicio" class="label required">Fecha Inicio</label>
+        <nb-form-field>
+          <input type="text" autocomplete="off" name="fecha_inicio" placeholder="00/00/0000" id="fecha_inicio"
+            formControlName="fecha_inicio" [nbDatepicker]="nfechaInicio" fullWidth fieldSize="small" nbInput>
+          <nb-icon nbSuffix icon="calendar-outline" pack="eva"></nb-icon>
+        </nb-form-field>
+        <nb-datepicker #nfechaInicio></nb-datepicker>
+      </div>
+
+      <div class="col-md-6 mb-1">
+        <label for="fecha_fin" class="label required">Fecha Fin</label>
+        <nb-form-field>
+          <input type="text" autocomplete="off" name="fecha_fin" placeholder="00/00/0000" id="fecha_fin"
+            formControlName="fecha_fin" [nbDatepicker]="nfechaFin" fullWidth fieldSize="small" nbInput>
+          <nb-icon nbSuffix icon="calendar-outline" pack="eva"></nb-icon>
+        </nb-form-field>
+        <nb-datepicker #nfechaFin></nb-datepicker>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="col-md-12 mb-1">
+      <label for="codigo_promocional">Código promocional</label>
+      <nb-form-field>
+        <input type="text" autocomplete="off" name="codigo_promocional" id="codigo_promocional"
+          formControlName="codigo_promocional" placeholder="ej:AB234" nbInput fullWidth fieldSize="small">
+      </nb-form-field>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6 mb-1">
+    <label for="tipo_aplicacion" class="label required">Tipo de aplicación</label>
+    <nb-select placeholder="Seleccionar" fullWidth [size]="'small'" formControlName="tipo_aplicacion" id="tipo_aplicacion">
+      <nb-option value="-1">-Seleccione-</nb-option>
+      <nb-option *ngFor="let tipo of tiposAplicacion" [value]="tipo.id">
+        {{ tipo.nombre }}
+      </nb-option>
+    </nb-select>
+  </div>
+
+  <div class="col-md-6 mb-1">
+    <label for="activo" class="label required">Activo</label>
+    <div style="display: flex; align-items: center; height: 38px;">
+      <nb-toggle [(ngModel)]="activo"  class="toggle-azul"></nb-toggle>
+    </div>
+  </div>
+</div>
+
+<div class="row align-items-end">
+  <div class="col-md-6 mb-1">
+    <div class="row">
+      <div class="col-md-6">
+        <label class="label required">Aplica límites monto</label>
+    <div style="display: flex; align-items: center; height: 38px;">
+   <nb-toggle [(ngModel)]="aplica_limite" class="toggle-azul"></nb-toggle>
+ </div>
+</div>
+
+
+      <div class="col-md-6">
+        <label for="monto_minimo" class="label required">Monto mínimo</label>
+        <nb-form-field>
+          <input type="number" nbInput fullWidth placeholder="0" id="monto_minimo" [(ngModel)]="montoMinimo">
+        </nb-form-field>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <label for="monto_maximo" class="label required">Monto máximo</label>
+    <nb-form-field>
+      <input type="number" nbInput fullWidth placeholder="0" id="monto_maximo" [(ngModel)]="montoMaximo">
+    </nb-form-field>
+  </div>
+</div>
+
+<div class="row align-items-end">
+  <div class="col-md-6 mb-1">
+    <div class="row">
+      <div class="col-md-6">
+        <label class="label required">Tiene límite</label>
+    <div style="display: flex; align-items: center; height: 38px;">
+   <nb-toggle [(ngModel)]="tiene_limite"  class="toggle-azul"></nb-toggle>
+ </div>
+</div>
+
+
+      <div class="col-md-6">
+        <label for="limite_uso" class="label required">Límite de uso</label>
+        <nb-form-field>
+          <input type="number" nbInput fullWidth placeholder="0" id="limite_uso" [(ngModel)]="limite_uso">
+        </nb-form-field>
+      </div>
+    </div>
+  </div>
+ </div>
+
+    </form>
+   
+  </nb-card-body>
+  <nb-card-footer class="text-end">
+    <button nbButton class="me-1" status="basic" size="small" (click)="onClose()">
+      <nb-icon icon="close-outline"></nb-icon>
+      Cancelar
+    </button>
+
+    <button nbButton class="me-1" status="primary" size="small" (click)="onSave()">
+      <nb-icon icon="save-outline"></nb-icon>
+      Guardar
+    </button>
+
+  </nb-card-footer>
+</nb-card>

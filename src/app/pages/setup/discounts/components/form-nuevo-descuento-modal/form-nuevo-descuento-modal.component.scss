@@ -1,0 +1,28 @@
+@import 'themes';
+
+nb-radio-group {
+    display: flex;
+}
+nb-card-header{
+    display: flex;
+    justify-content: space-between;
+}
+
+::ng-deep nb-dialog-container {
+    width: 60rem !important;
+}
+
+.label-group {
+    color: nb-theme(color-primary-500);
+}
+::ng-deep .toggle-azul nb-toggle .toggle-switch {
+  background-color: #003399 !important;
+  border-color: #003399 !important;
+}
+
+::ng-deep .toggle-azul nb-toggle .toggle-switch.checked {
+  background-color: #003399 !important;
+}
+::ng-deep .toggle-azul nb-toggle .toggle-switch:not(.checked) {
+  background-color: #e0e0e0 !important; // gris claro cuando está apagado
+}
