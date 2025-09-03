@@ -16,7 +16,7 @@ import { FormNuevoAgregarModalComponent } from './form-nuevo-agregar-modal/form-
 export class FormNuevoListaModalComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   public formularioListaModal: FormGroup = this.formBuilder.group({
-
+    text_search: [''],
   });
 
 
