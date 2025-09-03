@@ -10,11 +10,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class ListaBeneficiadosComponent implements OnInit, OnDestroy {
 
   constructor(private formBuilder: FormBuilder,
-      private router: Router,
-      private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
   ) { }
 
   ngOnInit() {
+   
   }
 
   ngOnDestroy() {

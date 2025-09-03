@@ -8,4 +8,5 @@ export class AnhosService extends EntityDataService<any> {
     constructor(protected override httpClient: HttpClient) {
         super(httpClient, `${environment.apiUrls.openAccounting}/api/anhos`);
     }
+
 }

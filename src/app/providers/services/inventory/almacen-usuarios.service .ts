@@ -22,4 +22,6 @@ export class AlmacenUsuariosService extends EntityDataService<any> {
         return this.httpClient.get<any>(`${this.endPoint}/mis-almacenes`, { params });
     }
 
+
+
 }
