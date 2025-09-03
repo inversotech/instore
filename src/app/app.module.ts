@@ -14,7 +14,7 @@ import { AuthStorageService } from './core/providers/interceptors/auth-storage.s
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,

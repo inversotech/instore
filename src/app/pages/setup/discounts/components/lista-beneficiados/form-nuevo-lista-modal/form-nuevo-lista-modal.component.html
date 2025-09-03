@@ -1,0 +1,42 @@
+<nb-card [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary" status="primary">
+  <nb-card-header>
+    <div class="text-center d-flex justify-content-between align-items-center">
+      <span i18n>
+        AGREGAR BENEFICIADOS
+      </span>
+    </div>
+    <div>
+      <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer"></nb-icon>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <form [formGroup]="formularioListaModal" class="text-center">
+      <div class="fullWidth">
+        <label for="text_search" class="label form-label">Buscar persona (por DNI)</label>
+        <nb-form-field>
+          <nb-icon nbPrefix icon="search-outline" pack="eva" class="w-100 d-flex justify-content-center"></nb-icon>
+          <input formControlName="text_search" type="search" placeholder="Buscar..." nbInput fullWidth shape="round"
+            fieldSize="small">
+        </nb-form-field>
+      </div>
+      <br>
+      <div class="col-md-12 mt-md-auto mx-auto text-center">
+        <button nbButton type="button" status="primary" size="small" (click)="onClose()">
+          <nb-icon nbPrefix icon="folder-add-outline" pack="eva"></nb-icon>
+          AGREGAR A LISTA
+        </button>
+      </div>
+      <div class="text-center text-primary mt-2">
+        Si no encuentra a la persona se recomienda crearla
+        <a class="text-decoration-underline text-primary" (click)="abrirModal3()" role="button"
+          style="cursor: pointer;">
+          aquí
+        </a>.
+      </div>
+
+
+    </form>
+
+  </nb-card-body>
+
+</nb-card>
