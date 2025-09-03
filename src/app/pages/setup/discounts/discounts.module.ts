@@ -20,12 +20,15 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { SharedModule } from '../../shared/shared.module';
 import { FormNuevoDescuentoModalComponent } from './components/form-nuevo-descuento-modal/form-nuevo-descuento-modal.component';
 import { ListaBeneficiadosComponent } from './components/lista-beneficiados/lista-beneficiados.component';
-
+import { FormNuevoListaModalComponent } from './components/lista-beneficiados/form-nuevo-lista-modal/form-nuevo-lista-modal.component';
+import { FormNuevoAgregarModalComponent } from './components/lista-beneficiados/form-nuevo-lista-modal/form-nuevo-agregar-modal/form-nuevo-agregar-modal.component';
 const COMPONENTS: any[] = [
   DiscountsComponent,
   ListaGeneralComponent,
   FormNuevoDescuentoModalComponent,
   ListaBeneficiadosComponent,
+  FormNuevoListaModalComponent,
+  FormNuevoAgregarModalComponent,
 ];
 
 const NB_MODULES: any[] = [
@@ -61,6 +64,7 @@ const NG_MODULES: any[] = [
 @NgModule({
   declarations: [
     ...COMPONENTS,
+    FormNuevoListaModalComponent,
   ],
   imports: [
     ...NG_MODULES,

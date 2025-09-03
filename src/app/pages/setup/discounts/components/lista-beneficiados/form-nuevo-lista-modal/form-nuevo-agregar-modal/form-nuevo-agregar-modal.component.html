@@ -1,0 +1,74 @@
+<nb-card [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary" status="primary">
+  <nb-card-header>
+    <div class="text-center">
+      <span i18n>
+        INGRESAR NUEVA PERSONA BENEFICIADA
+      </span>
+
+    </div>
+    <div>
+      <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer"></nb-icon>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <form [formGroup]="formularioAgregar">
+
+        <div class="col-md-12 mb-1">
+          <label for="tipo_descuento" class="label required">Tipo de documento</label>
+          <nb-select placeholder="Seleccionar" fullWidth [size]="'small'" formControlName="tipo_documento"
+            id="tipo_documento">
+            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option *ngFor="let tipo of tipoDocumento" [value]="tipo.id">
+              {{ tipo.nombre }}
+            </nb-option>
+          </nb-select>
+        </div>
+
+        <div class="col-md-12 mb-1">
+          <label for="documento" class="label required">DOCUMENTO</label>
+          <nb-form-field>
+            <input nbInput fullWidth type="text" name="documento" id="documento" formControlName="documento"
+              placeholder="Ingrese el Nro de Documento" fieldSize="small">
+          </nb-form-field>
+        </div>
+
+
+        <div class="col-md-12 mb-1">
+          <label for="nombres" class="label required">NOMBRES</label>
+          <nb-form-field>
+            <input nbInput fullWidth type="text" name="nombres" id="nombres" formControlName="nombres"
+              placeholder="Ingrese el nombre" fieldSize="small">
+          </nb-form-field>
+        </div>
+
+        <div class="col-md-12 mb-1">
+          <label for="apellido_paterno" class="label required">APELLIDO PATERNO</label>
+          <nb-form-field>
+            <input nbInput fullWidth type="text" name="apellido_paterno" id="nombre" formControlName="apellido_paterno"
+              placeholder="Ingrese ap. paterno" fieldSize="small">
+          </nb-form-field>
+        </div>
+
+        <div class="fullWidth">
+          <label for="apellido_materno" class="label required">APELLIDO MATERNO</label>
+          <nb-form-field>
+            <input type="text" autocomplete="off" name="apellido_materno" id="apellido_materno" formControlName="apellido_materno" placeholder="Ingrese ap. materno"
+              nbInput fullWidth fieldSize="small">
+          </nb-form-field>
+        </div>
+    </form>
+
+  </nb-card-body>
+  <nb-card-footer class="text-end">
+    <button nbButton class="me-1" status="basic" size="small" (click)="onClose()">
+      <nb-icon icon="close-outline"></nb-icon>
+      Cancelar
+    </button>
+
+    <button nbButton class="me-1" status="primary" size="small" (click)="onSave()" >
+      <nb-icon icon="save-outline"></nb-icon>
+      Guardar
+    </button>
+
+  </nb-card-footer>
+</nb-card>
