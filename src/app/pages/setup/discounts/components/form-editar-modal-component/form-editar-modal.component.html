@@ -2,7 +2,7 @@
   <nb-card-header>
     <div class="text-center">
       <span i18n>
-        NUEVO DESCUENTO
+        EDITAR DESCUENTO
       </span>
       <span class="font-weight-light" i18n>
         Formulario
@@ -21,7 +21,7 @@
         <div class="col-md-6 mb-1">
           <label for="id_almacen" class="label required">Almacén</label>
           <nb-select placeholder="Seleccionar" fullWidth [size]="'small'" formControlName="id_almacen" id="id_almacen">
-            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option value="1">-Seleccione-</nb-option>
             <nb-option *ngFor="let item of misAlmacenes" [value]="item.id_almacen">
               {{ item.almacen_nombre }}
             </nb-option>
@@ -49,7 +49,7 @@
               {{ tipo.label }}
             </nb-option>
           </nb-select>
-          <div *ngIf="f['tipo_descuento'].invalid && f['tipo_descuento'].touched" class="text-danger mt-1">
+          <div *ngIf="f['tipo_descuento']?.invalid && f['tipo_descuento']?.touched" class="text-danger mt-1">
             Debes seleccionar un tipo de descuento.
           </div>
         </div>
@@ -99,16 +99,16 @@
       </div>
       <div class="row">
         <div class="col-md-6 mb-1">
-          <label for="tipo_aplicacion" class="label required">Tipo de aplicación</label>
+          <label for="id_desc_tipo_aplicacion" class="label required">Tipo de aplicación</label>
           <nb-select placeholder="Seleccionar" fullWidth [size]="'small'" formControlName="id_desc_tipo_aplicacion"
-            id="tipo_aplicacion">
+            id="id_desc_tipo_aplicacion">
 
             <nb-option value="-1">-Seleccione-</nb-option>
             <nb-option *ngFor="let tipo of tiposAplicacion" [value]="tipo.id_desc_tipo_aplicacion">
               {{ tipo.nombre }}
             </nb-option>
           </nb-select>
-          <div *ngIf="f['id_desc_tipo_aplicacion'].invalid && f['id_desc_tipo_aplicacion'].touched"
+          <div *ngIf="f['id_desc_tipo_aplicacion']?.invalid && f['id_desc_tipo_aplicacion']?.touched"
             class="text-danger mt-1">
             Debes seleccionar un tipo de aplicación.
           </div>
@@ -131,18 +131,18 @@
         </div>
 
         <div class="col-md-3 mb-1">
-          <label for="monto_minimo" class="label">Monto mínimo</label>
+          <label for="importe_minimo_venta" class="label">Monto mínimo</label>
           <nb-form-field>
-            <input type="number" nbInput fieldSize="small" fullWidth placeholder="0" id="monto_minimo"
-              formControlName="monto_minimo">
+            <input type="number" nbInput fieldSize="small" fullWidth placeholder="0" id="importe_minimo_venta"
+              formControlName="importe_minimo_venta">
           </nb-form-field>
         </div>
 
         <div class="col-md-3 mb-1">
-          <label for="monto_maximo" class="label">Monto máximo</label>
+          <label for="importe_maximo_venta" class="label">Monto máximo</label>
           <nb-form-field>
-            <input type="number" nbInput fieldSize="small" fullWidth placeholder="0" id="monto_maximo"
-              formControlName="monto_maximo">
+            <input type="number" nbInput fieldSize="small" fullWidth placeholder="0" id="importe_maximo_venta"
+              formControlName="importe_maximo_venta">
           </nb-form-field>
         </div>
       </div>
@@ -173,7 +173,7 @@
       Cancelar
     </button>
 
-    <button nbButton class="me-1" status="primary" size="small" (click)="onSave()">
+    <button nbButton class="me-1" status="primary" size="small" (click)="onSave()"[disabled]="loadingSpinnerSave">
       <nb-icon icon="save-outline"></nb-icon>
       Guardar
     </button>

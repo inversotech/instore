@@ -17,7 +17,6 @@ export class ListaBeneficiadosComponent implements OnInit, OnDestroy {
   
 
   ngOnInit() {
-   
   }
 
   ngOnDestroy() {

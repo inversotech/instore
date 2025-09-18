@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { StateService } from '../core/providers/state.service';
-
 @Component({
   selector: 'open-pages',
   templateUrl: './pages.component.html',

@@ -31,10 +31,10 @@
           </nb-select>
         </div>
         <div class="col-md-3">
-          <label for="id_anho" class="label form-label">Año</label>
-          <nb-select placeholder="Año" fullWidth [size]="'small'" formControlName="id_anho" id="id_anho">
-            <nb-option *ngFor="let item of anhos$ | async" [value]="item.id_anho">
-              {{ item.id_anho }} </nb-option>
+          <label for="estado" class="label form-label">Estado</label>
+          <nb-select placeholder="Seleccione" fullWidth [size]="'small'" formControlName="estado" id="estado" (ngModelChange)="onEstadoChange()">
+            <nb-option *ngFor="let estado of listaEstados" [value]="estado.valor">
+              {{ estado.nombre }} </nb-option>
           </nb-select>
         </div>
         <!-- <div class="col-md-3">
@@ -70,40 +70,42 @@
       <div class="col-md-12">
         <table class="table table-sm table-hover">
           <thead>
-            <tr class="text-center">
+            <tr class="text-center" >
               <th>NRO</th>
               <th>ALMECÉN</th>
               <th>NOMBRE DESCUENTO</th>
               <th>FECHA INICIO</th>
-              <th>FECHA FIN</th>
+              <th>FECHA VENCIMIENTO</th>
               <th>APLICA</th>
+              <th>VALOR</th>
               <th>CANTIDAD CLIENTES</th>
               <th>ACCIONES</th>
             </tr>
           </thead>
 
           <tbody>
-            <tr class="text-center">
-              <td>1</td>
-              <td>Almacén Central</td>
-              <td>Descuento de prueba</td>
-              <td>2025-08-22</td>
-              <td>2025-08-31</td>
-              <td>Todos</td>
+            <tr class="text-center" *ngFor="let descuento of descuentos;let i=index">
+              <td>{{i+1}}</td>
+              <td>{{descuento.almacen_nombre}}</td>
+              <td>{{descuento.nombre}}</td>
+              <td>{{descuento.fecha_inicio}}</td>
+              <td>{{descuento.fecha_vencimiento}}</td>
+              <td>{{descuento.descuento_tipo_aplicacion_nombre}}</td>
+              <td>{{descuento.valor}}</td>
               <td>15</td>
               <td>
 
-                <button nbButton class="me-1" type="button" status="info" size="tiny" (click)="verBeneficiados(1)">
+                <button nbButton class="me-1" type="button" status="info" size="tiny" (click)="verBeneficiados(descuento.id_venta_descuento)">
                   <nb-icon icon="list-outline"></nb-icon>
                   Beneficiados
                 </button>
 
-                <button nbButton class="me-1" type="button" status="primary" size="tiny">
+                <button nbButton class="me-1" type="button" status="primary" size="tiny" (click)="abrirModalEditar(descuento)">
                   <nb-icon icon="edit-outline"></nb-icon>
                   Editar
                 </button>
 
-                <button nbButton type="button" status="danger" size="tiny">
+                <button nbButton type="button" status="danger" size="tiny"  (click)="eliminarDescuento(descuento.id_venta_descuento)">
                   <nb-icon icon="trash-outline"></nb-icon>
                   Eliminar
                 </button>
@@ -145,4 +147,4 @@
     </ng-template>
   </nb-card-body>
 </nb-card>
-<open-form-nuevo-descuento-modal *ngIf="mostrarFormulario"></open-form-nuevo-descuento-modal>
+<!-- <open-form-nuevo-descuento-modal *ngIf="mostrarFormulario"></open-form-nuevo-descuento-modal> -->

@@ -22,6 +22,7 @@ import { FormNuevoDescuentoModalComponent } from './components/form-nuevo-descue
 import { ListaBeneficiadosComponent } from './components/lista-beneficiados/lista-beneficiados.component';
 import { FormNuevoListaModalComponent } from './components/lista-beneficiados/form-nuevo-lista-modal/form-nuevo-lista-modal.component';
 import { FormNuevoAgregarModalComponent } from './components/lista-beneficiados/form-nuevo-lista-modal/form-nuevo-agregar-modal/form-nuevo-agregar-modal.component';
+import { FormEditarModalComponent } from './components/form-editar-modal-component/form-editar-modal.component';
 const COMPONENTS: any[] = [
   DiscountsComponent,
   ListaGeneralComponent,
@@ -29,6 +30,7 @@ const COMPONENTS: any[] = [
   ListaBeneficiadosComponent,
   FormNuevoListaModalComponent,
   FormNuevoAgregarModalComponent,
+  FormEditarModalComponent,
 ];
 
 const NB_MODULES: any[] = [
