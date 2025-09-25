@@ -1,0 +1,103 @@
+<nb-card status="primary">
+  <nb-card-header>
+    <div class="lh-sm">
+      <table>
+        <tr>
+          <td>
+            <button nbButton size="small" (click)="onBack()">
+              <nb-icon icon="arrow-back-outline"></nb-icon>
+            </button>
+          </td>
+          <td class="border-start ps-4">
+            <div>
+              <span i18n>
+                GRUPO DE PRODUCTOS
+              </span>
+            </div>
+          </td>
+          <!-- <td>
+            <nb-icon status="primary" style="font-size: 1.6rem;" icon="settings-outline" pack="eva"></nb-icon> &nbsp;
+          </td> -->
+          <td class="border-start ps-4">
+            <div>
+              <span i18n>
+                SELECCION DE PRODUCTOS
+              </span>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <form [formGroup]="formProductos">
+      <div class="row align-items-end">
+        <div class="col-md-6">
+          <label for="id_anho" class="label form-label">Año</label>
+          <nb-select placeholder="Año" fullWidth [size]="'small'" formControlName="id_anho" id="id_anho">
+            <nb-option *ngFor="let item of anhos$ | async" [value]="item.id_anho">
+              {{ item.id_anho }} </nb-option>
+          </nb-select>
+        </div>
+
+        <div class="col-md-6 d-flex justify-content-end">
+          <button nbButton class="me-1" status="primary" size="small" (click)="onSave()"
+            [disabled]="loadingSpinnerSave">
+            <nb-icon icon="save-outline"></nb-icon>
+            Guardar
+          </button>
+
+          <!-- <button nbButton class="me-1" status="danger" size="small" (click)="onClose()">
+            <nb-icon icon="close-outline"></nb-icon>
+            Cancelar
+          </button> -->
+        </div>
+      </div>
+    </form>
+
+    <div class="row mt-3">
+      <div class="col-md-12">
+        <table class="table table-sm table-hover">
+          <thead>
+            <tr class="text-center">
+              <th>#</th>
+              <th></th>
+              <th>Nombre</th>
+              <th>Código</th>
+              <th>CUBSO</th>
+              <th>Almacén</th>
+              <th>Año</th>
+              <th>Activo</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let articulo of articulos; let i = index" class="text-center" status="primary">
+              <td>{{ i + 1 }}</td>
+              <td>
+                
+                <nb-checkbox [(ngModel)]="articulo.checked">
+                  {{ articulo.nombre }}
+                </nb-checkbox>
+
+
+                <!-- <nb-checkbox (checkedChange)="toggle($event)">Toggle me</nb-checkbox> -->
+              </td>
+              <td>{{ articulo.articulo_nombre }}</td>
+              <td>{{ articulo.articulo_codigo }}</td>
+              <td>{{ articulo.articulo_codigo_cubso }}</td>
+              <td>{{ articulo.id_almacen }}</td>
+              <td>{{ articulo.id_anho }}</td>
+              <td>{{ articulo.activo ? 'Sí' : 'No' }}</td>
+              <!-- <td>
+                <button nbButton type="button" status="danger" size="tiny">
+                  <nb-icon icon="trash-outline"></nb-icon>
+                  Eliminar
+                </button></td> -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>

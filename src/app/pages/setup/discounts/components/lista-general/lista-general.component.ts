@@ -24,6 +24,7 @@ export class ListaGeneralComponent implements OnInit, OnDestroy {
   mostrarFormulario: boolean = false;
   public descuentos: any[] = [];
   public loadingSpinner: boolean = false;
+  mostrarModalProductos: boolean = false;
 
   public searchForm: FormGroup = this.formBuilder.group({
     id_almacen: [1, Validators.required],
@@ -33,19 +34,18 @@ export class ListaGeneralComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject<void>();
   public monedas$ = this.monedasService.getAll$();
-  // public anhos$ = this.anhosService.getAll$();
   public misAlmacenes$ = this.almacenUsuariosService.getMisAlmacenes$({});
 
   constructor(private formBuilder: FormBuilder,
     private monedasService: MonedasService,
-    // private anhosService: AnhosService,
     private almacenUsuariosService: AlmacenUsuariosService,
     private nbDialogService: NbDialogService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private discountsCoreService: DiscountsCoreService,
-
   ) { }
+  
+
 
   ngOnInit() {
     this.setDefaultValues();
@@ -57,16 +57,17 @@ this.searchForm.get('id_almacen')?.valueChanges.subscribe(valor => {
         this.obtenerDescuentos(); // Se ejecuta automáticamente al cambiar
     });
   }
+ 
 
   public onEstadoChange(): void {
-    // Se ejecuta cada vez que cambian el select
+    //Se ejecuta cada vez que cambian el select
     // this.obtenerDescuentos();
       console.log(' onEstadoChange se ejecutó');
   console.log(' Valor actual del estado:', this.searchForm.get('estado')?.value);
   
-  // Ejecuta después de un pequeño delay
+  //Ejecuta después de un pequeño delay
   setTimeout(() => {
-    this.obtenerDescuentos();
+    this.obtenerDescuentos(); // aqui se quita el  setTimeout (ojo)
   }, 100);
   }
 
@@ -75,8 +76,10 @@ this.searchForm.get('id_almacen')?.valueChanges.subscribe(valor => {
     const almacenId = this.searchForm.get('id_almacen')?.value;
     const estadoSeleccionado = this.searchForm.get('estado')?.value;
     // if (!almacenId) return;
+
+    
     const params = {
-      id_almacen: almacenId || 1,
+      id_almacen: almacenId || 1, 
       estado: estadoSeleccionado ?? -1
       
     };
@@ -104,6 +107,9 @@ this.searchForm.get('id_almacen')?.valueChanges.subscribe(valor => {
     this.destroy$.next();
     this.destroy$.complete();
   }
+  abrirGrupoProductos(id: string) {
+  this.router.navigate([id, 'productos'], { relativeTo: this.activatedRoute });
+}
 
   public verBeneficiados(id_descuento: any) {
     this.router.navigate(['./', id_descuento], { relativeTo: this.activatedRoute });
@@ -118,13 +124,8 @@ this.searchForm.get('id_almacen')?.valueChanges.subscribe(valor => {
         }, 0);
       });
 
-    // this.searchForm.get('id_anho')?.valueChanges
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe(response => {
-    //     setTimeout(() => {
-    //       this.getPrecios();
-    //     }, 0);
-    //   });
+   
+    
 
     this.misAlmacenes$.subscribe(almacenes => {
       if (almacenes && almacenes.length > 0) {
@@ -150,46 +151,8 @@ this.searchForm.get('id_almacen')?.valueChanges.subscribe(valor => {
       }, err => { });
   }
 
-  // public getPrecios() {
-  //   const value = this.searchForm.value;
-  //   const invalid = this.searchForm.invalid;
-  //   if (invalid) return;
+ 
 
-  //   const params = {
-  //     id_almacen: value.id_almacen,
-  //     // id_anho: value.id_anho,
-  //     text_search: value.text_search,
-  //   };
-  //   this.loadingSpinner = true;
-  //   this.ventaPreciosService.getByQuery$(params)
-  //     .pipe(takeUntil(this.destroy$))
-  //     .subscribe(response => {
-  //       // this.ventaPrecios = response;
-  //       this.loadingSpinner = false;
-  //     }, err => {
-  //       this.loadingSpinner = false;
-  //     });
-  // }
-
-  // public onGuardar(item: any) {
-
-  //   const data = {
-  //     id_almacen: item.id_almacen,
-  //     id_articulo: item.id_articulo,
-  //     // id_anho: item.id_anho,
-  //     precio_inicial_pen: item.precio_inicial_pen,
-  //     precio_inicial_usd: item.precio_inicial_usd,
-  //   };
-  //   this.loadingSpinner = true;
-  //   this.ventaPreciosService.add$(data)
-  //     .pipe(takeUntil(this.destroy$))
-  //     .subscribe(response => {
-  //       this.getPrecios();
-  //       this.loadingSpinner = false;
-  //     }, err => {
-  //       this.loadingSpinner = false;
-  //     });
-  // }
 
   eliminarDescuento(id_venta_descuento: number): void {
     const confirmar = confirm('¿Estás seguro de que deseas eliminar este descuento?');
@@ -232,6 +195,7 @@ this.searchForm.get('id_almacen')?.valueChanges.subscribe(valor => {
         console.error('Error al obtener descuento por ID:', err);
       }
     });
+    
 
 
     // this.nbDialogService.open(FormEditarModalComponent, {
@@ -247,6 +211,7 @@ this.searchForm.get('id_almacen')?.valueChanges.subscribe(valor => {
     //   }
     // });
   };
+
 
 
   // const ventaPrecios = this.ventaPrecios || [];
@@ -267,7 +232,7 @@ this.searchForm.get('id_almacen')?.valueChanges.subscribe(valor => {
   //   }, err => {
   //     this.loadingSpinner = false;
   //   });
-};
 
+}
 
 

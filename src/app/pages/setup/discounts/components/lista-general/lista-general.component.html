@@ -94,6 +94,10 @@
               <td>{{descuento.valor}}</td>
               <td>15</td>
               <td>
+                <button nbButton class="me-1" type="button" status="info" size="tiny" (click)="abrirGrupoProductos(descuento.id_venta_descuento)">
+                  <nb-icon icon="list-outline"></nb-icon>
+                  Productos
+                </button>
 
                 <button nbButton class="me-1" type="button" status="info" size="tiny" (click)="verBeneficiados(descuento.id_venta_descuento)">
                   <nb-icon icon="list-outline"></nb-icon>
@@ -107,7 +111,7 @@
 
                 <button nbButton type="button" status="danger" size="tiny"  (click)="eliminarDescuento(descuento.id_venta_descuento)">
                   <nb-icon icon="trash-outline"></nb-icon>
-                  Eliminar
+                Eliminar
                 </button>
 
               </td>

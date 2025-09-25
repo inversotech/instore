@@ -3,9 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { DiscountsRoutingModule } from './discounts-routing.module';
 import { DiscountsComponent } from './discounts.component';
-import {
-  ListaGeneralComponent,
-} from './components';
+import {ListaGeneralComponent,} from './components';
+
 import {
   NbCardModule, NbDialogModule, NbRadioModule,
   NbSpinnerModule, NbCheckboxModule, NbButtonModule,
@@ -23,6 +22,7 @@ import { ListaBeneficiadosComponent } from './components/lista-beneficiados/list
 import { FormNuevoListaModalComponent } from './components/lista-beneficiados/form-nuevo-lista-modal/form-nuevo-lista-modal.component';
 import { FormNuevoAgregarModalComponent } from './components/lista-beneficiados/form-nuevo-lista-modal/form-nuevo-agregar-modal/form-nuevo-agregar-modal.component';
 import { FormEditarModalComponent } from './components/form-editar-modal-component/form-editar-modal.component';
+import { GrupoProductosComponent } from './components/grupo-productos/grupo-productos.component';
 const COMPONENTS: any[] = [
   DiscountsComponent,
   ListaGeneralComponent,
@@ -31,6 +31,7 @@ const COMPONENTS: any[] = [
   FormNuevoListaModalComponent,
   FormNuevoAgregarModalComponent,
   FormEditarModalComponent,
+  GrupoProductosComponent,
 ];
 
 const NB_MODULES: any[] = [

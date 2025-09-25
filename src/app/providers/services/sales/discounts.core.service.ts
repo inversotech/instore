@@ -2,19 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-
-
 @Injectable({
   providedIn: 'root'
 })
 export class DiscountsCoreService {
+private baseUrl = "https://app101.adventistas.pe/php80/vopen/dev/open-accounting-api/public/api/discounts";
+private endPoint = `${this.baseUrl}/discounts`;
+private endPointAplicacion = `${this.baseUrl}/type-application`;
+private endPointDiscount = `${this.baseUrl}/type-discounts`;
 
-  private endPoint: string = "https://app101.adventistas.pe/php80/vopen/dev/open-accounting-api/public/api/discounts/discounts";
-  private endPointDelete: string = "https://app101.adventistas.pe/php80/vopen/dev/open-accounting-api/public/api/discounts/discounts";
-  public endPointPost: string = "https://app101.adventistas.pe/php80/vopen/dev/open-accounting-api/public/api/discounts/discounts";
-  public endPointAplicacion: string = "https://app101.adventistas.pe/php80/vopen/dev/open-accounting-api/public/api/discounts/type-application"
-  public endPointDiscount: string = "https://app101.adventistas.pe/php80/vopen/dev/open-accounting-api/public/api/discounts/type-discounts"
-  // public endPointEditar: string = "https://app101.adventistas.pe/php80/vopen/dev/open-accounting-api/public/api/discounts/discounts/:id_venta_descuento"
 
   constructor(private httpClient: HttpClient) { }
 
@@ -22,11 +18,11 @@ export class DiscountsCoreService {
     return this.httpClient.get<any>(this.endPoint, { params });
   }
   public eliminar(id_venta_descuento: any): Observable<any> {
-    const url = `${this.endPointDelete}/${id_venta_descuento}`;
+    const url = `${this.endPoint}/${id_venta_descuento}`;
     return this.httpClient.delete<any>(url);
   }
   public crear(data: any): Observable<any> {
-    return this.httpClient.post<any>(this.endPointPost, data);
+    return this.httpClient.post<any>(this.endPoint, data);
   }
 
   public getTipoAplicacion(params: any): Observable<any> {
@@ -43,6 +39,14 @@ export class DiscountsCoreService {
     const url = `${this.endPoint}/${id_venta_descuento}`;
     return this.httpClient.get<any>(url);
   }
+ public getGrupoProductos(id_venta_descuento: any, id_anho: number): Observable<any[]> {
+  const url = `https://app101.adventistas.pe/php80/vopen/dev/open-accounting-api/public/api/discounts/${id_venta_descuento}/groups-articles?id_anho=${id_anho}`;
+  return this.httpClient.get<any[]>(url);
+}
+postGrupoProductos(id_descuento: any, payload: any) {
+  const url = `https://app101.adventistas.pe/php80/vopen/dev/open-accounting-api/public/api/discounts/${id_descuento}/groups-articles`;
+  return this.httpClient.post(url, payload);
+}
 }
 
 
