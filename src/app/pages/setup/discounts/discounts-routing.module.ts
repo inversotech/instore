@@ -18,8 +18,8 @@ const routes: Routes = [
     // ],
     children: [
       {path: '',component: ListaGeneralComponent},
-      {path: ':id_descuento', component: ListaBeneficiadosComponent},
-      {path: ':id_descuento/productos',component: GrupoProductosComponent}
+      {path: ':id_venta_descuento', component: ListaBeneficiadosComponent},
+      {path: ':id_venta_descuento/productos',component: GrupoProductosComponent}
     ],
   }
 ];

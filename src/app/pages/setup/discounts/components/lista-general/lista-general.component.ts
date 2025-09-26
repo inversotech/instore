@@ -44,7 +44,7 @@ export class ListaGeneralComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private discountsCoreService: DiscountsCoreService,
   ) { }
-  
+
 
 
   ngOnInit() {
@@ -52,52 +52,44 @@ export class ListaGeneralComponent implements OnInit, OnDestroy {
     this.obtenerDescuentos();
     console.log("habla  causa");
 
-this.searchForm.get('id_almacen')?.valueChanges.subscribe(valor => {
-        console.log('Almacén seleccionado:', valor);
-        this.obtenerDescuentos(); // Se ejecuta automáticamente al cambiar
+    this.searchForm.get('id_almacen')?.valueChanges.subscribe(valor => {
+      console.log('Almacén seleccionado:', valor);
+      this.obtenerDescuentos(); // Se ejecuta automáticamente al cambiar
     });
   }
- 
+
 
   public onEstadoChange(): void {
     //Se ejecuta cada vez que cambian el select
     // this.obtenerDescuentos();
-      console.log(' onEstadoChange se ejecutó');
-  console.log(' Valor actual del estado:', this.searchForm.get('estado')?.value);
-  
-  //Ejecuta después de un pequeño delay
-  setTimeout(() => {
-    this.obtenerDescuentos(); // aqui se quita el  setTimeout (ojo)
-  }, 100);
+    console.log(' onEstadoChange se ejecutó');
+    console.log(' Valor actual del estado:', this.searchForm.get('estado')?.value);
+
+    //Ejecuta después de un pequeño delay
+    setTimeout(() => {
+      this.obtenerDescuentos(); // aqui se quita el  setTimeout (ojo)
+    }, 100);
   }
 
   public obtenerDescuentos(): void {
-    console.log("obtenerDescuentos iniciado");
     const almacenId = this.searchForm.get('id_almacen')?.value;
     const estadoSeleccionado = this.searchForm.get('estado')?.value;
-    // if (!almacenId) return;
-
-    
+    if (!almacenId) return;
+    if (!estadoSeleccionado) return;
     const params = {
-      id_almacen: almacenId || 1, 
+      id_almacen: almacenId || 1,
       estado: estadoSeleccionado ?? -1
-      
     };
-
-    console.log('Parámetros enviados:', params);
-
+    this.loadingSpinner = true;
     this.discountsCoreService.listaDescuentos$(params)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response: any) => {
-          console.log('Respuesta del backend:', response);
-          console.log('Cantidad de descuentos recibidos:', response);
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (response: any) => {
+          this.loadingSpinner = false;
           this.descuentos = response;
-
         },
-
-        error: (err:any) => {
-          console.error('Error al obtener descuentos:', err);
+        error: (err: any) => {
+          this.loadingSpinner = false;
         }
       });
   }
@@ -107,12 +99,12 @@ this.searchForm.get('id_almacen')?.valueChanges.subscribe(valor => {
     this.destroy$.next();
     this.destroy$.complete();
   }
-  abrirGrupoProductos(id: string) {
-  this.router.navigate([id, 'productos'], { relativeTo: this.activatedRoute });
-}
+  abrirGrupoProductos(id_venta_descuento: string) {
+    this.router.navigate([id_venta_descuento, 'productos'], { relativeTo: this.activatedRoute });
+  }
 
-  public verBeneficiados(id_descuento: any) {
-    this.router.navigate(['./', id_descuento], { relativeTo: this.activatedRoute });
+  public verBeneficiados(id_venta_descuento: any) {
+    this.router.navigate(['./', id_venta_descuento], { relativeTo: this.activatedRoute });
   }
 
   private setDefaultValues() {
@@ -124,8 +116,8 @@ this.searchForm.get('id_almacen')?.valueChanges.subscribe(valor => {
         }, 0);
       });
 
-   
-    
+
+
 
     this.misAlmacenes$.subscribe(almacenes => {
       if (almacenes && almacenes.length > 0) {
@@ -151,20 +143,22 @@ this.searchForm.get('id_almacen')?.valueChanges.subscribe(valor => {
       }, err => { });
   }
 
- 
+
 
 
   eliminarDescuento(id_venta_descuento: number): void {
     const confirmar = confirm('¿Estás seguro de que deseas eliminar este descuento?');
 
     if (!confirmar) return;
+    this.loadingSpinner = true;
     this.discountsCoreService.eliminar(id_venta_descuento).subscribe({
       next: (respuesta) => {
+        this.loadingSpinner = false;
         this.obtenerDescuentos();
         console.log('Descuento eliminado:', respuesta);
       },
-
       error: (error) => {
+        this.loadingSpinner = false;
         console.error('Error al eliminar:', error);
 
       },
@@ -195,7 +189,7 @@ this.searchForm.get('id_almacen')?.valueChanges.subscribe(valor => {
         console.error('Error al obtener descuento por ID:', err);
       }
     });
-    
+
 
 
     // this.nbDialogService.open(FormEditarModalComponent, {

@@ -29,10 +29,10 @@
       </table>
     </div>
   </nb-card-header>
-  <nb-card-body>
+  <nb-card-body [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary">
     <form [formGroup]="formProductos">
       <div class="row align-items-end">
-        <div class="col-md-6">
+        <div class="col-md-3">
           <label for="id_anho" class="label form-label">Año</label>
           <nb-select placeholder="Año" fullWidth [size]="'small'" formControlName="id_anho" id="id_anho">
             <nb-option *ngFor="let item of anhos$ | async" [value]="item.id_anho">
@@ -40,11 +40,11 @@
           </nb-select>
         </div>
 
-        <div class="col-md-6 d-flex justify-content-end">
-          <button nbButton class="me-1" status="primary" size="small" (click)="onSave()"
+        <div class="col-md-2 d-flex justify-content-end">
+          <button nbButton class="me-1" status="info" size="small" (click)="onSave()"
             [disabled]="loadingSpinnerSave">
             <nb-icon icon="save-outline"></nb-icon>
-            Guardar
+            Guardar cambios
           </button>
 
           <!-- <button nbButton class="me-1" status="danger" size="small" (click)="onClose()">
@@ -79,8 +79,6 @@
                 <nb-checkbox [(ngModel)]="articulo.checked">
                   {{ articulo.nombre }}
                 </nb-checkbox>
-
-
                 <!-- <nb-checkbox (checkedChange)="toggle($event)">Toggle me</nb-checkbox> -->
               </td>
               <td>{{ articulo.articulo_nombre }}</td>
