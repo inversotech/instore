@@ -1,0 +1,52 @@
+<nb-card [nbSpinner]="loadingSpinner" nbSpinnerStatus="primary">
+  <nb-card-header class="d-flex justify-content-between align-items-center">
+    <div class="lh-base">
+      <div class="fw-bold">
+        <img src="assets/icons/pago-con-tarjeta.png" alt="Pago con tarjeta" style="height: 20px;">
+        POS
+      </div>
+      <small>Registrar depósito</small>
+    </div>
+    <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer"></nb-icon>
+  </nb-card-header>
+
+  <nb-card-body>
+
+    <div class="text-center mb-2">
+      <small class="text-muted">TOTAL DEPÓSITO</small>
+      <h4 class="mb-0 mt-2">S/ {{ aData.total_importe | number:'1.2-2' }}</h4>
+    </div>
+    <form [formGroup]="payForm">
+
+
+
+      <div class="mb-1">
+        <label class="form-label label required">Tarjeta</label>
+        <div>
+          <nb-select formControlName="id_tipo_tarjeta" placeholder="Tipo de tarjeta" fullWidth [size]="'small'"
+            placeholder="Tipo de tarjeta">
+            <nb-option *ngFor="let item of tipoTarjetas" [value]="item.id_tipo_tarjeta">{{ item.nombre }}
+            </nb-option>
+          </nb-select>
+        </div>
+      </div>
+      <div class="mb-1">
+        <label class="form-label label required">Nro. de operación</label>
+        <input formControlName="operacion" fieldSize="small" nbInput fullWidth placeholder="Nro. de operación">
+      </div>
+
+    </form>
+
+  </nb-card-body>
+
+  <nb-card-footer class="text-end">
+    <button nbButton status="basic" size="small" (click)="onClose()" class="me-2">
+      <nb-icon icon="close-outline"></nb-icon>
+      Cancelar
+    </button>
+    <button nbButton status="primary" size="small" (click)="onSave()" [disabled]="payForm.invalid">
+      <nb-icon icon="checkmark-outline"></nb-icon>
+      Confirmar pago
+    </button>
+  </nb-card-footer>
+</nb-card>

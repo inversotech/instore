@@ -1,0 +1,60 @@
+<nb-card [nbSpinner]="loadingSpinner" nbSpinnerStatus="primary">
+  <nb-card-header class="d-flex justify-content-between align-items-center">
+    <div class="lh-base">
+      <div class="fw-bold">
+        <img src="assets/icons/transferencia-movil.png" alt="Transferencia movil" style="height: 20px;" class="me-1">
+        TRANSFERENCIA
+      </div>
+      <small>Registrar depósito</small>
+    </div>
+    <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer"></nb-icon>
+  </nb-card-header>
+
+  <nb-card-body>
+
+    <div class="text-center mb-2">
+      <small class="text-muted">TOTAL DEPÓSITO</small>
+      <h4 class="mb-0 mt-2">S/ {{ aData.total_importe | number:'1.2-2' }}</h4>
+    </div>
+    <form [formGroup]="payForm">
+      <div class="mb-1">
+        <label class="form-label label required">Cuenta bancaria</label>
+        <div>
+          <nb-select formControlName="id_cuenta_bancaria" placeholder="Cuenta bancaria" fullWidth [size]="'small'">
+            <nb-option *ngFor="let item of cuentaBancarias" [value]="item.id_cuenta_bancaria">
+              {{ item.nro_cuenta }} - {{ item.banco_nombre }}
+            </nb-option>
+          </nb-select>
+        </div>
+      </div>
+      <div class="mb-1">
+        <label class="form-label label required">Nro. de operación</label>
+        <input fieldSize="small" formControlName="nro_operacion_dep" nbInput fullWidth class="text-start"
+          placeholder="Nro. de operación">
+      </div>
+      <div class="mb-1">
+        <label class="form-label label required">Fecha de operación</label>
+        <nb-form-field>
+          <input type="text" autocomplete="off" name="fecha_operacion_dep" placeholder="Fecha de operación"
+            id="fecha_operacion_dep" formControlName="fecha_operacion_dep" [nbDatepicker]="nfecha2" fullWidth
+            fieldSize="small" nbInput>
+          <nb-icon nbSuffix icon="calendar-outline" pack="eva"></nb-icon>
+        </nb-form-field>
+        <nb-datepicker #nfecha2></nb-datepicker>
+      </div>
+
+    </form>
+
+  </nb-card-body>
+
+  <nb-card-footer class="text-end">
+    <button nbButton status="basic" size="small" (click)="onClose()" class="me-2">
+      <nb-icon icon="close-outline"></nb-icon>
+      Cancelar
+    </button>
+    <button nbButton status="primary" size="small" (click)="onSave()" [disabled]="payForm.invalid">
+      <nb-icon icon="checkmark-outline"></nb-icon>
+      Confirmar pago
+    </button>
+  </nb-card-footer>
+</nb-card>

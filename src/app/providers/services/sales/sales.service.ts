@@ -10,6 +10,14 @@ export class SalesService extends EntityDataService<any> {
         super(httpClient, `${environment.apiUrls.openAccounting}/api/sales`);
     }
 
+    public getCuentaBancarias$(params: any): Observable<any> {
+        return this.httpClient.get<any>(`${this.endPoint}/cuenta-bancarias`, { params: params });
+    }
+
+    public getTipoTarjetas$(params: any): Observable<any> {
+        return this.httpClient.get<any>(`${this.endPoint}/tipo-tarjetas`, { params: params });
+    }
+
     public getSalesFinalized$(params: any): Observable<any> {
         return this.httpClient.get<any>(`${this.endPoint}/sales-finalized`, { params: params });
     }
@@ -68,6 +76,11 @@ export class SalesService extends EntityDataService<any> {
 
     public deleteSaleDetalle$(idVentaDetalle: any): Observable<any> {
         return this.httpClient.delete<any>(`${this.endPoint}/sales-detail/${idVentaDetalle}`);
+    }
+
+
+    public getMisCajaCajasParaVentas$(params: any): Observable<any> {
+        return this.httpClient.get<any>(`${this.endPoint}/mis-cajas-habilitadas-para-ventas`, { params: params });
     }
 
 }

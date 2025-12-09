@@ -22,6 +22,10 @@ export class PersonaConsultasService extends EntityDataService<any> {
         return this.httpClient.get<any>(`${this.endPoint}/search-clientes-to-boleta`, { params: params });
     }
 
+    public searchClientesToPay$(params: any): Observable<any> {
+        return this.httpClient.get<any>(`${this.endPoint}/search-clientes-to-pay`, { params: params });
+    }
+
     public getRuc$(params: any): Observable<any> {
         return this.httpClient.get<any>(`${this.endPoint}/validar-ruc`, { params: params });
     }

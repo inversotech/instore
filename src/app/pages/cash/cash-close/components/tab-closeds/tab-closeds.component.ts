@@ -16,23 +16,22 @@ import { IncomeService } from 'src/app/providers/services/treasury/income.servic
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'lamb-main-income',
-  templateUrl: './main-income.component.html',
-  styleUrls: ['./main-income.component.scss']
+  selector: 'lamb-tab-closeds',
+  templateUrl: './tab-closeds.component.html',
+  styleUrls: ['./tab-closeds.component.scss']
 })
-export class MainIncomeComponent implements OnInit, OnDestroy {
+export class TabClosedsComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   public loading: boolean = false;
-  public misCajasHabilitadas: any[] = [];
+  public misAlmacenes: any[] = [];
   public vouchers: any[] = [];
-  public depositos: any[] = [];
-  public depositos_total: any;
+  public ventas: any[] = [];
   public anhos: any[] = [];
   public meses: any[] = [];
 
   public filterForm: FormGroup = this.formBuilder.group({
     text_search: [''],
-    ids_caja: [[]],
+    ids_almacen: [[]],
     id_anho: ['', Validators.required],
     id_mes: ['', Validators.required],
     // id_voucher: ['', Validators.required],
@@ -77,6 +76,7 @@ export class MainIncomeComponent implements OnInit, OnDestroy {
     private nbToastrService: NbToastrService,
     private manageAutorizationService: ManageAutorizationService,
     private almacenUsuariosService: AlmacenUsuariosService,
+    private vouchersService: VouchersService,
     // private userService: UserService,
   ) {
   }
@@ -102,21 +102,20 @@ export class MainIncomeComponent implements OnInit, OnDestroy {
   public getMasters(): void {
 
     forkJoin({
-      // misAlmacenes: this.almacenUsuariosService.getMisAlmacenes$({}),
-      misCajasHabilitadas: this.incomeService.getMisCajasHabilitadasAbiertas$({}),
+      misAlmacenes: this.almacenUsuariosService.getMisAlmacenes$({}),
       anhos: this.anhosService.getAll$(),
       meses: this.mesesService.getAll$(),
     })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: ({ misCajasHabilitadas, anhos, meses }) => {
-          this.misCajasHabilitadas = misCajasHabilitadas;
+        next: ({ misAlmacenes, anhos, meses }) => {
+          this.misAlmacenes = misAlmacenes;
           this.anhos = anhos;
           this.meses = meses;
 
-          if (this.misCajasHabilitadas.length > 0) {
+          if (this.misAlmacenes.length > 0) {
             setTimeout(() => {
-              this.filterForm.get('ids_caja')?.setValue(this.misCajasHabilitadas.map((caja: any) => caja.id_caja), { emitEvent: false });
+              this.filterForm.get('ids_almacen')?.setValue(this.misAlmacenes.map((almacen: any) => almacen.id_almacen), { emitEvent: false });
             }, 0);
           }
 
@@ -219,7 +218,7 @@ export class MainIncomeComponent implements OnInit, OnDestroy {
 
 
   private suscribeForms(): void {
-    this.filterForm.get('ids_caja')?.valueChanges
+    this.filterForm.get('ids_almacen')?.valueChanges
       .subscribe(res => {
         setTimeout(() => {
           this.onBuscar();
@@ -349,7 +348,7 @@ export class MainIncomeComponent implements OnInit, OnDestroy {
       per_page: this.paginate.pageSize,
       id_anho: value.id_anho,
       id_mes: value.id_mes,
-      ids_caja: value.ids_caja.join(','),
+      ids_almacen: value.ids_almacen.join(','),
     };
     this.loading = true;
     this.incomeService.getIncomesFinalized$(params)
@@ -357,15 +356,13 @@ export class MainIncomeComponent implements OnInit, OnDestroy {
       .subscribe({
         next: res => {
           this.loading = false;
-          this.depositos = res.depositos.data;
-          this.depositos_total = res.totales;
-          this.paginate.currentPage = res.depositos.current_page;
-          this.paginate.totalItems = res.depositos.total;
+          this.ventas = res.data;
+          this.paginate.currentPage = res.current_page;
+          this.paginate.totalItems = res.total;
         },
         error: () => {
           this.loading = false;
-          this.depositos = [];
-          this.depositos_total = null;
+          this.ventas = [];
           this.paginate.currentPage = 1;
           this.paginate.totalItems = 0;
         }

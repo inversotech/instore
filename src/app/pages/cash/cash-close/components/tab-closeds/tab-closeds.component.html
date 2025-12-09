@@ -1,14 +1,17 @@
 <nb-card>
-  <nb-card-header class="lh-sm">
-    <div>REPORTE - DEPOSITOS</div>
-    <div class="fw-light opacity-75">Reporte de depositos realizadas.</div>
-  </nb-card-header>
   <nb-card-body>
     <div class="row" [nbSpinner]="loading" nbSpinnerStatus="primary">
       <div class="col-12">
         <form [formGroup]="filterForm">
           <div class="row mb-3 g-1">
-
+            <div class="col-2">
+              <label for="text_search" class="label">Almacenes</label>
+              <nb-select multiple placeholder="Seleccione" fullWidth size="small" formControlName="ids_almacen">
+                <nb-option value="" disabled> -Seleccionar- </nb-option>
+                <nb-option *ngFor="let item of misAlmacenes" [value]="item.id_almacen">{{ item.almacen_nombre
+                  }}</nb-option>
+              </nb-select>
+            </div>
             <div class="col-2">
               <label for="text_search" class="label">Año</label>
               <nb-select placeholder="Seleccione" fullWidth size="small" formControlName="id_anho">
@@ -25,18 +28,6 @@
                 </nb-select>
               </div>
             </div>
-
-            <div class="col-4">
-              <label for="text_search" class="label">Cajas abiertas</label>
-              <nb-select multiple placeholder="Seleccione" fullWidth size="small" formControlName="ids_caja">
-                <nb-option value="" disabled> -Seleccionar- </nb-option>
-                <nb-option *ngFor="let item of misCajasHabilitadas" [value]="item.id_caja">
-                  ({{ item.correlativo }})-{{ item.caja_nombre }} {{ item.fecha_apertura | date: 'dd/MM/yyyy' }}
-                 
-                </nb-option>
-              </nb-select>
-            </div>
-
             <!-- <div class="col-md-2">
               <label for="id_voucher" class="label">Voucher</label>
               <nb-select placeholder="Seleccionar voucher" fullWidth [size]="'small'" formControlName="id_voucher"
@@ -137,8 +128,8 @@
                 <th class="text-nowrap">RAZÓN SOCIAL</th>
               </tr> -->
             </thead>
-            <tbody *ngIf="depositos.length>0; else emptyList">
-              <ng-container *ngFor="let item of depositos | paginate: { id: 'fmrPaginate',
+            <tbody *ngIf="ventas.length>0; else emptyList">
+              <ng-container *ngFor="let item of ventas | paginate: { id: 'fmrPaginate',
                 itemsPerPage: paginate?.pageSize,
                 currentPage: paginate?.currentPage,
                 totalItems: paginate?.totalItems}; let i=index">
@@ -152,8 +143,7 @@
                   <td class="text-nowrap text-start">{{ item.serie }}</td>
                   <td class="text-nowrap text-start">{{ item.numero }}</td>
                   <td class="text-nowrap text-start">
-                    <span *ngIf="item.numero_operacion" class="text-capitalize">Ope.{{ item.numero_operacion }}.{{
-                      item.fecha_operacion | date : 'dd/MM/yyyy'}}-</span>
+                    <span *ngIf="item.numero_operacion" class="text-capitalize">Ope.{{ item.numero_operacion }}.{{ item.fecha_operacion | date : 'dd/MM/yyyy'}}-</span>
                     {{ item.detalle }}
                   </td>
                   <!-- <td class="text-nowrap text-start">{{ item.id_tipo_documento_cli }}</td>
@@ -187,22 +177,6 @@
                 </tr>
               </ng-container>
             </tbody>
-            <!-- // Agregar un totalizador -->
-            <tfoot *ngIf="depositos.length>0">
-              <tr>
-                <th colspan="9" class="text-end">
-                  <span class="me-4">TOTALES</span>
-                  Cantidad: {{ depositos_total.cantidad_depositos }}
-                </th>
-                <th class="text-end">
-                  {{ depositos_total.total_importe | number : '1.2-2' }}
-                </th>
-                <th class="text-end">
-                  {{ depositos_total.total_importe_me | number : '1.2-2' }}
-                </th>
-                <th colspan="3"></th>
-              </tr>
-            </tfoot>
           </table>
         </div>
         <div class="row">

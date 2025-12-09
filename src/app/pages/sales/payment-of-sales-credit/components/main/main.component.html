@@ -1,0 +1,357 @@
+<nb-card accent="primary" class="mb-1">
+  <nb-card-header class="d-flex align-items-center">
+    <nb-icon status="info" style="font-size: 1.6rem;" icon="credit-card-outline" pack="eva" class="me-3"></nb-icon>
+
+    <div class="border-start ps-3 me-4 lh-base">
+      <div class="fw-semibold">PAGO DE VENTAS AL CRÉDITO</div>
+      <div class="fw-normal small text-primary">
+        Pagar cuentas por cobrar
+      </div>
+    </div>
+    <!-- {{ misCajasHabilitadas | json }} -->
+  </nb-card-header>
+</nb-card>
+
+<div class="row g-1">
+  <div class="col-md-6">
+
+    <!-- <nb-card accent="primary" class="mb-0"> -->
+    <nb-card class="mb-0">
+      <nb-card-header>
+        <form [formGroup]="documentoForm">
+
+          <div class="row g-1">
+            <div class="col-md-12 text-center mb-1">
+              <label for="ruc" i18n class="label mb-1">
+                Buscar por cliente (Opcional)
+                <!-- BUSCAR POR CLIENTE -->
+              </label>
+              <div>
+                <nb-form-field>
+                  <!-- <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon> -->
+
+                  <input #inputCliente [status]="clienteStatus" autocomplete="off" type="search" name="ruc" id="ruc"
+                    [formControl]="rucCliente" fullWidth fieldSize="small" nbInput [nbAutocomplete]="autoClienteRuc"
+                    placeholder="Ingrese ruc o dni del cliente" class="text-center">
+                  <!-- [formControl]="rucCliente" fullWidth fieldSize="small" nbInput> -->
+                  <button type="button" (click)="onSearchCliente()" outline [nbSpinner]="clienteLoading"
+                    nbSpinnerStatus="primary" nbSuffix [status]="clienteStatus" type="submit" nbButton size="small"
+                    nbTooltip="Buscar">
+                    <nb-icon icon="search-outline"></nb-icon>
+                  </button>
+
+                </nb-form-field>
+                <nb-autocomplete #autoClienteRuc [activeFirst]="true" [handleDisplayFn]="clienteHandle"
+                  (selectedChange)="clienteSelect($event)">
+                  <nb-option *ngFor="let item of filteredOptionsClientes$ | async" [value]="item">
+                    <nb-user shape="rectangle" [name]="item.numero_documento" [title]="item.razon_social"></nb-user>
+                  </nb-option>
+                </nb-autocomplete>
+                <small class="mt-1 text-center text-muted"> {{ documentoForm.get('cliente_razon_social')?.value || ''}}
+                </small>
+              </div>
+            </div>
+
+            <!-- <div class="col-md-6">
+              <label for="cliente_razon_social" i18n class="label">
+                Ap. y nombres/Razón social del cliente
+              </label>
+              <div [nbSpinner]="clienteLoading">
+                <nb-form-field>
+                  <input readonly type="text" formControlName="cliente_razon_social" name="cliente_razon_social"
+                    id="cliente_razon_social" nbInput fullWidth fieldSize="small">
+                </nb-form-field>
+              </div>
+            </div> -->
+
+          </div>
+          <div class="row g-1">
+            <div class="col-md-12">
+              <button nbButton fullWidth type="button" (click)="onSearchVentas()" class="me-1" type="submit"
+                status="basic" size="small" nbTooltip="Cargar cuentas por cobrar">
+                <nb-icon nbPrefix icon="search-outline" status="info" pack="eva"></nb-icon>
+                Buscar
+              </button>
+            </div>
+          </div>
+        </form>
+
+      </nb-card-header>
+      <nb-card-body>
+
+        <!-- <div *ngIf="saldoVentas.length > 0; else emptyListVentaSaldo"> -->
+
+        <div class="mt-2" *ngIf="saldoVentas.length > 0; else emptyList">
+          <div *ngFor="let item of saldoVentas; let i = index" class="compact-item mb-1 p-2 border-1 border ">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="fw-bold small">
+                {{ (i+1) }}
+                {{ item.serie }}-{{ item.numero }}
+              </div>
+
+              <div class="fw-bold">
+                {{ item.saldo_pendiente | currency:'S/.' }}
+              </div>
+            </div>
+            <div class="text-muted small text-truncate">
+              {{ item.razon_social_cli }} ({{ item.num_doc_cli }})
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-0 small text-secondary">
+              <span class="small">Emisión: {{ item.fecha_emision | date:'dd/MM/yyyy HH:mm' }}</span>
+
+              <button nbButton size="tiny" status="primary" outline (click)="onAgregarVenta(item)">
+                <nb-icon icon="plus-outline" pack="eva"></nb-icon>
+                Agregar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #emptyList>
+          <div class="mt-2">
+            <div class="d-flex justify-content-center mt-4">
+              <nb-card class="text-center">
+                <nb-card-body>
+                  <nb-icon status="info" icon="alert-circle-outline" pack="eva" class="mb-2 fs-3"></nb-icon>
+                  <p class="fw-bold mb-1">No se encontraron registros</p>
+                  <small class="text-muted">Busque cuentas por cobrar.</small>
+                </nb-card-body>
+              </nb-card>
+            </div>
+          </div>
+        </ng-template>
+
+        <!-- 
+        <nb-tabset>
+
+          <nb-tab tabTitle="Efectivo" tabIcon="credit-card-outline" class="p-0">
+            <nb-card class="m-0">
+              <nb-card-body>
+                <form [formGroup]="efectivoDepositoForm">
+                  <div class="row g-3">
+                    <div class="col-md-4">
+                      <div class="d-flex">
+                        <div class="me-2 pt-2" (click)="pushPayOnMethod('efectivo')">
+                          <img src="assets/icons/logo-efectivo.png" alt="Efectivo" style="height: 50px;">
+                        </div>
+                        <div class="flex-grow-1">
+                          <input nbInput fullWidth fieldSize="small" status="primary" formControlName="efectivo"
+                            class="mb-2" placeholder="Monto en efectivo (S/.)">
+                          <input nbInput fullWidth fieldSize="small" formControlName="glosa"
+                            placeholder="Glosa adicional">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </nb-card-body>
+            </nb-card>
+          </nb-tab>
+          <nb-tab tabTitle="Yape" tabIcon="credit-card-outline" class="p-0">
+            <nb-card class="m-0">
+              <nb-card-body>
+                <form [formGroup]="yapeDepositoForm">
+                  <div class="row g-3">
+                    <div class="col-md-4">
+                      <div class="d-flex">
+                        <div class="me-2 pt-2" (click)="pushPayOnMethod('yape')">
+                          <img src="assets/icons/logo-yape.png" alt="Yape" style="height: 50px;">
+                        </div>
+                        <div class="flex-grow-1">
+                          <input nbInput fullWidth fieldSize="small" status="primary" formControlName="yape"
+                            class="mb-2" placeholder="Monto con yape (S/.)">
+                          <input nbInput fullWidth fieldSize="small" formControlName="glosa_yape"
+                            placeholder="Glosa adicional">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </nb-card-body>
+            </nb-card>
+
+          </nb-tab>
+          <nb-tab tabTitle="Transferencia" tabIcon="credit-card-outline" class="p-0">
+            <nb-card class="m-0">
+              <nb-card-body>
+                <form [formGroup]="depositoDepositoForm">
+                  <div class="row g-3">
+                    <div class="col-md-4">
+
+                      <div class="d-flex">
+                        <div class="me-2 pt-2" (click)="pushPayOnMethod('transferencia')">
+                          <img src="assets/icons/transferencia-movil.png" alt="Transferencia movil"
+                            style="height: 50px;">
+                        </div>
+                        <div class="flex-grow-1">
+                          <input nbInput fullWidth fieldSize="small" status="primary" formControlName="deposito_cuenta"
+                            class="mb-2" placeholder="Monto con transferencia (S/.)">
+                          <nb-select formControlName="id_cuenta_bancaria" placeholder="Cuenta bancaria" fullWidth
+                            [size]="'small'" class="mb-2">
+                            <nb-option *ngFor="let item of cuentaBancarias" [value]="item.id_cuenta_bancaria">
+                              {{ item.nro_cuenta }} - {{ item.banco_nombre }}
+                            </nb-option>
+                          </nb-select>
+                          <input fieldSize="small" formControlName="nro_operacion_dep" nbInput fullWidth
+                            class="text-start" placeholder="Nro. de operación" class="mb-2">
+                          <nb-form-field class="mb-2">
+                            <input type="text" autocomplete="off" name="fecha_operacion_dep"
+                              placeholder="Fecha de operación" id="fecha_operacion_dep"
+                              formControlName="fecha_operacion_dep" [nbDatepicker]="nfecha2" fullWidth fieldSize="small"
+                              nbInput>
+                            <nb-icon nbSuffix icon="calendar-outline" pack="eva"></nb-icon>
+                          </nb-form-field>
+                          <nb-datepicker #nfecha2></nb-datepicker>
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </form>
+              </nb-card-body>
+            </nb-card>
+          </nb-tab>
+          <nb-tab tabTitle="Tarjeta" tabIcon="credit-card-outline" class="p-0">
+            <nb-card class="m-0">
+              <nb-card-body>
+                <form [formGroup]="tarjetaDepositoForm">
+                  <div class="row g-3">
+                    <div class="col-md-4">
+
+                      <div class="d-flex">
+                        <div class="me-2 pt-2" (click)="pushPayOnMethod('tarjeta')">
+                          <img src="assets/icons/pago-con-tarjeta.png" alt="Pago con tarjeta" style="height: 50px;">
+                        </div>
+                        <div class="flex-grow-1">
+                          <input fieldSize="small" status="primary" formControlName="tarjeta" nbInput fullWidth
+                            class="text-end" placeholder="Monto con tarjeta (S/.)" class="mb-2">
+
+                          <nb-select formControlName="id_tipo_tarjeta" placeholder="Tipo de tarjeta" fullWidth
+                            [size]="'small'" class="mb-2" placeholder="Tipo de tarjeta">
+                            <nb-option *ngFor="let item of tipoTarjetas" [value]="item.id_tipo_tarjeta">{{ item.nombre
+                              }}
+                            </nb-option>
+                          </nb-select>
+
+                          <input formControlName="operacion" fieldSize="small" nbInput fullWidth
+                            placeholder="Nro. de operación" class="mb-2">
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </nb-card-body>
+            </nb-card>
+
+          </nb-tab>
+          <nb-tab tabTitle="Anticipos" tabIcon="credit-card-outline" class="p-0">
+          </nb-tab>
+
+        </nb-tabset> -->
+
+
+      </nb-card-body>
+
+      <!-- <div class="text-center mt-3 mb-4">
+    <button nbButton type="button" size="small" class="me-1" status="primary" nbTooltip="Fin" (click)="onFinalizar()">
+      <nb-icon nbPrefix icon="checkmark-circle-outline" pack="eva"></nb-icon>
+      FINALIZAR VENTA
+    </button>
+  </div> -->
+    </nb-card>
+
+  </div>
+  <div class="col-md-6">
+    <nb-card class="mb-0">
+      <nb-card-header class="text-center">
+        <span class="text-center text-muted">CARRITO</span>
+      </nb-card-header>
+      <nb-card-body>
+
+        <div *ngIf="carritoVentas.length > 0; else emptyListVentaSaldo">
+
+          <div *ngFor="let item of carritoVentas; let i = index" class="compact-item mb-1 p-2 border-1 border ">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="fw-bold small">
+                {{ (i+1) }}
+                {{ item.serie }}-{{ item.numero }}
+              </div>
+
+              <div class="fw-bold text-end">
+                <!-- {{ item.importe_total | currency:'S/.' }} -->
+                <input type="text" status="info" nbInput fieldSize="small" class="text-end w-50" [(ngModel)]="item.saldo_pendiente_pagar">
+                <!-- [value]="item.importe_total | number:'1.2-2'" readonly> -->
+              </div>
+            </div>
+
+            <div class="text-muted small text-truncate">
+              {{ item.razon_social_cli }} ({{ item.num_doc_cli }})
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-0 small text-secondary">
+              <span class="small">Emisión: {{ item.fecha_emision | date:'dd/MM/yyyy HH:mm' }}</span>
+              <div>
+                <!-- <button nbButton class="me-1" size="tiny" status="primary" outline>
+                  <nb-icon icon="plus-outline" pack="eva"></nb-icon>
+                  Agregar
+                </button> -->
+                <button nbButton size="tiny" status="danger" outline nbTooltip="Quitar"
+                  (click)="onRemoveFromCarrito(item)">
+                  <nb-icon icon="trash-outline" pack="eva"></nb-icon>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <ng-template #emptyListVentaSaldo>
+          <div class="d-flex justify-content-center mt-4">
+            <nb-card class="text-center">
+              <nb-card-body>
+                <nb-icon status="info" icon="shopping-cart-outline" pack="eva" class="mb-2 fs-3"></nb-icon>
+                <p class="fw-bold mb-1">No se encontraron registros</p>
+                <small class="text-muted">Agregue cuentas al carrito.</small>
+              </nb-card-body>
+            </nb-card>
+          </div>
+        </ng-template>
+
+      </nb-card-body>
+      <nb-card-footer>
+        <div class="d-flex justify-content-between align-items-center fw-bold mb-3">
+          <span>Total:</span>
+          <span>
+            S/. {{ totalCarritoVentas | number:'1.2-2' }}
+          </span>
+        </div>
+
+        <div class="mb-1">
+          <button fullWidth nbButton status="basic" size="small" (click)="openPayModal()">
+            <img src="assets/icons/logo-efectivo.png" alt="Efectivo" style="height: 20px;" class="me-2">
+            Efectivo</button>
+        </div>
+        <div class="mb-1">
+          <button fullWidth nbButton status="basic" size="small" (click)="openPayYapeModal()">
+            <img src="assets/icons/logo-yape.png" alt="Yape" style="height: 20px;" class="me-2">
+            Con yape</button>
+        </div>
+        <div class="mb-1">
+          <button fullWidth nbButton status="basic" size="small" (click)="openPayTransferenciaModal()">
+            <img src="assets/icons/transferencia-movil.png" alt="Transferencia movil" style="height: 20px;"
+              class="me-2">
+            Transferencia bancaria</button>
+        </div>
+        <div class="mb-1">
+          <button fullWidth nbButton status="basic" size="small" (click)="openPayPosModal()">
+            <img src="assets/icons/pago-con-tarjeta.png" alt="Pago con tarjeta" style="height: 20px;" class="me-2">
+            Con POS</button>
+        </div>
+
+      </nb-card-footer>
+    </nb-card>
+
+  </div>
+</div>

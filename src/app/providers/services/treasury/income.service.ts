@@ -14,6 +14,31 @@ export class IncomeService extends EntityDataService<any> {
         return this.httpClient.get<any>(`${this.endPoint}/incomes-finalized`, { params: params });
     }
 
+    public getIncomesFinalizedToClose$(params: any): Observable<any> {
+        return this.httpClient.get<any>(`${this.endPoint}/incomes-finalized-to-close`, { params: params });
+    }
+
+
+    public getMedioPagos$(params: any): Observable<any> {
+        return this.httpClient.get<any>(`${this.endPoint}/medio-pagos`, { params: params });
+    }
+
+    public getMisCajasHabilitadasAbiertas$(params: any): Observable<any> {
+        return this.httpClient.get<any>(`${this.endPoint}/mis-cajas-habilitadas-abiertas`, { params: params });
+    }
+
+    public getMisCajasHabilitadasAll$(params: any): Observable<any> {
+        return this.httpClient.get<any>(`${this.endPoint}/mis-cajas-habilitadas-all`, { params: params });
+    }
+
+    public cerrarCaja$(data: any): Observable<any> {
+        return this.httpClient.post<any>(`${this.endPoint}/cajas/cerrar`, data);
+    }
+
+    public saveDepositoFromCaja$(data: any): Observable<any> {
+        return this.httpClient.post<any>(`${this.endPoint}/depositos/save-deposito-fromcaja`, data);
+    }
+
     // public getIncomesNoFinalized$(params: any): Observable<any> {
     //     return this.httpClient.get<any>(`${this.endPoint}/incomes-no-finalized`, { params: params });
     // }
@@ -29,8 +54,8 @@ export class IncomeService extends EntityDataService<any> {
     //     return this.httpClient.post<any>(`${this.endPoint}/incomes`, data);
     // }
 
-    public anularIncome$(idVenta: any): Observable<any> {
-        return this.httpClient.delete<any>(`${this.endPoint}/incomes/${idVenta}/anular`);
+    public anularIncome$(idDeposito: any): Observable<any> {
+        return this.httpClient.delete<any>(`${this.endPoint}/incomes/${idDeposito}/anular`);
     }
 
     // public finalizarIncome$(idVenta: any, data: any): Observable<any> {
@@ -70,4 +95,14 @@ export class IncomeService extends EntityDataService<any> {
     //     return this.httpClient.delete<any>(`${this.endPoint}/incomes-detail/${idVentaDetalle}`);
     // }
 
+    public getCuentasPorCobrar$(params: any): Observable<any> {
+        return this.httpClient.get<any>(`${this.endPoint}/cuentas-por-cobrar`, { params: params });
+    }
+
+    public getCuentaBancarias$(params: any): Observable<any> {
+        return this.httpClient.get<any>(`${this.endPoint}/cuenta-bancarias`, { params: params });
+    }
+    public getTipoTarjetas$(params: any): Observable<any> {
+        return this.httpClient.get<any>(`${this.endPoint}/tipo-tarjetas`, { params: params });
+    }
 }

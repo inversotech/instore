@@ -1,28 +1,175 @@
-<nb-card>
-    <nb-card-header>
-        <div class="text-center">
-            <span i18n>
-                DASHBOARD |
-            </span>
-            <span class="font-weight-light" i18n>
-                Página principal
-            </span>
+<div class="container-fluid p-1">
+    <!-- Header -->
+    <div class="row">
+        <div class="col-12 lh-base">
+            <h5 class="mb-0">Dashboard de Ventas</h5>
+            <p class="text-muted">Resumen general del sistema</p>
         </div>
-        <div></div>
-    </nb-card-header>
-    <nb-card-body>
+    </div>
 
-        <!-- <div *ngIf="apiLoaded | async">
-            <google-map [center]="position" [zoom]="8" width="100%" height="63%">
-                <map-marker [position]="position"></map-marker>
-            </google-map>
-        </div> -->
+    <!-- Cards de estadísticas -->
+    <div class="row mb-2 g-2">
+        <div class="col-md-3">
+            <nb-card status="primary" class="mb-0">
+                <nb-card-body>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Ventas del Día</p>
+                            <h4 class="mb-0">{{ ventasDia.moneda }} {{ ventasDia.valor | number:'1.2-2' }}</h4>
+                            <small class="text-{{ ventasDia.percent_vs_anterior_status }}">{{
+                                ventasDia.percent_vs_anterior }} vs ayer</small>
+                        </div>
+                        <nb-icon icon="trending-up-outline" status="primary"></nb-icon>
+                    </div>
+                </nb-card-body>
+            </nb-card>
+        </div>
 
-        <!-- <div *ngIf="apiLoaded | async"> -->
-            <!-- <google-map></google-map> -->
-        <!-- </div> -->
-    </nb-card-body>
-    <nb-card-footer class="text-end open-button-end">
+        <div class="col-md-3">
+            <nb-card status="success" class="mb-0">
+                <nb-card-body>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Ventas del Mes</p>
+                            <h4 class="mb-0">{{ ventasMes.moneda }} {{ ventasMes.valor | number:'1.2-2' }}</h4>
+                            <small class="text-{{ ventasMes.percent_vs_anterior_status }}">{{
+                                ventasMes.percent_vs_anterior }} vs mes anterior</small>
+                        </div>
+                        <nb-icon icon="bar-chart-outline" [status]="ventasMes.percent_vs_anterior_status"></nb-icon>
+                    </div>
+                </nb-card-body>
+            </nb-card>
+        </div>
 
-    </nb-card-footer>
-</nb-card>
+        <div class="col-md-3">
+            <nb-card status="warning" class="mb-0">
+                <nb-card-body>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Órdenes Pendientes</p>
+                            <h4 class="mb-0">{{ ordenesPendientes.valor }}</h4>
+                            <small class="text-{{ ordenesPendientes.por_vencer_hoy > 0 ? 'warning' : 'basic' }}">{{ ordenesPendientes.por_vencer_hoy }} por vencer hoy</small>
+                        </div>
+                        <nb-icon icon="shopping-cart-outline"
+                            [status]="ordenesPendientes.valor > 0 ? 'warning' : 'basic'"></nb-icon>
+                    </div>
+                </nb-card-body>
+            </nb-card>
+        </div>
+
+        <div class="col-md-3">
+            <nb-card status="info" class="mb-0">
+                <nb-card-body>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Clientes Activos</p>
+                            <h4 class="mb-0">{{ clientesActivos }}</h4>
+                            <small class="text-info">+15 este mes</small>
+                        </div>
+                        <nb-icon icon="people-outline" status="info"></nb-icon>
+                    </div>
+                </nb-card-body>
+            </nb-card>
+        </div>
+    </div>
+
+    <!-- Gráfico y productos -->
+    <div class="row mb-2 g-2">
+        <div class="col-lg-8 mb-2">
+            <nb-card class="mb-0">
+                <nb-card-header>Ventas de los Últimos 7 Días</nb-card-header>
+                <nb-card-body>
+                    <!-- Aquí puedes integrar Chart.js o cualquier librería -->
+                    <div class="text-center text-muted py-5">
+                        <nb-icon icon="bar-chart-outline"></nb-icon>
+                        <p>Gráfico de ventas</p>
+                    </div>
+                </nb-card-body>
+            </nb-card>
+        </div>
+
+        <div class="col-lg-4 mb-1">
+            <nb-card class="mb-0">
+                <nb-card-header>Productos Más Vendidos</nb-card-header>
+                <nb-card-body>
+                    <nb-list>
+                        <nb-list-item *ngFor="let producto of productosTopVentas" class="p-1">
+                            <div class="d-flex justify-content-between w-100 position-relative">
+                                <div class="lh-sm">
+                                    <div class="fw-bold small">{{ producto.nombre }}</div>
+                                    <small class="text-muted">SKU: {{ producto.sku }}</small>
+                                </div>
+                                <nb-badge [text]="producto.cantidad" status="primary"></nb-badge>
+                            </div>
+                        </nb-list-item>
+                    </nb-list>
+                </nb-card-body>
+            </nb-card>
+        </div>
+    </div>
+
+    <!-- Últimas ventas y alertas -->
+    <div class="row g-2">
+        <div class="col-lg-7 mb-2">
+            <nb-card class="mb-0">
+                <nb-card-header class="d-flex justify-content-between align-items-center">
+                    <span>Últimas Ventas</span>
+                    <button nbButton size="small" status="primary" outline>Ver todas</button>
+                </nb-card-header>
+                <nb-card-body class="p-1">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>N° Venta</th>
+                                <th>Cliente</th>
+                                <th>Fecha</th>
+                                <th class="text-end">Total</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let venta of ultimasVentas">
+                                <td class="fw-bold">{{ venta.numero }}</td>
+                                <td>{{ venta.cliente }}</td>
+                                <td>{{ venta.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+                                <td class="text-end">S/ {{ venta.total | number:'1.2-2' }}</td>
+                                <td class="position-relative">
+                                    <nb-badge [text]="venta.estado"
+                                        [status]="venta.estado === 'Pagado' ? 'success' : 'warning'">
+                                    </nb-badge>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </nb-card-body>
+            </nb-card>
+        </div>
+
+        <div class="col-lg-5 mb-3">
+            <nb-card class="mb-0">
+                <nb-card-header>Alertas y Notificaciones</nb-card-header>
+                <nb-card-body>
+                    <nb-alert status="warning" class="mb-2 lh-base">
+                        <strong>Stock bajo</strong>
+                        <div class="small">5 productos por debajo del stock mínimo</div>
+                    </nb-alert>
+
+                    <nb-alert status="info" class="mb-2 lh-base">
+                        <strong>Pagos pendientes</strong>
+                        <div class="small">8 facturas vencen en los próximos 3 días</div>
+                    </nb-alert>
+
+                    <nb-alert status="success" class="mb-2 lh-base">
+                        <strong>Meta alcanzada</strong>
+                        <div class="small">Has superado la meta de ventas del mes</div>
+                    </nb-alert>
+
+                    <nb-alert status="danger" class="mb-0 lh-base">
+                        <strong>Productos por vencer</strong>
+                        <div class="small">3 productos vencen en los próximos 7 días</div>
+                    </nb-alert>
+                </nb-card-body>
+            </nb-card>
+        </div>
+    </div>
+</div>

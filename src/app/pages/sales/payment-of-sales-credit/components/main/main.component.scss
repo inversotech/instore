@@ -1,0 +1,16 @@
+@import 'themes';
+
+.compact-item {
+//   border-bottom: 1px solid #e4e9f2;
+//   line-height: 1.1rem;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.compact-item:hover {
+  background: #f7f9fc;
+}
+
+.compact-item:last-child {
+  border-bottom: none;
+}

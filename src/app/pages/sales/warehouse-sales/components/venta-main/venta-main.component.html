@@ -1,7 +1,22 @@
 <nb-card class="mb-1">
 
   <nb-card accent="primary" class="mb-0">
-    <nb-card-header>
+    <nb-card-header class="d-flex align-items-center">
+      <button nbButton type="button" size="small" ghost nbTooltip="Regresar" (click)="onBack()" class="me-2">
+        <nb-icon status="primary" style="font-size: 1.6rem;" icon="arrow-ios-back-outline" pack="eva"></nb-icon>
+      </button>
+
+      <nb-icon status="info" style="font-size: 1.6rem;" icon="shopping-cart-outline" pack="eva" class="me-3"></nb-icon>
+
+      <div class="border-start ps-3 me-4 lh-base">
+        <div class="fw-semibold">VENTAS DE BODEGA</div>
+        <div class="fw-normal small text-primary">
+          • Tienda de Ñaña
+        </div>
+      </div>
+      <!-- {{ misCajasHabilitadas | json }} -->
+    </nb-card-header>
+    <!-- <nb-card-header>
 
       <div style="line-height: 1rem;">
         <table>
@@ -13,7 +28,7 @@
               </button>
             </td>
             <td>
-              <nb-icon status="primary" style="font-size: 1.6rem;" icon="book-open-outline" pack="eva"></nb-icon> &nbsp;
+              <nb-icon status="info" style="font-size: 1.6rem;" icon="shopping-cart-outline" pack="eva"></nb-icon> &nbsp;
             </td>
             <td class="border-start ps-2">
               <div>
@@ -34,7 +49,7 @@
           </tr>
         </table>
       </div>
-    </nb-card-header>
+    </nb-card-header> -->
     <nb-card-body>
       <!-- {{ documentoForm.value | json }} -->
       <form [formGroup]="documentoForm">
@@ -269,22 +284,22 @@
                 <th class="text-end">OP. GRAVADA</th>
                 <th class="text-end">{{ ventaTotales?.bi_gravada }}</th>
               </tr>
-              <tr>
+              <tr *ngIf="ventaTotales?.mto_inafecto > 0">
                 <th colspan="6" style="border-style: none;"></th>
                 <th class="text-end">OP. INAFECTA</th>
                 <th class="text-end">{{ ventaTotales?.mto_inafecto }}</th>
               </tr>
-              <tr>
+              <tr *ngIf="ventaTotales?.mto_exonerado > 0">
                 <th colspan="6" style="border-style: none;"></th>
                 <th class="text-end">OP. EXONERADA</th>
                 <th class="text-end">{{ ventaTotales?.mto_exonerado }}</th>
               </tr>
-              <tr>
+              <tr *ngIf="ventaTotales?.valor_op_gratuitas > 0">
                 <th colspan="6" style="border-style: none;"></th>
                 <th class="text-end">OP. GRATUITA</th>
                 <th class="text-end">{{ ventaTotales?.valor_op_gratuitas }}</th>
               </tr>
-              <tr>
+              <tr *ngIf="ventaTotales?.descuento_bi > 0">
                 <th colspan="6" style="border-style: none;"></th>
                 <th class="text-end">BI DESCUENTO</th>
                 <th class="text-end">{{ ventaTotales?.descuento_bi }}</th>
@@ -317,24 +332,34 @@
     </nb-card-body>
   </nb-card>
 
-  <div class="text-center g-1">
-    <nb-toggle status="warning" [formControl]="esCreditoInterno">
-      Venta al crédito (Crédito interno que se le da al cliente)
-    </nb-toggle>
-  </div>
 
   <nb-tabset>
-    <nb-tab tabTitle="Modalidad de pago" tabIcon="bell-outline" class="p-0">
+    <nb-tab tabTitle="Modalidad de pago" tabIcon="credit-card-outline" class="p-0">
       <nb-card class="m-0">
         <nb-card-body>
 
 
           <form [formGroup]="saleDepositoForm">
 
-            <div class="row g-1">
+            <div class="row g-3">
+
+
+
               <!-- PAGO EFECTIVO -->
-              <div class="col-md-4">
-                <div class="mb-1 row">
+              <div class="offset-md-2 col-md-4" *ngIf="hasCajaHabilitadaEfectivo">
+
+                <div class="d-flex">
+                  <div class="me-2 pt-2" (click)="pushPayOnMethod('efectivo')">
+                    <img src="assets/icons/logo-efectivo.png" alt="Efectivo" style="height: 50px;">
+                  </div>
+                  <div class="flex-grow-1">
+                    <input nbInput fullWidth fieldSize="small" status="primary" formControlName="efectivo" class="mb-2"
+                      placeholder="Monto en efectivo (S/.)">
+                    <input nbInput fullWidth fieldSize="small" formControlName="glosa" placeholder="Glosa adicional">
+                  </div>
+                </div>
+
+                <!-- <div class="mb-1 row">
                   <label class="col-md-5 text-md-end label form-label" i18n>Pago con efectivo</label>
                   <div class="col-md-7">
                     <input fieldSize="small" status="primary" nbInput fullWidth class="text-end" placeholder="00.00"
@@ -347,12 +372,39 @@
                     <input fieldSize="small" formControlName="glosa" nbInput fullWidth class="text-start"
                       placeholder="Glosa">
                   </div>
-                </div>
+                </div> -->
               </div>
 
               <!-- PAGO YAPE -->
-              <div class="col-md-4">
-                <div class="mb-1 row">
+              <div class="col-md-4" *ngIf="hasCajaHabilitadaYape">
+
+                <div class="d-flex">
+                  <div class="me-2 pt-2" (click)="pushPayOnMethod('yape')">
+                    <img src="assets/icons/logo-yape.png" alt="Yape" style="height: 50px;">
+                  </div>
+                  <div class="flex-grow-1">
+                    <input nbInput fullWidth fieldSize="small" status="primary" formControlName="yape" class="mb-2"
+                      placeholder="Monto con yape (S/.)">
+                    <input nbInput fullWidth fieldSize="small" formControlName="glosa_yape"
+                      placeholder="Glosa adicional">
+                  </div>
+                </div>
+                <!-- <div class="d-flex align-items-center mb-3">
+                  <img src="assets/icons/logo-yape.png" alt="Yape" style="height: 35px;" class="me-2">
+                  <span class="fw-semibold">Pago con YAPE</span>
+                </div>
+
+                <div class="mb-2">
+                  <input nbInput fullWidth fieldSize="small" status="primary" formControlName="yape" class="text-end"
+                    placeholder="Monto (S/.)">
+                </div>
+
+                <div>
+                  <input nbInput fullWidth fieldSize="small" formControlName="glosa_yape" class="text-start"
+                    placeholder="Glosa adicional">
+                </div> -->
+
+                <!-- <div class="mb-1 row">
                   <label class="col-md-5 text-md-end label form-label" i18n>Pago con YAPE</label>
                   <div class="col-md-7">
                     <input fieldSize="small" status="primary" nbInput fullWidth class="text-end" placeholder="00.00"
@@ -365,12 +417,65 @@
                     <input fieldSize="small" formControlName="glosa_yape" nbInput fullWidth class="text-start"
                       placeholder="Glosa">
                   </div>
+                </div> -->
+              </div>
+
+              <div class="col-md-2 text-center">
+                <nb-toggle status="info" [formControl]="esCreditoInterno"
+                  nbTooltip="Venta al crédito. Esta opción permite generar créditos a clientes, sin embargo el comprobante electrónico sigue siendo al contado"
+                  nbTooltipStatus="info">
+                </nb-toggle>
+                <div>
+                  <small>
+                    Venta al crédito (El cliente pagará después)
+                  </small>
                 </div>
               </div>
 
+            </div>
+            <div class="row g-3">
+              <div class="col text-center">
+                <button nbButton (click)="showMoreOptionPay = !showMoreOptionPay"
+                  nbTooltip="Click para ver más opciones" size="tiny" status="basic" class="text-lowercase mt-4">
+                  {{ showMoreOptionPay ? 'Ver menos opciones de pago' : 'Ver más opciones de pago' }}
+                </button>
+              </div>
+            </div>
+            <div class="row g-3" *ngIf="showMoreOptionPay">
+              <div class="offset-md-2"></div>
+
               <!-- PAGO DEPOSITO EN CUENTA -->
-              <div class="col-md-4">
-                <div class="mb-1 row">
+              <div class="col-md-4" *ngIf="hasCajaHabilitadaDeposito">
+
+                <!-- <div class="d-flex align-items-center"> -->
+                <div class="d-flex">
+                  <div class="me-2 pt-2" (click)="pushPayOnMethod('transferencia')">
+                    <img src="assets/icons/transferencia-movil.png" alt="Transferencia movil" style="height: 50px;">
+                  </div>
+                  <div class="flex-grow-1">
+                    <input nbInput fullWidth fieldSize="small" status="primary" formControlName="deposito_cuenta"
+                      class="mb-2" placeholder="Monto con transferencia (S/.)">
+                    <nb-select formControlName="id_cuenta_bancaria" placeholder="Cuenta bancaria" fullWidth
+                      [size]="'small'" class="mb-2">
+                      <nb-option *ngFor="let item of cuentaBancarias" [value]="item.id_cuenta_bancaria">
+                        {{ item.nro_cuenta }} - {{ item.banco_nombre }}
+                      </nb-option>
+                    </nb-select>
+                    <input fieldSize="small" formControlName="nro_operacion_dep" nbInput fullWidth class="text-start"
+                      placeholder="Nro. de operación" class="mb-2">
+                    <nb-form-field class="mb-2">
+                      <input type="text" autocomplete="off" name="fecha_operacion_dep" placeholder="Fecha de operación"
+                        id="fecha_operacion_dep" formControlName="fecha_operacion_dep" [nbDatepicker]="nfecha2"
+                        fullWidth fieldSize="small" nbInput>
+                      <nb-icon nbSuffix icon="calendar-outline" pack="eva"></nb-icon>
+                    </nb-form-field>
+                    <nb-datepicker #nfecha2></nb-datepicker>
+
+                  </div>
+                </div>
+
+
+                <!-- <div class="mb-1 row">
                   <label class="col-md-5 text-md-end label form-label" i18n>Pago a cuenta-cte</label>
                   <div class="col-md-7">
                     <input fieldSize="small" status="primary" nbInput fullWidth class="text-end" placeholder="00.00"
@@ -380,10 +485,10 @@
                 <div class="mb-1 row">
                   <label class="col-md-5 text-md-end label form-label" i18n>Cuenta bancaria</label>
                   <div class="col-md-7">
-                    <nb-select formControlName="id_ctabancaria" placeholder="Cuenta bancaria" fullWidth
+                    <nb-select formControlName="id_cuenta_bancaria" placeholder="Cuenta bancaria" fullWidth
                       [size]="'small'">
-                      <nb-option *ngFor="let item of bankAccounts" [value]="item.id_ctabancaria">
-                        {{ item.nombre }} - {{ item.banco }}
+                      <nb-option *ngFor="let item of cuentaBancarias" [value]="item.id_cuenta_bancaria">
+                        {{ item.nro_cuenta }} - {{ item.banco_nombre }}
                       </nb-option>
                     </nb-select>
                   </div>
@@ -407,12 +512,34 @@
                     </nb-form-field>
                     <nb-datepicker #nfecha2></nb-datepicker>
                   </div>
-                </div>
+                </div> -->
               </div>
 
               <!-- PAGO TARJETA DE CREDITO -->
-              <div class="col-md-4">
-                <div class="mb-1 row">
+              <div class="col-md-4" *ngIf="hasCajaHabilitadaCreditCard">
+
+                <div class="d-flex">
+                  <div class="me-2 pt-2" (click)="pushPayOnMethod('tarjeta')">
+                    <img src="assets/icons/pago-con-tarjeta.png" alt="Pago con tarjeta" style="height: 50px;">
+                  </div>
+                  <div class="flex-grow-1">
+                    <input fieldSize="small" status="primary" formControlName="tarjeta" nbInput fullWidth
+                      class="text-end" placeholder="Monto con tarjeta (S/.)" class="mb-2">
+
+                    <nb-select formControlName="id_tipo_tarjeta" placeholder="Tipo de tarjeta" fullWidth
+                      [size]="'small'" class="mb-2" placeholder="Tipo de tarjeta">
+                      <nb-option *ngFor="let item of tipoTarjetas" [value]="item.id_tipo_tarjeta">{{ item.nombre }}
+                      </nb-option>
+                    </nb-select>
+
+                    <input formControlName="operacion" fieldSize="small" nbInput fullWidth
+                      placeholder="Nro. de operación" class="mb-2">
+
+                  </div>
+                </div>
+
+
+                <!-- <div class="mb-1 row">
                   <label class="col-md-5 text-md-end label form-label" i18n>Pago con tarjeta</label>
                   <div class="col-md-7">
                     <input fieldSize="small" status="primary" formControlName="tarjeta" nbInput fullWidth
@@ -422,9 +549,9 @@
                 <div class="mb-1 row">
                   <label class="col-md-5 text-md-end label form-label" i18n>Tipo de tarjeta</label>
                   <div class="col-md-7">
-                    <nb-select formControlName="id_tipotarjeta" placeholder="Tipo de tarjeta" fullWidth
+                    <nb-select formControlName="id_tipo_tarjeta" placeholder="Tipo de tarjeta" fullWidth
                       [size]="'small'">
-                      <nb-option *ngFor="let item of cardTypes" [value]="item.id_tipotarjeta">{{ item.nombre }}
+                      <nb-option *ngFor="let item of tipoTarjetas" [value]="item.id_tipo_tarjeta">{{ item.nombre }}
                       </nb-option>
                     </nb-select>
                   </div>
@@ -434,7 +561,7 @@
                   <div class="col-md-7">
                     <input formControlName="operacion" fieldSize="small" nbInput fullWidth placeholder="####">
                   </div>
-                </div>
+                </div> -->
               </div>
 
               <!-- PAGOS ANTICIPADOS -->

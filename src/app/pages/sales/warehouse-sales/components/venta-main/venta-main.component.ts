@@ -25,6 +25,7 @@ export class VentaMainComponent implements OnInit, OnDestroy {
   public ventaDetalles: any[] = [];
   public ventaTotales: any;
   public loadingSpinner: boolean = false;
+  public showMoreOptionPay: boolean = false;
 
   public filteredOptionsClientes$: Observable<any[]> | undefined = of([]);
   public rucCliente: FormControl = new FormControl('', [Validators.required]);
@@ -34,8 +35,9 @@ export class VentaMainComponent implements OnInit, OnDestroy {
   public clienteStatus: any = 'basic';
 
 
-  public cardTypes: any[] = [];
-  public bankAccounts: any[] = [];
+  public tipoTarjetas: any[] = [];
+  public cuentaBancarias: any[] = [];
+  public misCajasHabilitadas: any[] = [];
 
   public documentoForm: FormGroup = this.formBuilder.group({
     id_conta_documento: ['', Validators.required],
@@ -78,18 +80,17 @@ export class VentaMainComponent implements OnInit, OnDestroy {
     glosa_yape: [''],
 
     deposito_cuenta: [],
-    id_ctabancaria: [''],
+    id_cuenta_bancaria: [''],
     nro_operacion_dep: [''],
     fecha_operacion_dep: [''],
 
     tarjeta: [],
-    id_tipotarjeta: [],
+    id_tipo_tarjeta: [],
     operacion: [],
   });
 
   constructor(private formBuilder: FormBuilder,
     private nbDialogService: NbDialogService,
-    private movimientosService: MovimientosService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private salesService: SalesService,
@@ -314,12 +315,12 @@ export class VentaMainComponent implements OnInit, OnDestroy {
           glosa_yape: '',
 
           deposito_cuenta: '',
-          id_ctabancaria: '',
+          id_cuenta_bancaria: '',
           nro_operacion_dep: '',
           fecha_operacion_dep: '',
 
           tarjeta: '',
-          id_tipotarjeta: '',
+          id_tipo_tarjeta: '',
           operacion: '',
         });
       }, 0);
@@ -450,13 +451,13 @@ export class VentaMainComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (data) => {
             console.log(data);
-            
+
             this.clienteLoading = false;
             this.documentoForm.get('id_cliente')?.patchValue(id_persona);
             this.documentoForm.get('cliente_id_tipo_documento')?.patchValue(data.id_tipo_documento);
             this.documentoForm.get('cliente_num_documento')?.patchValue(numero_documento);
             this.documentoForm.get('cliente_razon_social')?.patchValue(razon_social);
-            this.documentoForm.get('cliente_direccion')?.patchValue(data.direccion ?? '');
+            this.documentoForm.get('cliente_direccion')?.patchValue(data.direccion ?? 'Sin direccion');
             this.documentoForm.get('cliente_email')?.patchValue('example@ex.com');
             this.configRucExistsInSunat(data);
           }, error: () => {
@@ -475,7 +476,7 @@ export class VentaMainComponent implements OnInit, OnDestroy {
             this.documentoForm.get('cliente_id_tipo_documento')?.patchValue(data.id_tipo_documento);
             this.documentoForm.get('cliente_num_documento')?.patchValue(numero_documento);
             this.documentoForm.get('cliente_razon_social')?.patchValue(razon_social);
-            this.documentoForm.get('cliente_direccion')?.patchValue('');
+            this.documentoForm.get('cliente_direccion')?.patchValue('Sin direccion');
             this.documentoForm.get('cliente_email')?.patchValue('example@ex.com');
             // this.configRucExistsInSunat(data);
           }, error: () => {
@@ -494,7 +495,7 @@ export class VentaMainComponent implements OnInit, OnDestroy {
             this.documentoForm.get('cliente_id_tipo_documento')?.patchValue(data.id_tipo_documento);
             this.documentoForm.get('cliente_num_documento')?.patchValue(numero_documento);
             this.documentoForm.get('cliente_razon_social')?.patchValue(razon_social);
-            this.documentoForm.get('cliente_direccion')?.patchValue('');
+            this.documentoForm.get('cliente_direccion')?.patchValue('Sin direccion');
             this.documentoForm.get('cliente_email')?.patchValue('example@ex.com');
             // this.configRucExistsInSunat(data);
           }, error: () => {
@@ -580,21 +581,32 @@ export class VentaMainComponent implements OnInit, OnDestroy {
 
   public getMasters() {
     const contaDocumentos$ = this.salesService.getMisContaDocumentos$({ id_venta: this.idVenta }).pipe(takeUntil(this.destroy$));
+    const cuentaBancarias$ = this.salesService.getCuentaBancarias$({ id_venta: this.idVenta }).pipe(takeUntil(this.destroy$));
+    const tipoTarjetas$ = this.salesService.getTipoTarjetas$({ id_venta: this.idVenta }).pipe(takeUntil(this.destroy$));
+    const misCajasHabilitadas$ = this.salesService.getMisCajaCajasParaVentas$({}).pipe(takeUntil(this.destroy$));
     this.loadingSpinner = true;
     forkJoin({
-      contaDocumentos: contaDocumentos$
+      contaDocumentos: contaDocumentos$,
+      cuentaBancarias: cuentaBancarias$,
+      tipoTarjetas: tipoTarjetas$,
+      misCajasHabilitadas: misCajasHabilitadas$
     }).subscribe({
       next: (response) => {
         this.loadingSpinner = false;
         this.contaDocumentos = response.contaDocumentos || [];
+        this.cuentaBancarias = response.cuentaBancarias || [];
+        this.tipoTarjetas = response.tipoTarjetas || [];
+        this.misCajasHabilitadas = response.misCajasHabilitadas || [];
         this.getVentaById();
         this.getVentaDetalleByIdVenta();
       },
       error: (err) => {
         this.loadingSpinner = false;
         this.contaDocumentos = [];
+        this.cuentaBancarias = [];
       }
     });
+
 
 
     // this.mesesService.getAll$()
@@ -616,6 +628,70 @@ export class VentaMainComponent implements OnInit, OnDestroy {
     //   });
   }
 
+
+  get hasCajaHabilitadaEfectivo(): boolean {
+    return this.misCajasHabilitadas.some(caja => caja.id_medio_pago === '008');
+  }
+  get hasCajaHabilitadaYape(): boolean {
+    return this.misCajasHabilitadas.some(caja => caja.id_medio_pago === '021');
+  }
+  get hasCajaHabilitadaCreditCard(): boolean {
+    return this.misCajasHabilitadas.some(caja => caja.id_medio_pago === '006');
+  }
+  get hasCajaHabilitadaDeposito(): boolean {
+    return this.misCajasHabilitadas.some(caja => caja.id_medio_pago === '001');
+  }
+
+  private clearSaleDepositoForm() {
+    setTimeout(() => {
+      this.saleDepositoForm.patchValue({
+        efectivo: '',
+        glosa: '',
+
+        yape: '',
+        glosa_yape: '',
+
+        deposito_cuenta: '',
+        id_cuenta_bancaria: '',
+        nro_operacion_dep: '',
+        fecha_operacion_dep: '',
+
+        tarjeta: '',
+        id_tipo_tarjeta: '',
+        operacion: '',
+      });
+    }, 0);
+  }
+
+  public pushPayOnMethod(method: string) {
+    this.clearSaleDepositoForm();
+    if (method === 'efectivo') {
+      setTimeout(() => {
+        this.saleDepositoForm.patchValue({
+          efectivo: this.ventaTotales?.importe ?? 0,
+        });
+      }, 0);
+    } else if (method === 'yape') {
+      setTimeout(() => {
+        this.saleDepositoForm.patchValue({
+          yape: this.ventaTotales?.importe ?? 0,
+        });
+      }, 0);
+    } else if (method === 'transferencia') {
+      setTimeout(() => {
+        this.saleDepositoForm.patchValue({
+          deposito_cuenta: this.ventaTotales?.importe ?? 0,
+        });
+      }, 0);
+    } else if (method === 'tarjeta') {
+      setTimeout(() => {
+        this.saleDepositoForm.patchValue({
+          tarjeta: this.ventaTotales?.importe ?? 0,
+        });
+      }, 0);
+    }
+
+  }
   // public onRegistrarNuevoRecei() {
   //   const modal = this.nbDialogService.open(FormReceiNuevoMovimientoModalComponent);
   //   modal.onClose
@@ -740,19 +816,23 @@ export class VentaMainComponent implements OnInit, OnDestroy {
       es_credito_interno: es_credito_interno,
 
       //Pago de la operacion
-      efectivo: valuePay.efectivo,
+      id_caja_efectivo: this.misCajasHabilitadas.find(caja => caja.id_medio_pago === '008')?.id_caja || null,
+      efectivo: this.hasCajaHabilitadaEfectivo ? valuePay.efectivo : 0,
       glosa: valuePay.glosa,
 
-      yape: valuePay.yape,
+      id_caja_yape: this.misCajasHabilitadas.find(caja => caja.id_medio_pago === '021')?.id_caja || null,
+      yape: this.hasCajaHabilitadaYape ? valuePay.yape : 0,
       glosa_yape: valuePay.glosa_yape,
 
-      deposito_cuenta: valuePay.deposito_cuenta,
-      id_ctabancaria: valuePay.id_ctabancaria,
+      id_caja_deposito: this.misCajasHabilitadas.find(caja => caja.id_medio_pago === '001')?.id_caja || null,
+      deposito_cuenta: this.hasCajaHabilitadaYape ? valuePay.deposito_cuenta : 0,
+      id_cuenta_bancaria: valuePay.id_cuenta_bancaria,
       nro_operacion_dep: valuePay.nro_operacion_dep,
       fecha_operacion_dep: fecha_operacion_dep,
 
-      tarjeta: valuePay.tarjeta,
-      id_tipotarjeta: valuePay.id_tipotarjeta,
+      id_caja_tarjeta: this.misCajasHabilitadas.find(caja => caja.id_medio_pago === '006')?.id_caja || null,
+      tarjeta: this.hasCajaHabilitadaCreditCard ? valuePay.tarjeta : 0,
+      id_tipo_tarjeta: valuePay.id_tipo_tarjeta,
       operacion: valuePay.operacion,
 
       anticipos: [

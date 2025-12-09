@@ -19,6 +19,10 @@ const routes: Routes = [
         path: 'income-list',
         loadChildren: () => import('./income-list/income-list.module').then(m => m.IncomeListModule),
       },
+      {
+        path: 'payment-of-sales-credit',
+        loadChildren: () => import('./payment-of-sales-credit/payment-of-sales-credit.module').then(m => m.PaymentOfSalesCreditModule),
+      },
     ]
   }
 ];
