@@ -756,7 +756,39 @@ export class MainComponent implements OnInit, OnDestroy {
   //     }, err => { });
   // }
 
-  private validarPagoTotal(): number | undefined {
+  public openPayModal() {
+    this.abrirPago({
+      medioPago: '008',
+      mensajeNoCaja: 'No tienes ninguna caja habilitada para pagos en efectivo.',
+      modalComponent: PayEfectivoModalComponent
+    });
+  }
+
+  public openPayYapeModal() {
+    this.abrirPago({
+      medioPago: '021',
+      mensajeNoCaja: 'No tienes ninguna caja habilitada para pagos con Yape.',
+      modalComponent: PayYapeModalComponent
+    });
+  }
+
+  public openPayTransferenciaModal() {
+    this.abrirPago({
+      medioPago: '001',
+      mensajeNoCaja: 'No tienes ninguna caja habilitada para pagos por transferencia.',
+      modalComponent: PayTransferenciaModalComponent
+    });
+  }
+
+  public openPayPosModal() {
+    this.abrirPago({
+      medioPago: '006',
+      mensajeNoCaja: 'No tienes ninguna caja habilitada para pagos con tarjeta de crédito/débito.',
+      modalComponent: PayPosModalComponent
+    });
+  }
+
+  private abrirPago({ medioPago, mensajeNoCaja, modalComponent }: { medioPago: string; mensajeNoCaja: string; modalComponent: any }) {
     const totalImporte = this.totalCarritoVentas;
     if (totalImporte <= 0) {
       this.nbToastrService.show(
@@ -766,22 +798,19 @@ export class MainComponent implements OnInit, OnDestroy {
       );
       return;
     }
-    return totalImporte;
-  }
 
-  public openPayModal() {
-    const totalImporte = this.validarPagoTotal();
-    const id_caja = this.misCajasHabilitadas.find(caja => caja.id_medio_pago === '008')?.id_caja;
+    const id_caja = this.misCajasHabilitadas.find(c => c.id_medio_pago === medioPago)?.id_caja;
+
     if (!id_caja) {
       this.nbToastrService.show(
-        `No tienes ninguna caja habilitada para pagos en efectivo.`,
+        mensajeNoCaja,
         'Caja no habilitada',
         { status: "warning", icon: "alert-circle-outline" }
       );
       return;
     }
 
-    const modal = this.nbDialogService.open(PayEfectivoModalComponent, {
+    const modal = this.nbDialogService.open(modalComponent, {
       context: {
         data: {
           carritoVentas: this.carritoVentas,
@@ -790,108 +819,19 @@ export class MainComponent implements OnInit, OnDestroy {
         }
       }
     });
+
     modal.onClose
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res) => {
-          if (!res.cancel) {
+          if (!res?.cancel) {
             this.carritoVentas = [];
             this.onSearchVentas();
           }
-        }, error: () => {
         }
       });
   }
 
-  public openPayYapeModal() {
-    const totalImporte = this.validarPagoTotal();
-    const id_caja = this.misCajasHabilitadas.find(caja => caja.id_medio_pago === '021')?.id_caja;
-    if (!id_caja) {
-      this.nbToastrService.show(
-        `No tienes ninguna caja habilitada para pagos con Yape.`,
-        'Caja no habilitada',
-        { status: "warning", icon: "alert-circle-outline" }
-      );
-      return;
-    }
-    const modal = this.nbDialogService.open(PayYapeModalComponent, {
-      context: {
-        data: {
-          carritoVentas: this.carritoVentas,
-          total_importe: totalImporte,
-          id_caja: id_caja,
-        }
-      }
-    });
-    modal.onClose
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(res => {
-        if (!res.cancel) {
-          this.carritoVentas = [];
-          this.onSearchVentas();
-        }
-      }, err => { });
-  }
-
-  public openPayTransferenciaModal() {
-    const totalImporte = this.validarPagoTotal();
-    const id_caja = this.misCajasHabilitadas.find(caja => caja.id_medio_pago === '001')?.id_caja;
-    if (!id_caja) {
-      this.nbToastrService.show(
-        `No tienes ninguna caja habilitada para pagos por transferencia.`,
-        'Caja no habilitada',
-        { status: "warning", icon: "alert-circle-outline" }
-      );
-      return;
-    }
-    const modal = this.nbDialogService.open(PayTransferenciaModalComponent, {
-      context: {
-        data: {
-          carritoVentas: this.carritoVentas,
-          total_importe: totalImporte,
-          id_caja: id_caja,
-        }
-      }
-    });
-    modal.onClose
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(res => {
-        if (!res.cancel) {
-          this.carritoVentas = [];
-          this.onSearchVentas();
-        }
-      }, err => { });
-  }
-
-  public openPayPosModal() {
-    const totalImporte = this.validarPagoTotal();
-    const id_caja = this.misCajasHabilitadas.find(caja => caja.id_medio_pago === '006')?.id_caja;
-    if (!id_caja) {
-      this.nbToastrService.show(
-        `No tienes ninguna caja habilitada para pagos con tarjeta de crédito/débito.`,
-        'Caja no habilitada',
-        { status: "warning", icon: "alert-circle-outline" }
-      );
-      return;
-    }
-    const modal = this.nbDialogService.open(PayPosModalComponent, {
-      context: {
-        data: {
-          carritoVentas: this.carritoVentas,
-          total_importe: totalImporte,
-          id_caja: id_caja,
-        }
-      }
-    });
-    modal.onClose
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(res => {
-        if (!res.cancel) {
-          this.carritoVentas = [];
-          this.onSearchVentas();
-        }
-      }, err => { });
-  }
 
   // public onRegistrarNuevoDepar() {
   //   const modal = this.nbDialogService.open(FormDeparNuevoMovimientoModalComponent);
