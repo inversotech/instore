@@ -23,10 +23,6 @@ const routes: Routes = [
         path: 'operations-list/sales-list',
         loadChildren: () => import('./operations-list/sales-list/sales-list.module').then(m => m.SalesListModule),
       },
-      {
-        path: 'operations-list/income-list',
-        loadChildren: () => import('./operations-list/income-list/income-list.module').then(m => m.IncomeListModule),
-      },
 
 
       // Setup
