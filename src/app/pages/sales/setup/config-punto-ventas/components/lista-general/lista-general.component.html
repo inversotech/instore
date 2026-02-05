@@ -1,0 +1,139 @@
+<nb-card>
+  <nb-card-header>
+
+    <div style="line-height: 1rem;">
+      <table>
+        <tr>
+          <td>
+            <nb-icon status="primary" style="font-size: 1.6rem;" icon="settings-outline" pack="eva"></nb-icon> &nbsp;
+          </td>
+          <td class="border-start ps-2">
+            <div>
+              <span i18n>
+                CONFIGURACIÓN DE PUNTO DE VENTAS
+              </span>
+            </div>
+            <div class="fw-light">Creación y gestión de puntos de venta</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+  </nb-card-header>
+  <nb-card-body>
+    <form [formGroup]="searchForm" (ngSubmit)="submitFormSearch()">
+
+      <div class="row g-1">
+        <div class="col-md-3">
+          <label for="id_empresa" class="label form-label">Empresa</label>
+          <nb-select placeholder="Empresa" fullWidth [size]="'small'" formControlName="id_empresa" id="id_empresa">
+            <nb-option *ngFor="let item of empresas$ | async" [value]="item.id_empresa">
+              {{ item.id_empresa }} - {{ item.empresa_nombrecomercial }}</nb-option>
+          </nb-select>
+        </div>
+
+        <div class="col-md-3">
+          <label for="text_search" class="label form-label">Buscar</label>
+          <nb-form-field>
+            <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+            <input formControlName="text_search" type="search" placeholder="Buscar..." nbInput fullWidth shape="round"
+              fieldSize="small">
+          </nb-form-field>
+        </div>
+        <div class="col-md-4 mt-md-auto">
+          <button nbButton class="me-1" type="submit" status="primary" size="small">
+            <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+            Buscar
+          </button>
+          <button nbButton class="me-1" type="button" (click)="onRegistrarNuevo()" status="primary" size="small">
+            <nb-icon nbPrefix icon="plus-outline" pack="eva"></nb-icon>
+            Nuevo punto
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <br>
+    <div class="row" [nbSpinner]="loadingSpinner" nbSpinnerStatus="primary">
+      <div class="col-md-12">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>N</th>
+              <th>NOMBRE</th>
+              <th>EMPRESA</th>
+              <th>SUCURSAL</th>
+              <th class="text-center">DOCUMENTOS</th>
+              <th class="text-center">USUARIOS</th>
+              <th class="text-center">ALMACEN</th>
+              <th class="text-center">ACTIVO</th>
+              <th class="text-center">ACCIONES</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="puntoVentas.length > 0; else emptyList">
+            <tr *ngFor="let item of puntoVentas; let i=index" [ngClass]="{'fw-bold': item.id_assigned}">
+              <td> {{ (i+1) }} </td>
+              <th> {{ item.nombre }}</th>
+              <td> {{ item.id_empresa }}-{{ item.empresa_nombre_comercial }}</td>
+              <td> {{ item.id_empresa_sucursal }}-{{ item.sucursal_nombre }}</td>
+              <td class="text-center">
+                <!-- {{ item.total_documentos }} -->
+                <span *ngFor="let item of item.documentos">
+                  <nb-icon icon="file-text-outline" status="info" pack="eva" class="fs-6"></nb-icon>
+                  {{ item.serie }}&nbsp;
+                </span>
+              </td>
+              <td class="text-center">
+                <div *ngIf="item.users.length > 0">
+                  <nb-icon icon="people-outline" status="info" pack="eva" class="fs-6"></nb-icon>
+                  {{ item.users[0].email }}
+                  <span *ngIf="item.users.length > 1">y {{ item.users.length -1 }} más...</span>
+                </div>
+                <div *ngIf="item.users.length == 0" class="text-muted">
+                  <nb-icon icon="people-outline" status="basic" pack="eva" class="fs-6"></nb-icon>
+                  Sin usuarios asignado
+                </div>
+              </td>
+              <td class="text-center">
+                <span *ngIf="item.id_almacen">
+                  <nb-icon icon="home-outline" status="info" pack="eva" class="fs-6"></nb-icon>
+                  {{ item.almacen_nombre }}
+                </span>
+                <span *ngIf="!item.id_almacen" class="text-muted">
+                  <nb-icon icon="home-outline" status="basic" pack="eva" class="fs-6"></nb-icon>
+                  Sin almacén
+                </span>
+              </td>
+              <td class="text-center">
+                {{ item.activo ? 'SI' : 'NO' }}
+              </td>
+              <td class="text-center">
+                <button class="me-1" nbButton size="small" nbTooltip="Editar" (click)="onEditar(item)">
+                  <nb-icon icon="edit-outline" status="info" pack="eva"></nb-icon>
+                </button>
+                <button class="me-1" nbButton size="small" nbTooltip="Configurar" (click)="onConfigurar(item)">
+                  <nb-icon icon="settings-outline" status="info" pack="eva"></nb-icon>
+                </button>
+                <button class="me-1" nbButton size="small" nbTooltip="Eliminar" (click)="onEliminar(item)">
+                  <nb-icon icon="trash-outline" status="danger" pack="eva"></nb-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <ng-template #emptyList>
+      <tbody>
+        <tr>
+          <td colspan="7" class="text-center">
+            <span i18n class="label">
+              No hay registros para mostrar
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </ng-template>
+  </nb-card-body>
+</nb-card>

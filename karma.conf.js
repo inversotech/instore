@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/open-sales-src'),
+      dir: require('path').join(__dirname, './coverage/inverso-store-src'),
       subdir: '.',
       reporters: [
         { type: 'html' },

@@ -1,7 +1,7 @@
 <nb-layout>
   <nb-layout-header fixed>
-    <open-header [position]="(sidebar?.id === 'left' ? 'normal': 'inverse')"></open-header>
-    <!-- <open-header ></open-header> -->
+    <inverso-header [position]="(sidebar?.id === 'left' ? 'normal': 'inverse')"></inverso-header>
+    <!-- <inverso-header ></inverso-header> -->
   </nb-layout-header>
 
   <!-- sidebar -->
@@ -9,15 +9,15 @@
 
     <!-- header -->
     <!-- <nb-sidebar-header>
-      <open-sidebar-header></open-sidebar-header>
+      <inverso-sidebar-header></inverso-sidebar-header>
     </nb-sidebar-header> -->
 
     <!-- body -->
-    <open-sidebar-content></open-sidebar-content>
+    <inverso-sidebar-content></inverso-sidebar-content>
 
     <!-- footer -->
     <nb-sidebar-footer fixed [ngStyle]="{'text-align': 'center'}">
-      <open-sidebar-footer></open-sidebar-footer>
+      <inverso-sidebar-footer></inverso-sidebar-footer>
     </nb-sidebar-footer>
 
   </nb-sidebar>
@@ -25,7 +25,7 @@
 
   <nb-layout-column>
     <router-outlet></router-outlet>
-    <!-- <open-identity-iasd-logo [position]="sidebar?.id"></open-identity-iasd-logo> -->
+    <!-- <inverso-identity-iasd-logo [position]="sidebar?.id"></inverso-identity-iasd-logo> -->
   </nb-layout-column>
 
   <!-- sidebar right -->

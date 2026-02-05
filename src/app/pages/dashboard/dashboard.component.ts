@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'open-dashboard',
+  selector: 'inverso-dashboard',
   template: '<router-outlet></router-outlet>',
   styles: ['']
 })

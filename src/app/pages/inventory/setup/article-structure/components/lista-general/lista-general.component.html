@@ -1,0 +1,276 @@
+<nb-card>
+  <nb-card-header class="cabecera">
+    <div class="text-center">
+      <span i18n>
+        UNSPSC |
+      </span>
+      <span class="font-weight-light" i18n>
+        Código de Producto SUNAT
+      </span>
+    </div>
+    <div>
+      <a href="https://cpe.sunat.gob.pe/informacion_general/codigoproducto" target="_blank">
+        <img width="7rem" class="image-sunat" src="assets/icons/sunat_web.png">
+      </a>
+      <button nbButton (click)="onImportar()" nbTooltip="Importar desde un excel" type="button" status="success"
+        size="small">
+        <nb-icon icon="upload-outline"></nb-icon>
+        Importar
+      </button>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <!-- <nb-card-body [nbSpinner]="loadingSpinner" nbSpinnerStatus="primary"> -->
+
+    <!-- <nb-card>
+      <nb-card-header> -->
+
+    <form (ngSubmit)="submitFormSearch()">
+      <div class="mb-2 row">
+        <div class="col-md-10">
+          <nb-form-field>
+            <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+            <input type="search" placeholder="Buscar..." [formControl]="textSearch" nbInput fullWidth shape="round"
+              fieldSize="small">
+          </nb-form-field>
+        </div>
+        <div class="col-md-2">
+          <button nbSuffix nbButton nbTooltip="Buscar" type="submit" status="primary" size="small">
+            <nb-icon icon="search-outline"></nb-icon>
+            Buscar
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- <div class="mb-2 row"> -->
+    <div class="card-grupos">
+      <nb-card accent="warning" *ngFor="let item of cabeceraArticulos" (click)="getSegmentos(item)"
+        [ngClass]="{'active': item.id_articulo === params?.a_id_grupo}">
+        <!-- <nb-card accent="warning" *ngFor="let item of cabeceraArticulos" (click)="getSegmentos(item)"> -->
+        <nb-card-body>
+          <strong>[{{item.codigo}}]</strong><span class="label"> {{item.nombre}} </span>
+        </nb-card-body>
+      </nb-card>
+    </div>
+    <br>
+
+    <!-- </nb-card-header>
+    </nb-card> -->
+
+    <!-- </div>
+    </div> -->
+    <!-- </div> -->
+    <!-- </nb-card-body>
+</nb-card>
+<nb-card>
+  <nb-card-body> -->
+    <div class="row">
+      <div class="col-md-12 colums-clases">
+        <nb-card size="large">
+          <nb-card-header>
+            <div class="mb-2">
+              <div>
+                SEGMENTOS
+              </div>
+              <div class="open-button-end">
+                <!-- <button nbButton nbTooltip="Agregar" type="button" status="primary" size="small">
+                  <nb-icon icon="plus-outline"></nb-icon>
+                </button> -->
+              </div>
+            </div>
+            <form (ngSubmit)="getSegmentosForm()">
+              <nb-form-field>
+                <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+                <input type="search" placeholder="Buscar..." nbInput [formControl]="textSearchSegmentos" fullWidth
+                  shape="round" fieldSize="small">
+              </nb-form-field>
+            </form>
+          </nb-card-header>
+          <nb-card-body>
+
+            <nb-list *ngIf="segmentosArticulos.length>0;else emptyList">
+              <nb-list-item *ngFor="let item of segmentosArticulos" (click)="getFamilias(item)"
+                [ngClass]="{'active': item.id_articulo === params?.a_id_segmento}">
+                <span class="code-article">{{item.codigo}}</span>
+                <span class="label-article">{{item.nombre}}</span>
+              </nb-list-item>
+            </nb-list>
+            <ng-template #emptyList>
+              <nb-list>
+                <nb-list-item>
+                  <span class="label">No se encontraron resultados.</span>
+                </nb-list-item>
+              </nb-list>
+            </ng-template>
+          </nb-card-body>
+          <nb-card-footer>
+            <small class="label-articles">Cantidad de artículos: </small>
+            <small class="count-articles"><b>{{segmentosArticulos.length}}</b></small>
+          </nb-card-footer>
+        </nb-card>
+        <nb-card size="large">
+          <nb-card-header>
+            <div class="mb-2">
+              <div>
+                FAMILIAS
+              </div>
+              <div class="open-button-end">
+                <!-- <button nbButton nbTooltip="Agregar" type="button" status="primary" size="small">
+                  <nb-icon icon="plus-outline"></nb-icon>
+                </button> -->
+              </div>
+            </div>
+            <form (ngSubmit)="getFamiliasForm()">
+              <nb-form-field>
+                <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+                <input type="search" placeholder="Buscar..." [formControl]="textSearchFamilias" nbInput fullWidth
+                  shape="round" fieldSize="small">
+              </nb-form-field>
+            </form>
+          </nb-card-header>
+          <nb-card-body>
+            <nb-list *ngIf="familiasArticulos.length>0;else emptyList">
+              <nb-list-item *ngFor="let item of familiasArticulos" (click)="getClases(item)"
+                [ngClass]="{'active': item.id_articulo === params?.a_id_familia}">
+                <span class="code-article">{{item.codigo}}</span>
+                <span class="label-article">{{item.nombre}}</span>
+              </nb-list-item>
+            </nb-list>
+          </nb-card-body>
+          <nb-card-footer>
+            <small class="label-articles">Cantidad de artículos: </small>
+            <small class="count-articles"><b>{{familiasArticulos.length}}</b></small>
+          </nb-card-footer>
+        </nb-card>
+        <nb-card size="large">
+          <nb-card-header>
+            <div class="mb-2">
+              <div>
+                CLASES
+              </div>
+              <div class="open-button-end">
+                <!-- <button nbButton nbTooltip="Agregar" type="button" status="primary" size="small">
+                  <nb-icon icon="plus-outline"></nb-icon>
+                </button> -->
+              </div>
+            </div>
+            <form (ngSubmit)="getClasesForm()">
+              <nb-form-field>
+                <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+                <input type="search" placeholder="Buscar..." [formControl]="textSearchClases" nbInput fullWidth
+                  shape="round" fieldSize="small">
+              </nb-form-field>
+            </form>
+          </nb-card-header>
+          <nb-card-body>
+            <nb-list *ngIf="clasesArticulos.length>0;else emptyList">
+              <nb-list-item *ngFor="let item of clasesArticulos" (click)="getProductos(item)"
+                [ngClass]="{'active': item.id_articulo === params?.a_id_clase}">
+                <span class="code-article">{{item.codigo}}</span>
+                <span class="label-article">{{item.nombre}}</span>
+              </nb-list-item>
+            </nb-list>
+          </nb-card-body>
+          <nb-card-footer>
+            <small class="label-articles">Cantidad de artículos: </small>
+            <small class="count-articles"><b>{{clasesArticulos.length}}</b></small>
+          </nb-card-footer>
+        </nb-card>
+        <nb-card size="large">
+          <nb-card-header>
+            <div class="mb-2">
+              <div>
+                PRODUCTOS
+              </div>
+              <div class="open-button-end">
+                <!-- <button nbButton nbTooltip="Agregar" type="button" status="primary" size="small">
+                  <nb-icon icon="plus-outline"></nb-icon>
+                </button> -->
+              </div>
+            </div>
+            <form (ngSubmit)="getProductosForm()">
+              <nb-form-field>
+                <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+                <input type="search" placeholder="Buscar..." [formControl]="textSearchProductos" nbInput fullWidth
+                  shape="round" fieldSize="small">
+              </nb-form-field>
+            </form>
+          </nb-card-header>
+          <nb-card-body>
+            <nb-list *ngIf="productosArticulos.length>0;else emptyList">
+              <nb-list-item *ngFor="let item of productosArticulos" (click)="getItems(item)"
+                [ngClass]="{'active': item.id_articulo === params?.a_id_producto}">
+                <span class="code-article">{{item.codigo}}</span>
+                <span class="label-article">{{item.nombre}}</span>
+              </nb-list-item>
+            </nb-list>
+          </nb-card-body>
+          <nb-card-footer>
+            <small class="label-articles">Cantidad de artículos: </small>
+            <small class="count-articles"><b>{{productosArticulos.length}}</b></small>
+          </nb-card-footer>
+        </nb-card>
+        <nb-card size="large">
+          <nb-card-header>
+            <div class="mb-2">
+              <div>ITEMS </div>
+              <div class="open-button-end">
+                <button nbButton nbTooltip="Agregar artículo" (click)="onAddItem()" type="button" status="primary"
+                  size="small">
+                  <nb-icon icon="plus-outline"></nb-icon>
+                  <!-- Agregar -->
+                </button>
+                <button nbButton nbTooltip="Importar artículos" (click)="onImportItem()" type="button" status="primary"
+                  size="small">
+                  <nb-icon icon="cloud-upload-outline"></nb-icon>
+                  <!-- Agregar -->
+                </button>
+              </div>
+            </div>
+            <form (ngSubmit)="getItemsForm()">
+              <nb-form-field>
+                <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+                <input type="search" placeholder="Buscar..." [formControl]="textSearchItems" nbInput fullWidth
+                  shape="round" fieldSize="small">
+              </nb-form-field>
+            </form>
+          </nb-card-header>
+          <nb-card-body>
+
+            <nb-list *ngIf="itemsArticulos.length>0;else emptyList">
+              <nb-list-item *ngFor="let item of itemsArticulos" nbTooltip="Click para ver el detalle del artículo"
+                [ngClass]="{'active': item.id_articulo === params?.a_id_producto}" (click)="onUpdateArticulo(item)">
+                <span class="code-article">{{item.codigo}}</span>
+                <span class="label-article">{{item.nombre}}</span>
+              </nb-list-item>
+            </nb-list>
+          </nb-card-body>
+          <nb-card-footer>
+            <small class="label-articles">Cantidad de artículos: </small>
+            <small class="count-articles"><b>{{itemsArticulos.length}}</b></small>
+          </nb-card-footer>
+        </nb-card>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <nb-card size="large">
+          <nb-card-body>
+            <nb-list *ngIf="generalArticulos.length>0;else emptyList">
+              <nb-list-item *ngFor="let item of generalArticulos" (click)="getArticulo(item)">
+                <span class="code-article">{{item.codigo}}</span>
+                <span class="label-article">{{item.nombre}}</span>
+              </nb-list-item>
+            </nb-list>
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+
+
+  </nb-card-body>
+</nb-card>
+
+<!-- <router-outlet></router-outlet> -->

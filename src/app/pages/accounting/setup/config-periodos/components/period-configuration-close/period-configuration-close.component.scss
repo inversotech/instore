@@ -1,0 +1,33 @@
+@import 'themes';
+@include nb-install-component() {
+  .lamb-icon {
+    margin-right: 6px;
+  }
+
+  .lamb-fieldset-border {
+    border: 1px solid nb-theme(color-bg-active);
+    padding: 0 1em 1em !important;
+    -webkit-box-shadow: 0 nb-theme(color-bg-active);
+    box-shadow: 5px 5px 0 nb-theme(color-bg-active);
+  }
+
+  .lamb-legend-border {
+    font-size: nb-theme(header-font-size);
+    font-weight: nb-theme(font-weight-bolder);
+    text-align: left !important;
+    width: auto;
+    padding: 0 10px;
+    border-bottom: none;
+  }
+  .lamb-option {
+    pointer-events: none;
+    text-transform: uppercase;
+  }
+  .lamb-option-child {
+    margin-left: 5px;
+  }
+  .lamb-group-buttons {
+    float: right;
+  }
+
+}

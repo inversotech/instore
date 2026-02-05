@@ -1,0 +1,97 @@
+<nb-card lambWindow widthSize="md" status="primary" [nbSpinner]="loading" nbSpinnerMessage="Espere..."
+    nbSpinnerStatus="primary">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8 text-start">
+                NUEVO | Aperturar periodo
+            </div>
+            <div class="col-4 text-end">
+                <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer;"></nb-icon>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="periodOpeningForm">
+            <div class="row">
+                <div class="col-md-6 mb-1">
+                    <label for="nombre" class="form-label label required">Nombre</label>
+                    <input type="text" id="nombre" nbInput fullWidth fieldSize="small" formControlName="nombre"
+                        autocomplete="off">
+                </div>
+                <div class="col-md-6 mb-1">
+                    <label for="id_empresa" class="label form-label">Empresa</label>
+                    <nb-select placeholder="Empresa" fullWidth [size]="'small'" formControlName="id_empresa"
+                        id="id_empresa">
+                        <nb-option *ngFor="let item of empresas$ | async" [value]="item.id_empresa">
+                            {{ item.id_empresa }} - {{ item.empresa_nombrecomercial }}</nb-option>
+                    </nb-select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-1">
+                    <label for="id_anho" class="form-label label required">Año</label>
+                    <nb-select placeholder="Seleccione" fullWidth size="small" formControlName="id_anho" id="id_anho">
+                        <nb-option value="">-Seleccione-</nb-option>
+                        <nb-option *ngFor="let year of anhos$ | async" [value]="year.id_anho">
+                            {{ year.id_anho }}
+                        </nb-option>
+                    </nb-select>
+                </div>
+                <div class="col-md-6 mb-1">
+                    <label for="id_tipo_plan" i18n class="form-label label required">
+                        Tipo Plan
+                    </label>
+                    <nb-select fullWidth size="small" formControlName="id_tipo_plan" id="id_tipo_plan">
+                        <nb-option value="">-Seleccionar-</nb-option>
+                        <nb-option *ngFor="let item of tipoPlans$ | async" [value]="item.id_tipo_plan">
+                            {{ item.nombre }}
+                        </nb-option>
+                    </nb-select>
+                </div>
+                <div class="col-md-6 mb-1">
+                    <label for="id_moneda" i18n class="form-label label required">
+                        Moneda
+                    </label>
+                    <nb-select fullWidth size="small" formControlName="id_moneda" id="id_moneda">
+                        <nb-option value="">-Seleccionar-</nb-option>
+                        <nb-option *ngFor="let item of monedas$ | async" [value]="item.id_moneda">
+                            {{ item.currency_name }} - ({{ item.currency }})
+                        </nb-option>
+                    </nb-select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-1">
+                    <label for="fecha_inicio" class="form-label label required">Fecha Inicio</label>
+                    <nb-form-field>
+                        <input type="text" name="fecha_inicio" id="fecha_inicio" formControlName="fecha_inicio"
+                            [nbDatepicker]="nfecha" fullWidth fieldSize="small" nbInput>
+                        <nb-icon nbSuffix icon="calendar-outline" pack="eva"></nb-icon>
+                    </nb-form-field>
+                    <nb-datepicker #nfecha></nb-datepicker>
+                </div>
+                <div class="col-md-6 mb-1">
+                    <label for="fecha_fin" class="form-label label required">Fecha Fin</label>
+                    <nb-form-field>
+                        <input type="text" name="fecha_fin" id="fecha_fin" formControlName="fecha_fin"
+                            [nbDatepicker]="nfechaa" fullWidth fieldSize="small" nbInput>
+                        <nb-icon nbSuffix icon="calendar-outline" pack="eva"></nb-icon>
+                    </nb-form-field>
+                    <nb-datepicker #nfechaa></nb-datepicker>
+                </div>
+            </div>
+        </form>
+    </nb-card-body>
+    <nb-card-footer>
+        <div class="text-end">
+            <button nbButton status="basic" size="small" class="me-2" (click)="onClose()">
+                <nb-icon icon="close-outline"></nb-icon>
+                Cancelar
+            </button>
+            <button nbButton status="primary" size="small" (click)="onSave()" [disabled]="periodOpeningForm.invalid">
+                <nb-icon icon="save-outline"></nb-icon>
+                Guardar
+            </button>
+        </div>
+    </nb-card-footer>
+</nb-card>

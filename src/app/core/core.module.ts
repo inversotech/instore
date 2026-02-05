@@ -20,7 +20,7 @@ import { NbDateFnsDateModule } from '@nebular/date-fns';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/es-PE';
 import { SharedModule } from '../pages/shared/shared.module';
-import { AuthService } from './providers/auth.service';
+// import { AuthService } from './providers/auth.service';
 
 registerLocaleData(localePt);
 
@@ -74,8 +74,8 @@ const PROVIDERS: any[] = [
     // { provide: TOKEN_OPEN_SHELL_APP_URL, useValue: environment.openClientCredentials.shell_app_url },
     { provide: LOCALE_ID, useValue: 'es-PE' },
 
-    // { provide: TOKEN_OPEN_OAUTH_STORE, useValue: { accessToken: 'open-access-token', authorizationCode: 'open-authorization-code' } },
-    AuthService,
+    // { provide: TOKEN_OPEN_OAUTH_STORE, useValue: { accessToken: 'inverso-access-token', authorizationCode: 'inverso-authorization-code' } },
+    // AuthService,
     StateService,
 ];
 

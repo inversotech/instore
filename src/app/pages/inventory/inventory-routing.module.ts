@@ -7,13 +7,32 @@ const routes: Routes = [
     path: '',
     component: InventoryComponent,
     children: [
+      // Setup
       {
-        path: 'article-structure',
-        loadChildren: () => import('./article-structure/article-structure.module').then(m => m.ArticleStructureModule),
+        path: 'setup/article-structure',
+        loadChildren: () => import('./setup/article-structure/article-structure.module').then(m => m.ArticleStructureModule),
       },
       {
-        path: 'warehouses',
-        loadChildren: () => import('./warehouses/warehouses.module').then(m => m.WarehousesModule),
+        path: 'setup/warehouses',
+        loadChildren: () => import('./setup/warehouses/warehouses.module').then(m => m.WarehousesModule),
+      },
+
+
+      // Operations
+      {
+        path: 'operations/movement-of-goods',
+        loadChildren: () => import('./operations/movement-of-goods/movement-of-goods.module').then(m => m.MovementOfGoodsModule),
+      },
+
+
+      // Reports
+      {
+        path: 'reports/kardex',
+        loadChildren: () => import('./reports/kardex/kardex.module').then(m => m.KardexModule),
+      },
+      {
+        path: 'reports/stocks',
+        loadChildren: () => import('./reports/stocks/stocks.module').then(m => m.StocksModule),
       },
     ]
   }

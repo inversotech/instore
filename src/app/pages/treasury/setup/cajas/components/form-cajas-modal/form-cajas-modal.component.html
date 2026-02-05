@@ -1,0 +1,125 @@
+<nb-card [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary" status="primary">
+  <nb-card-header class="d-flex justify-content-between align-items-center">
+    <div></div>
+    <div>
+      <span *ngIf="adata">EDITAR</span>
+      <span *ngIf="!adata">AGREGAR</span>
+      CAJA
+    </div>
+    <button nbButton ghost status="basic" size="tiny" (click)="onClose()" nbTooltip="Cerrar">
+      <nb-icon icon="close-outline"></nb-icon>
+    </button>
+  </nb-card-header>
+
+  <nb-card-body class="">
+
+    <form [formGroup]="newForm">
+
+      <div class="row g-1">
+        <div class="col-md-6">
+          <div class="mb-2">
+            <label for="id_empresa" class="label required">Empresa</label>
+            <nb-select placeholder="Empresa" size="small" formControlName="id_empresa" fullWidth name="id_empresa"
+              id="id_empresa">
+              <nb-option value="">-Seleccione-</nb-option>
+              <nb-option *ngFor="let item of misEmpresas" [value]="item.id_empresa">
+                {{ item.id_empresa }} - {{ item.empresa_nombrecomercial }}</nb-option>
+            </nb-select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-2">
+            <label for="id_empresa_sucursal" class="label required">Sucursal</label>
+            <nb-select placeholder="Empresa" size="small" formControlName="id_empresa_sucursal" fullWidth
+              name="id_empresa_sucursal" id="id_empresa_sucursal">
+              <nb-option value="">-Seleccione-</nb-option>
+              <nb-option *ngFor="let item of misEmpresasSucursales" [value]="item.id_empresa_sucursal">
+                {{ item.id_empresa_sucursal }} - {{ item.empresa_sucursal_nombre }}</nb-option>
+            </nb-select>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row g-1">
+        <div class="col-md-6 mb-2">
+          <label for="id_conta_documento" class="label required">Documento interno para el recibo de caja </label>
+          <div>
+            <nb-select placeholder="Documento" size="small" formControlName="id_conta_documento" fullWidth
+              name="id_conta_documento" id="id_conta_documento">
+              <nb-option value="">-Seleccione-</nb-option>
+              <nb-option *ngFor="let item of documentos" [value]="item.id_conta_documento">
+                {{ item.id_tipo_comprobante }} {{ item.nombre }} ({{ item.serie }})
+              </nb-option>
+            </nb-select>
+          </div>
+        </div>
+        <div class="col-md-6 mb-2">
+          <label for="id_medio_pago" class="label required">Medio de pago </label>
+          <div>
+            <nb-select placeholder="Medio de pago" size="small" formControlName="id_medio_pago" fullWidth
+              name="id_medio_pago" id="id_medio_pago">
+              <nb-option value="">-Seleccione-</nb-option>
+              <nb-option *ngFor="let item of medioPagos" [value]="item.id_medio_pago">
+                {{ item.id_medio_pago }} {{ item.nombre }}
+              </nb-option>
+            </nb-select>
+          </div>
+        </div>
+        <div class="col-md-6 mb-2">
+          <label for="id_moneda" class="label required">Moneda </label>
+          <div>
+            <nb-select placeholder="Moneda" size="small" formControlName="id_moneda" fullWidth name="id_moneda"
+              id="id_moneda">
+              <nb-option value="">-Seleccione-</nb-option>
+              <nb-option *ngFor="let item of contaMonedas" [value]="item.id_moneda">
+                {{ item.currency }} - {{ item.country_name }}
+              </nb-option>
+            </nb-select>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-1">
+        <div class="col-md-12 mb-2">
+          <label for="nombre" class="label required">Nombre </label>
+          <nb-form-field>
+            <input nbInput type="text" placeholder="Nombre" fullWidth fieldSize="small" formControlName="nombre" />
+          </nb-form-field>
+        </div>
+        <div class="col-md-12 mb-2">
+          <label for="descripcion" class="label required">Descripción </label>
+          <nb-form-field>
+            <input nbInput type="text" fullWidth fieldSize="small" formControlName="descripcion" />
+          </nb-form-field>
+        </div>
+      </div>
+
+      <div class="row g-1">
+        <div class="col-md-6 mb-2">
+          <label for="activo" class="label required">Activo </label>
+          <div>
+            <nb-toggle formControlName="activo"></nb-toggle>
+          </div>
+        </div>
+      </div>
+
+
+    </form>
+
+
+  </nb-card-body>
+
+  <nb-card-footer class="d-flex justify-content-center">
+    <button nbButton class="me-1" status="basic" size="small" (click)="onClose()">
+      <nb-icon icon="close-outline"></nb-icon>
+      <span class="ms-1">Cerrar</span>
+    </button>
+
+    <button nbButton class="me-1" status="primary" size="small" (click)="onSave()">
+      <nb-icon icon="save-outline"></nb-icon>
+      Guardar
+    </button>
+
+  </nb-card-footer>
+</nb-card>

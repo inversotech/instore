@@ -1,0 +1,46 @@
+<div class="d-flex">
+  <nb-icon icon="list-outline" pack="eva"></nb-icon> &nbsp;
+  <h6 class="opacity-50">Centros de venta</h6>
+</div>
+
+<div class="row" [nbSpinner]="loadingSpinner" nbSpinnerStatus="primary">
+  <div class="col-md-12" *ngFor="let item of misPuntoVentas$ | async">
+    <nb-card [status]="item?.activo ? 'warning' : 'basic'">
+      <nb-card-header class="d-flex justify-content-center">
+        {{ item?.nombre | uppercase }} &nbsp; <span *ngIf="!item?.activo">(Desactivo)</span>
+      </nb-card-header>
+      <nb-card-body class="d-flex justify-content-center pt-4 pb-4">
+        <button shape="round" [disabled]="!item?.activo" nbButton status="primary" (click)="onCreateVenta(item)">
+          <nb-icon icon="shopping-cart-outline" pack="eva"></nb-icon>
+          Iniciar nueva venta
+        </button>
+      </nb-card-body>
+      <nb-card-footer *ngIf="ventasNoFinalizadasPorPuntoVenta[item.id_punto_venta]">
+
+        <div *ngIf="ventasNoFinalizadasPorPuntoVenta[item.id_punto_venta].length > 0">
+          <div class="opacity-50 mb-1">Ventas no finalizadas</div>
+          <div *ngFor="let venta of ventasNoFinalizadasPorPuntoVenta[item.id_punto_venta]"
+            class="d-flex flex-column flex-md-row justify-content-between align-items-md-center px-2 py-1">
+            <div>
+              <div><small class="text-primary fw-bold">{{ venta.serie }}-######## {{ venta.fecha_emision | date:'dd/MM/yyyy' }}</small></div>
+              <div><small class="text-dark"> {{ venta.num_doc_cli ?? 'Sin cliente...' }} {{venta.razon_social_cli
+                  }}</small></div>
+            </div>
+            <div class="d-flex align-items-center mt-2 mt-md-0">
+              <span class="fw-bold me-2">{{ venta.importe | currency : 'S/. ' }}</span>
+              <button [disabled]="!item?.activo" outline nbButton nbTooltip="Continuar con la venta" size="tiny"
+                (click)="onContinueVenta(venta)" status="primary" class="ms-2">
+                <nb-icon icon="arrowhead-right-outline" pack="eva"></nb-icon>
+                Continuar
+              </button>
+              <button [disabled]="!item?.activo" outline nbButton nbTooltip="Eliminar venta" size="tiny"
+                (click)="onDeleteVenta(venta)" status="danger" class="ms-2">
+                <nb-icon icon="close-outline" pack="eva"></nb-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </nb-card-footer>
+    </nb-card>
+  </div>
+</div>

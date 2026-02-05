@@ -3,7 +3,7 @@ import { StateService } from '../providers/state.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'open-main-page',
+  selector: 'inverso-main-page',
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.scss'],
 })

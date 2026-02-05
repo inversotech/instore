@@ -1,0 +1,68 @@
+<nb-card openWindow widthSize="sm" [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary" status="basic">
+  <nb-card-header class="d-flex justify-content-between">
+    <div></div>
+    <div class="text-center" i18n>
+      IMPORTAR
+      <!-- <span class="font-weight-light" i18n>
+        Puedes arrastrar el archivo excel
+      </span> -->
+    </div>
+    <div>
+      <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer"></nb-icon>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+
+    <nb-list status="primary">
+      <nb-list-item class="justify-content-between">
+        <button nbButton size="small" status="info" nbTooltip="Click aquí para descargar la plantilla en excel" ghost
+          fullWidth (click)="downloadTemplate()">
+          <nb-icon icon="download-outline"></nb-icon>
+          Descargar la plantilla
+        </button>
+      </nb-list-item>
+    </nb-list>
+
+    <label class="mb-2 label">*Puedes arrastrar el archivo excel </label>
+    <ngx-file-drop dropZoneLabel="Arrastre tus arquivos aquí" (onFileDrop)="dropped($event)"
+      (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)">
+      <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+        <button nbButton outline status="primary" size="small" (click)="openFileSelector()">
+          <nb-icon nbPrefix icon="upload-outline" pack="eva"> </nb-icon>
+          <span> Subir archivo</span>
+        </button>
+        <small></small>
+      </ng-template>
+    </ngx-file-drop>
+    <p class="text-center mb-0"> <small i18n>(Formato: .xlsx, tamaño máximo:8MB)</small> </p>
+    <!-- <label class="btn btn-sm btn-light">
+          <span class="fa fa-upload"></span> Examinar
+          <input #inputFileExcel type="file" hidden accept=".xlsx" (change)="onFileChangeExcel($event)">
+        </label> -->
+    <nb-list>
+      <nb-list-item *ngFor="let file of filesExcels; let i=index" class="d-flex justify-content-between">
+        <span class="label">
+          {{ file.name }}
+        </span>
+        <button nbButton status="basic" size="tiny" (click)="onDeleteFile(file)" nbTooltip="Eliminar archivo">
+          <nb-icon icon="close-outline"></nb-icon>
+          Eliminar archivo
+        </button>
+      </nb-list-item>
+    </nb-list>
+  </nb-card-body>
+
+  <nb-card-footer class="text-end">
+    <button nbButton class="me-1" status="basic" size="small" (click)="onClose()">
+      <nb-icon icon="close-outline"></nb-icon>
+      Cancelar
+    </button>
+
+    <button nbButton class="me-1" status="primary" size="small" [disabled]="filesExcels.length !== 1"
+      (click)="onSave()">
+      <nb-icon icon="save-outline"></nb-icon>
+      Guardar
+    </button>
+
+  </nb-card-footer>
+</nb-card>

@@ -10,6 +10,10 @@ export class KardexesService extends EntityDataService<any> {
         super(httpClient, `${environment.apiUrls.openAccounting}/api/kardexes`);
     }
 
+    public getArticulosToSearchKardexByQuery$(params: any): Observable<any> {
+        return this.httpClient.get<any>(`${this.endPoint}/articulos-to-search`, { params });
+    }
+
     public getByArticulo$(params: any): Observable<any> {
         return this.httpClient.get<any>(`${this.endPoint}/by-articulo`, { params });
     }

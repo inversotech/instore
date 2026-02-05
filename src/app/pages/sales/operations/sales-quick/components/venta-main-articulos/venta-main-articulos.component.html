@@ -1,0 +1,218 @@
+<div class="row g-2">
+
+  <!-- Columna Izquierda: Catálogo de Productos -->
+  <div class="col-12 col-lg-8">
+    <nb-card class="mb-1">
+      <nb-card accent="primary" class="mb-0">
+        <nb-card-header class="d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center">
+            <button nbButton type="button" size="small" ghost nbTooltip="Regresar" (click)="onBack()" class="me-2">
+              <nb-icon status="primary" style="font-size: 1.6rem;" icon="arrow-ios-back-outline" pack="eva"></nb-icon>
+            </button>
+            <nb-icon status="info" style="font-size: 1.6rem;" icon="shopping-cart-outline" pack="eva" class="me-3"></nb-icon>
+
+            <div class="border-start ps-3 lh-base">
+              <div class="fw-semibold">{{ puntoVenta?.nombre || '-' }}</div>
+              <div class="fw-normal small">
+                <nb-icon icon="pin-outline" pack="eva" class="me-1"></nb-icon>
+                {{ puntoVenta?.almacen_nombre || '-' }}
+                <!-- {{ puntoVenta | json }} -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Contador de productos -->
+          <div class="text-end">
+            <small class="opacity-75 d-block">Productos disponibles</small>
+            <strong>{{ totalProductos || 0 }}</strong>
+          </div>
+        </nb-card-header>
+
+        <nb-card-body class="p-3">
+
+      <!-- Barra de búsqueda y filtros -->
+      <div class="row g-2 mb-3">
+        <div class="col-md-8">
+          <nb-form-field>
+            <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+            <input nbInput
+                   fullWidth
+                   type="text"
+                   placeholder="Buscar por nombre, código o código de barras..."
+                   [(ngModel)]="searchTerm"
+                   (ngModelChange)="onSearch($event)">
+            <button nbSuffix nbButton ghost status="basic" size="tiny" (click)="onClearSearch()" *ngIf="searchTerm">
+              <nb-icon icon="close-outline"></nb-icon>
+            </button>
+          </nb-form-field>
+        </div>
+
+        <div class="col-md-4">
+          <nb-select fullWidth placeholder="Categoría" [(ngModel)]="selectedCategoria" (ngModelChange)="onFilterCategoria()">
+            <nb-option [value]="null">Todas las categorías</nb-option>
+            <nb-option *ngFor="let cat of categorias" [value]="cat.id">{{ cat.nombre }}</nb-option>
+          </nb-select>
+        </div>
+      </div>
+
+      <!-- Lista de Productos en Grid -->
+      <div class="productos-grid" *ngIf="productosFiltrados.length > 0; else noProductos">
+
+        <div class="row g-1">
+          <div class="col-md-6 col-lg-4 col-xl-3" *ngFor="let producto of productosFiltrados">
+            <nb-card size="small" class="producto-card mb-0" [class.sin-stock]="producto.stock_actual <= 0">
+              <nb-card-body class="p-3">
+
+                <!-- Imagen del producto -->
+                <div class="producto-imagen mb-2 text-center">
+                  <img *ngIf="producto.imagen" [src]="producto.imagen" [alt]="producto.articulo_nombre" class="img-fluid">
+                  <div *ngIf="!producto.imagen" class="imagen-placeholder">
+                    <nb-icon icon="cube-outline" pack="eva" status="basic"></nb-icon>
+                  </div>
+                </div>
+
+                <!-- Info del producto -->
+                <div class="producto-info">
+                  <h6 class="mb-1 text-truncate" [nbTooltip]="producto.articulo_nombre">{{ producto.articulo_nombre }}</h6>
+
+                  <div class="d-flex align-items-center justify-content-between mb-2">
+                    <small class="opacity-75">
+                      <nb-icon icon="hash-outline" pack="eva" class="small"></nb-icon>
+                      {{ producto.codigo_almacen }}
+                    </small>
+                    <nb-badge [status]="producto.stock_actual > 0 ? 'success' : 'danger'"
+                              [text]="'Stock: ' + producto.stock_actual"
+                              position="top right">
+                    </nb-badge>
+                  </div>
+
+                  <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                      <small class="opacity-75 d-block">Precio</small>
+                      <h6 class="mb-0">S/ {{ producto.precio_inicial_pen | number:'1.2-2' }}</h6>
+                    </div>
+
+                    <button nbButton
+                            [status]="producto.stock_actual > 0 ? 'primary' : 'basic'"
+                            size="small"
+                            (click)="onSelectProducto(producto)"
+                            [disabled]="producto.stock_actual <= 0"
+                            [nbTooltip]="producto.stock_actual > 0 ? 'Agregar a la venta' : 'Sin stock'">
+                      <nb-icon icon="plus-outline"></nb-icon>
+                    </button>
+                  </div>
+                </div>
+
+              </nb-card-body>
+            </nb-card>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Sin Productos -->
+      <ng-template #noProductos>
+        <div class="text-center py-5">
+          <nb-icon icon="inbox-outline" pack="eva" status="basic" style="font-size: 3rem;"></nb-icon>
+          <p class="mt-3 mb-0 opacity-75">No se encontraron productos</p>
+          <small class="opacity-50">Intenta con otro término de búsqueda</small>
+        </div>
+      </ng-template>
+
+        </nb-card-body>
+      </nb-card>
+    </nb-card>
+  </div>
+
+  <!-- Columna Derecha: Carrito de Compras -->
+  <div class="col-12 col-lg-4">
+    <nb-card class="carrito-card">
+      <nb-card-header class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <nb-icon icon="shopping-bag-outline" pack="eva" status="success" class="me-2"></nb-icon>
+          <span>Carrito</span>
+        </div>
+        <nb-badge [status]="carrito.length > 0 ? 'success' : 'basic'" [text]="carrito.length + ' items'"></nb-badge>
+      </nb-card-header>
+
+      <nb-card-body class="p-0">
+
+        <!-- Items del Carrito -->
+        <div class="carrito-items" *ngIf="carrito.length > 0; else carritoVacio">
+          <div *ngFor="let item of carrito; let i = index" class="carrito-item p-3 border-bottom">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div class="flex-grow-1 me-2">
+                <div class="fw-semibold small">{{ item.nombre }}</div>
+                <small class="opacity-75">S/ {{ item.precio_inicial_pen | number:'1.2-2' }}</small>
+              </div>
+              <button nbButton ghost status="danger" size="tiny" (click)="onRemoveFromCart(i)" nbTooltip="Eliminar">
+                <nb-icon icon="trash-2-outline"></nb-icon>
+              </button>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="d-flex align-items-center">
+                <button nbButton ghost status="basic" size="tiny" (click)="onDecreaseQty(i)">
+                  <nb-icon icon="minus-outline"></nb-icon>
+                </button>
+                <input type="number"
+                       class="form-control form-control-sm text-center mx-1"
+                       style="width: 50px;"
+                       [(ngModel)]="item.cantidad"
+                       (ngModelChange)="onUpdateCart()"
+                       [max]="item.stock_disponible"
+                       min="1">
+                <button nbButton ghost status="basic" size="tiny" (click)="onIncreaseQty(i)">
+                  <nb-icon icon="plus-outline"></nb-icon>
+                </button>
+              </div>
+              <strong class="ms-2">S/ {{ item.subtotal | number:'1.2-2' }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carrito Vacío -->
+        <ng-template #carritoVacio>
+          <div class="text-center py-5">
+            <nb-icon icon="shopping-bag-outline" pack="eva" status="basic" style="font-size: 2.5rem;"></nb-icon>
+            <p class="mt-2 mb-0 opacity-75">Carrito vacío</p>
+            <small class="opacity-50">Agrega productos para comenzar</small>
+          </div>
+        </ng-template>
+
+      </nb-card-body>
+
+      <!-- Totales y Botón de Venta -->
+      <nb-card-footer class="p-3" *ngIf="carrito.length > 0">
+        <div class="mb-2 pb-2 border-bottom">
+          <div class="d-flex justify-content-between mb-1">
+            <small class="opacity-75">Subtotal</small>
+            <small>S/ {{ subtotalVenta | number:'1.2-2' }}</small>
+          </div>
+          <div class="d-flex justify-content-between mb-1">
+            <small class="opacity-75">IGV (18%)</small>
+            <small>S/ {{ igvVenta | number:'1.2-2' }}</small>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="mb-0">Total</h6>
+          <h5 class="mb-0">S/ {{ totalVenta | number:'1.2-2' }}</h5>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button nbButton status="success" fullWidth (click)="onGenerarVenta()">
+            <nb-icon icon="checkmark-circle-outline"></nb-icon>
+            Generar Venta
+          </button>
+          <button nbButton status="basic" fullWidth size="small" (click)="onLimpiarCarrito()">
+            <nb-icon icon="trash-outline"></nb-icon>
+            Limpiar Carrito
+          </button>
+        </div>
+      </nb-card-footer>
+
+    </nb-card>
+  </div>
+
+</div>

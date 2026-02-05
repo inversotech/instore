@@ -1,0 +1,85 @@
+<nb-card [nbSpinner]="loading" nbSpinnerStatus="primary" class="select-unidades-modal">
+  <nb-card-header class="d-block">
+    <div class="text-center">
+      Seleccionar unidades de: <strong>{{ articulo?.articulo_nombre }}</strong>
+    </div>
+    <div class="text-center text-muted small">
+      {{ articulo?.codigo_almacen }} - Stock: {{ articulo?.stock_actual }}
+    </div>
+  </nb-card-header>
+
+  <nb-card-body>
+    <!-- Selector de lote si hay múltiples -->
+    <div *ngIf="articulo?.lotes_disponibles?.length > 1" class="mb-3">
+      <label class="label">Seleccionar lote:</label>
+      <nb-select [(ngModel)]="loteSeleccionado" size="small" fullWidth placeholder="Todos los lotes">
+        <nb-option [value]="null">Todos los lotes</nb-option>
+        <nb-option *ngFor="let lote of articulo.lotes_disponibles" [value]="lote">
+          {{ lote.lote_numero || 'Sin lote' }} ({{ lote.cantidad }} disponibles)
+          <span *ngIf="lote.lote_fecha_vencimiento"> - Vence: {{ lote.lote_fecha_vencimiento }}</span>
+        </nb-option>
+      </nb-select>
+    </div>
+
+    <!-- Acciones rápidas -->
+    <div class="d-flex justify-content-between mb-2">
+      <div>
+        <button nbButton size="tiny" status="info" ghost (click)="seleccionarTodas()">
+          Seleccionar todas
+        </button>
+        <button nbButton size="tiny" status="basic" ghost (click)="deseleccionarTodas()">
+          Deseleccionar todas
+        </button>
+      </div>
+      <div>
+        <nb-badge [text]="unidadesSeleccionadas.length + ' seleccionadas'" status="primary"></nb-badge>
+      </div>
+    </div>
+
+    <!-- Lista de unidades -->
+    <div class="unidades-lista" *ngIf="unidadesFiltradas.length > 0; else noUnidades">
+      <nb-list>
+        <nb-list-item *ngFor="let unidad of unidadesFiltradas" class="unidad-item"
+          [class.selected]="isSelected(unidad)">
+          <nb-checkbox [checked]="isSelected(unidad)" class="me-2" (checkedChange)="toggleUnidad(unidad)"></nb-checkbox>
+          <div class="unidad-info flex-grow-1" (click)="toggleUnidad(unidad)">
+            <span class="serie">
+              <strong>Serie:</strong> {{ unidad.serie || '-' }}
+            </span>
+            <span class="modelo ms-3">
+              <strong>Modelo:</strong> {{ unidad.modelo || '-' }}
+            </span>
+            <span *ngIf="unidad.lote_numero" class="lote ms-3 text-muted">
+              Lote: {{ unidad.lote_numero }}
+            </span>
+          </div>
+        </nb-list-item>
+      </nb-list>
+    </div>
+
+    <ng-template #noUnidades>
+      <div class="text-center text-muted py-4">
+        <nb-icon icon="inbox-outline" style="font-size: 2rem;"></nb-icon>
+        <p>No hay unidades disponibles</p>
+      </div>
+    </ng-template>
+
+  </nb-card-body>
+
+  <nb-card-footer class="d-flex justify-content-between align-items-center">
+    <div>
+      <strong>{{ unidadesSeleccionadas.length }}</strong> unidades seleccionadas
+    </div>
+    <div>
+      <button class="me-1" nbButton status="basic" size="small" (click)="onClose()">
+        <nb-icon icon="close-outline"></nb-icon>
+        Cancelar
+      </button>
+      <button nbButton status="primary" size="small" (click)="onConfirmar()"
+        [disabled]="unidadesSeleccionadas.length === 0">
+        <nb-icon icon="checkmark-outline"></nb-icon>
+        Confirmar ({{ unidadesSeleccionadas.length }})
+      </button>
+    </div>
+  </nb-card-footer>
+</nb-card>

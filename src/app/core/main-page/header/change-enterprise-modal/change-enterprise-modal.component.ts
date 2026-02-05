@@ -7,7 +7,7 @@ import { SetupUserEnterpriseService } from 'src/app/core/providers/setup-user-en
 import { AppDataService } from 'src/app/core/providers/app-data.service';
 
 @Component({
-    selector: 'open-change-enterprise-modal',
+    selector: 'inverso-change-enterprise-modal',
     templateUrl: 'change-enterprise-modal.component.html',
     styleUrls: ['change-enterprise-modal.component.scss'],
 })

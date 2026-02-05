@@ -1,0 +1,96 @@
+<nb-card [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary" status="primary">
+  <nb-card-header>
+    <div class="text-center">
+      <span i18n>
+        NUEVO |
+      </span>
+      <span class="font-weight-light" i18n>
+        Nuevo almacén
+      </span>
+    </div>
+    <div>
+      <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer"></nb-icon>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <form [formGroup]="documentoForm">
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-2">
+            <label for="id_empresa" class="label form-label">Empresa</label>
+            <nb-select placeholder="Empresa" fullWidth [size]="'small'" formControlName="id_empresa" id="id_empresa">
+              <nb-option *ngFor="let item of empresas$ | async" [value]="item.id_empresa">
+                {{ item.id_empresa }} - {{ item.empresa_nombrecomercial }}</nb-option>
+            </nb-select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-2">
+            <label for="id_tipo_comprobante" class="label required">Tipo comprobante</label>
+            <nb-select placeholder="Tipo comprobante" fullWidth [size]="'small'" formControlName="id_tipo_comprobante"
+              id="id_tipo_comprobante">
+              <nb-option *ngFor="let item of tipoComprobantes$ | async" [value]="item.id_tipo_comprobante">
+                {{ item.id_tipo_comprobante }} - {{ item.nombre }} </nb-option>
+            </nb-select>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <label for="nombre" class="label required">Nombre</label>
+        <input type="text" nbInput fullWidth fieldSize="small" name="nombre" id="nombre" formControlName="nombre"
+          placeholder="">
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-2">
+            <label for="serie" class="label required">Serie</label>
+            <input type="text" nbInput fullWidth fieldSize="small" name="serie" id="serie" formControlName="serie"
+              placeholder="">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-2">
+            <label for="contador" class="label required">Contador</label>
+            <input type="text" nbInput fullWidth fieldSize="small" name="contador" id="contador"
+              formControlName="contador" placeholder="">
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-2" *ngIf="isNota">
+        <label for="id_conta_documento_parent" class="label required">Documento padre (Para Notas)</label>
+        <nb-select placeholder="Conta documento padre (Para notas)" fullWidth [size]="'small'"
+          formControlName="id_conta_documento_parent" id="id_conta_documento_parent">
+          <nb-option *ngFor="let item of contaDocumentosPadre" [value]="item.id_conta_documento">
+            {{ item.id_tipo_comprobante }} - {{ item.nombre }} ({{ item.serie }})</nb-option>
+        </nb-select>
+      </div>
+
+      <div class="mb-2">
+        <label for="activo" class="label">Activo</label>
+        <nb-radio-group formControlName="activo" status="warning">
+          <nb-radio [value]="true">Si</nb-radio>
+          <nb-radio [value]="false">No</nb-radio>
+        </nb-radio-group>
+      </div>
+
+
+    </form>
+
+  </nb-card-body>
+  <nb-card-footer class="text-end">
+    <button nbButton class="me-1" status="basic" size="small" (click)="onClose()">
+      <nb-icon icon="close-outline"></nb-icon>
+      Cancelar
+    </button>
+
+    <button nbButton class="me-1" status="primary" size="small" (click)="onSave()">
+      <nb-icon icon="save-outline"></nb-icon>
+      Guardar
+    </button>
+
+  </nb-card-footer>
+</nb-card>

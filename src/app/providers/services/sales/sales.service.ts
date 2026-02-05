@@ -61,6 +61,9 @@ export class SalesService extends EntityDataService<any> {
         return this.httpClient.get<any>(`${this.endPoint}/sales/search-articulo-to-venta`, { params: params });
     }
 
+    public getUnidadesDisponibles$(params: any): Observable<any> {
+        return this.httpClient.get<any>(`${this.endPoint}/sales/unidades-disponibles`, { params: params });
+    }
 
     public addSaleDetalle$(data: any): Observable<any> {
         return this.httpClient.post<any>(`${this.endPoint}/sales-detail`, data);
@@ -74,6 +77,10 @@ export class SalesService extends EntityDataService<any> {
         return this.httpClient.get<any>(`${this.endPoint}/sales-detail`, { params: params });
     }
 
+    public deleteAllSaleDetalle$(idVenta: any): Observable<any> {
+        return this.httpClient.delete<any>(`${this.endPoint}/sales-detail/${idVenta}/all`);
+    }
+
     public deleteSaleDetalle$(idVentaDetalle: any): Observable<any> {
         return this.httpClient.delete<any>(`${this.endPoint}/sales-detail/${idVentaDetalle}`);
     }
@@ -81,6 +88,14 @@ export class SalesService extends EntityDataService<any> {
 
     public getMisCajaCajasParaVentas$(params: any): Observable<any> {
         return this.httpClient.get<any>(`${this.endPoint}/mis-cajas-habilitadas-para-ventas`, { params: params });
+    }
+
+    public getMisPuntoVentas$(params: any): Observable<any> {
+        return this.httpClient.get<any>(`${this.endPoint}/mis-punto-ventas`, { params: params });
+    }
+
+    public getPuntoVentaById$(params: any): Observable<any> {
+        return this.httpClient.get<any>(`${this.endPoint}/sales/punto-venta-by-venta`, { params });
     }
 
 }

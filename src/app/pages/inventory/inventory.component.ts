@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'open-inventory',
+  selector: 'inverso-inventory',
   templateUrl: './inventory.component.html',
   styleUrls: ['./inventory.component.scss']
 })

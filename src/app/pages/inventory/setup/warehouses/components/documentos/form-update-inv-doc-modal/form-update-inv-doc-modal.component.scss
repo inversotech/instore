@@ -1,0 +1,9 @@
+@import 'themes';
+
+nb-radio-group {
+    display: flex;
+}
+
+::ng-deep nb-dialog-container {
+    width: 60rem !important;
+}

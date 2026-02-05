@@ -1,0 +1,43 @@
+<div class="container">
+    <div class="offset-md-2 col-md-8">
+        <nb-card [nbSpinner]="loading" nbSpinnerStatus="info" size="medium">
+            <!-- <nb-card-body class="d-flex justify-content-center align-items-center"> -->
+            <nb-card-body class="">
+                <br>
+                <div class="icon">
+                    <img class="black-and-white" src="assets/icons/verify-email.svg">
+                </div>
+                <br>
+                <div class="container">
+                    <div class="text-center">
+                        <h5 i18n>Verifique su dirección de correo electrónico</h5>
+                        <br>
+                        <!-- <h5 i18n>Verify your email address</h5> -->
+                        <!-- <p i18n>¡Te hemos enviado por correo el enlace para validar tu usuario!</p> -->
+                        <!-- <p i18n>Before proceeding, please check your email for a verification link. If you did not receive the
+                email, click here to request another</p> -->
+                        <p i18n>Antes de continuar, consulte su correo electrónico para ver si hay un enlace de
+                            verificación. Si
+                            no
+                            recibió el correo electrónico, haga clic aquí para solicitar otro.</p>
+                        <br>
+                        <button nbButton outline status="primary" nbTooltip="Volver a enviar correo"
+                            (click)="onSendOther()">
+                            <nb-icon icon="email-outline"></nb-icon>
+                            <span i18n>
+                                Volver a enviar correo
+                            </span>
+                        </button> 
+                    </div>
+                </div>
+            </nb-card-body>
+            <nb-card-footer class="open-links-end text-center">
+
+                <a class="text-link" role="button" (click)="goToHome()"
+                    nbTooltip="Ya verifiqué mi correo, ir a la página principal.">
+                    Ir a la página principal
+                </a>
+            </nb-card-footer>
+        </nb-card>
+    </div>
+</div>

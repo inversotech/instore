@@ -1,0 +1,48 @@
+<nb-card [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary" size="medium">
+  <nb-card-header class="d-flex justify-content-between align-items-center">
+    <div></div>
+    <div> Agregar almacen</div>
+    <button nbButton ghost status="basic" size="tiny" (click)="onClose()" nbTooltip="Cerrar">
+      <nb-icon icon="close-outline"></nb-icon>
+    </button>
+  </nb-card-header>
+
+  <nb-card-body class="">
+
+    <div *ngIf="almacenes.length > 0; else emptyList"></div>
+    <nb-radio-group [formControl]="idAlmacenSeleccionado">
+      <nb-radio *ngFor="let item of almacenes" [value]="item.id_almacen">
+        {{ item.nombre }}
+      </nb-radio>
+      <nb-radio [value]="null">
+        Sin almacén
+      </nb-radio>
+    </nb-radio-group>
+
+    <ng-template #emptyList>
+      <tbody>
+        <tr>
+          <td colspan="2" class="text-center">
+            <span i18n class="label">
+              No hay registros para mostrar
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </ng-template>
+
+  </nb-card-body>
+
+  <nb-card-footer class="d-flex justify-content-center">
+    <button nbButton status="basic" size="small" (click)="onClose()">
+      <nb-icon icon="close-outline"></nb-icon>
+      <span class="ms-1">Cerrar</span>
+    </button>
+
+    <button nbButton class="me-1" status="primary" size="small" (click)="onSave()">
+      <nb-icon icon="save-outline"></nb-icon>
+      Guardar
+    </button>
+
+  </nb-card-footer>
+</nb-card>

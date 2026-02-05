@@ -1,0 +1,231 @@
+<nb-card accent="primary">
+  <nb-card-header>
+
+    <div style="line-height: 1rem;">
+      <table>
+        <tr>
+          <td>
+            <nb-icon status="primary" style="font-size: 1.6rem;" icon="bar-chart-outline" pack="eva"></nb-icon> &nbsp;
+          </td>
+          <td>
+            <div>
+              <span i18n>
+                KARDEX
+              </span>
+            </div>
+            <div class="fw-light">Reporte kardex</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+
+    <form [formGroup]="filterForm" (ngSubmit)="submitFormSearch()">
+
+      <div class="row g-1">
+        <div class="col-md-2">
+          <nb-radio-group formControlName="modo" status="warning">
+            <nb-radio [value]="0">Todos</nb-radio>
+            <nb-radio [value]="1">Por artículo</nb-radio>
+          </nb-radio-group>
+        </div>
+
+        <div class="col-md-2">
+          <label for="id_anho" class="label">Año</label>
+          <nb-select placeholder="Seleccionar año" fullWidth [size]="'small'" formControlName="id_anho" id="id_anho">
+            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option *ngFor="let item of anhos" [value]="item.id_anho"> {{ item.id_anho }} </nb-option>
+          </nb-select>
+        </div>
+
+        <div class="col-md-2">
+          <label for="id_mes" class="label">Mes</label>
+          <nb-select placeholder="Seleccionar mes" fullWidth [size]="'small'" formControlName="id_mes" id="id_mes">
+            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option *ngFor="let item of meses" [value]="item.id_mes"> {{ item.nombre }} </nb-option>
+          </nb-select>
+        </div>
+
+        <div class="col-md-2">
+          <label for="id_almacen" class="label">Almacén</label>
+          <nb-select placeholder="Seleccionar almacén" fullWidth [size]="'small'" formControlName="id_almacen"
+            id="id_almacen">
+            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option *ngFor="let item of almacenes" [value]="item.id_almacen">
+              {{ item.almacen_nombre }}
+            </nb-option>
+          </nb-select>
+        </div>
+
+        <!-- <div class="col-md-2" *ngIf="filterForm.get('modo')?.value == 1">
+          <label for="text_search" class="label">Buscar artículo</label>
+          <nb-form-field>
+            <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+            <input formControlName="text_search" type="search" placeholder="Buscar..." nbInput fullWidth shape="round"
+              fieldSize="small">
+          </nb-form-field>
+        </div> -->
+
+        <div class="col-md-2" *ngIf="filterForm.get('modo')?.value == 1">
+          <label for="detalle" class="label">Buscar artículo</label>
+          <nb-form-field>
+            <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+            <input #idArticuloSearch autocomplete="off" nbInput type="search" placeholder="Buscar..." fullWidth
+              shape="round" fieldSize="small" [formControl]="textSearchArticulo"
+              [nbAutocomplete]="autoControlArticulo" />
+          </nb-form-field>
+          <nb-autocomplete #autoControlArticulo size="small" [activeFirst]="true" [handleDisplayFn]="viewHandleArticulo"
+            (selectedChange)="selectedChangeArticulo($event)">
+            <nb-option *ngFor="let item of filteredArticuloList$ | async" [value]="item">
+              {{ item?.i_articulo_nombre }} ({{ item?.i_articulo_codigo }})
+            </nb-option>
+          </nb-autocomplete>
+        </div>
+
+        <div class="col-md-2 text-start">
+          <label for="" class="label" style="visibility: hidden;">.</label>
+          <div>
+            <button nbButton class="me-1" type="submit" status="primary" size="small">
+              <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+              Buscar
+            </button>
+            <button nbButton (click)="onDownloadExcel()" nbTooltip="Descargar en excel" class="me-1" status="basic" type="button" size="small">
+              <nb-icon status="success" icon="download-outline" pack="eva"></nb-icon>
+            </button>
+            <button nbButton (click)="onDownloadPdf()" nbTooltip="Descargar en PDF" class="me-1" status="basic" type="button" size="small">
+              <nb-icon status="danger" icon="download-outline" pack="eva"></nb-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- <div class="row">
+      <div class="col-md-12 text-end">
+        <button nbButton nbTooltip="Descargar en excel" class="me-1" status="basic" type="button" size="tiny">
+          <nb-icon status="success" icon="download-outline" pack="eva"></nb-icon>
+          Excel
+        </button>
+        <button nbButton nbTooltip="Descargar en PDF" class="me-1" status="basic" type="button" size="tiny">
+          <nb-icon status="danger" icon="download-outline" pack="eva"></nb-icon>
+          Pdf
+        </button>
+      </div>
+    </div> -->
+
+    <div class="row mt-1" [nbSpinner]="loadingSpinner" nbSpinnerStatus="primary">
+      <div class="col-md-12">
+
+        <table class="table table-sm table-bordered table-borderless">
+          <thead>
+            <tr>
+              <th colspan="4" class="text-center">DETALLE</th>
+              <th colspan="3" class="text-center">ENTRADAS</th>
+              <th colspan="3" class="text-center">SALIDAS</th>
+              <th colspan="3" class="text-center">EXISTENCIAS</th>
+            </tr>
+            <tr>
+              <th>N</th>
+              <th>ARTÍCULO</th>
+              <th>FECHA</th>
+              <th>GLOSA</th>
+
+              <th>CANTIDAD</th>
+              <th class="text-end">C.UNIT</th>
+              <th class="text-end">COSTO TOTAL</th>
+
+              <th>CANTIDAD</th>
+              <th class="text-end">C.UNIT</th>
+              <th class="text-end">COSTO TOTAL</th>
+
+              <th>CANTIDAD</th>
+              <th class="text-end">C.UNIT</th>
+              <th class="text-end">COSTO TOTAL</th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="kardexes.length > 0; else emptyList">
+            <!-- <tr *ngFor="let item of movimientos | paginate: { id: 'movimientosPaginate',
+            itemsPerPage: pagination?.pageSize,
+            currentPage: pagination?.currentPage,
+            totalItems: pagination?.totalItems}; let i=index"> -->
+
+            <tr *ngFor="let item of kardexes; let i=index">
+              <td>
+                {{ (i+1) }}
+              </td>
+              <td>
+                [I] {{ item.articulo_nombre }}
+              </td>
+              <td>
+                {{ item.fecha | date: 'dd/MM/yyyy HH:mm' }}
+              </td>
+              <td>
+                {{ item.operacion }}
+              </td>
+              <td class="text-end">
+                {{ item.i_cantidad | number : '1.2-2' }}
+              </td>
+              <td class="text-end">
+                {{ item.i_costo | number : '1.2-2' }}
+              </td>
+              <td class="text-end">
+                {{ item.i_costo_total | number : '1.2-2' }}
+              </td>
+              
+              <td class="text-end">
+                {{ item.s_cantidad | number : '1.2-2' }}
+              </td>
+              <td class="text-end">
+                {{ item.s_costo | number : '1.2-2' }}
+              </td>
+              <td class="text-end">
+                {{ item.s_costo_total | number : '1.2-2' }}
+              </td>
+
+              <td class="text-end">
+                {{ item.e_cantidad | number : '1.2-2' }}
+              </td>
+              <td class="text-end">
+                {{ item.e_costo | number : '1.2-2' }}
+              </td>
+              <td class="text-end">
+                {{ item.e_costo_total | number : '1.2-2' }}
+              </td>
+             
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+    <ng-template #emptyList>
+      <tbody>
+        <tr>
+          <td colspan="13" class="text-center label">
+            No hay registros para mostrar
+          </td>
+        </tr>
+      </tbody>
+    </ng-template>
+
+    <!-- <div class="row">
+      <div class="col-md-12">
+        <nb-card>
+          <nb-card-body class="text-center">
+            <pagination-controls class="lamb-pagination" id="movimientosPaginate" (pageChange)="pageChanged($event)"
+              (pageBoundsCorrection)="pageChanged($event)" [maxSize]="paginationControls.maxSize"
+              [directionLinks]="paginationControls.directionLinks" [responsive]="paginationControls.responsive"
+              previousLabel="ANTERIOR" nextLabel="SIGUIENTE" [autoHide]="paginationControls.autoHide"
+              screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page"
+              screenReaderCurrentLabel="Estás en la página">
+            </pagination-controls>
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div> -->
+
+  </nb-card-body>
+</nb-card>

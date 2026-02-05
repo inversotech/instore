@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
-  selector: 'open-main',
+  selector: 'inverso-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
 })

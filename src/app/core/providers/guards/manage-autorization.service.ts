@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { StoreUserActionsService } from './store-user-actions.service';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ManageAutorizationService {
     // public actions: any[];
 

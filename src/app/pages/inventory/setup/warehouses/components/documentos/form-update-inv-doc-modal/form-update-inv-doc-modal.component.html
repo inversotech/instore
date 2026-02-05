@@ -1,0 +1,66 @@
+<nb-card [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary" status="primary">
+  <nb-card-header class="d-flex justify-content-between">
+    <div class="text-center">
+      <span i18n>
+        ACTUALIZAR |
+      </span>
+      <span class="font-weight-light" i18n>
+        Usuario responsable
+      </span>
+    </div>
+    <div>
+      <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer"></nb-icon>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <form [formGroup]="newForm">
+      <div class="row">
+        <div class="col-md-6 mb-2">
+          <label for="id_conta_documento" class="label required">Documento</label>
+          <nb-select placeholder="Documento" size="small" formControlName="id_conta_documento" fullWidth
+            name="id_conta_documento" id="id_conta_documento">
+            <nb-option value="">-Seleccione-</nb-option>
+            <nb-option *ngFor="let item of contaDocumentos" [value]="item.id_conta_documento">
+              {{ item.serie }} {{ item.nombre }}
+            </nb-option>
+          </nb-select>
+        </div>
+        <div class="col-md-6 mb-2">
+          <label for="id_tipo_operacion" class="label required">Tipo Operación</label>
+          <nb-select placeholder="Documento" size="small" formControlName="id_tipo_operacion" fullWidth
+            name="id_tipo_operacion" id="id_tipo_operacion">
+            <nb-option value="">-Seleccione-</nb-option>
+            <nb-option *ngFor="let item of tipoOperacions" [value]="item.id_tipo_operacion">
+              {{ item.id_tipo_operacion }} {{ item.nombre }}
+            </nb-option>
+          </nb-select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-2">
+            <label for="activo" class="label required">Activo</label>
+            <nb-radio-group formControlName="activo" name="activo" status="warning">
+              <nb-radio [value]="true">Si</nb-radio>
+              <nb-radio [value]="false">No</nb-radio>
+            </nb-radio-group>
+          </div>
+        </div>
+      </div>
+
+    </form>
+
+  </nb-card-body>
+  <nb-card-footer class="text-end">
+    <button nbButton class="me-1" status="basic" size="small" (click)="onClose()">
+      <nb-icon icon="close-outline"></nb-icon>
+      Cancelar
+    </button>
+
+    <button nbButton class="me-1" status="primary" size="small" (click)="onSave()">
+      <nb-icon icon="save-outline"></nb-icon>
+      Guardar
+    </button>
+
+  </nb-card-footer>
+</nb-card>

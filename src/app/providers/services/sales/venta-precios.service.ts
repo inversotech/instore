@@ -10,10 +10,9 @@ export class VentaPreciosService extends EntityDataService<any> {
         super(httpClient, `${environment.apiUrls.openAccounting}/api/sales/venta-precios`);
     }
 
-    // public onAddOrDeletessigme$(data: any): Observable<any> {
-    //     return this.httpClient.post<any>(`${this.endPoint}/addordel-assigme`, data);
-    // }
-
+    public onSincronizarArticulos$(data: any): Observable<any> {
+        return this.httpClient.post<any>(`${this.endPoint}/sincronizar-articulos`, data);
+    }
 
     // public getTipoComprobantes$(): Observable<any> {
     //     return this.httpClient.get<any>(`${this.endPoint}/tipo-comprobantes`);

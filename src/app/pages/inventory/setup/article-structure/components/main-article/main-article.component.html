@@ -1,0 +1,162 @@
+<nb-card [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary" status="primary">
+
+  <nb-card-body>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="mb-2 text-center">
+          <label for="codigo" class="label">Producto Padre</label>
+          <h4>{{parent?.codigo}}</h4>
+          <h6>{{parent?.nombre}}</h6>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="row">
+      <div class="card-header col-md-12">
+        <span i18n>
+          NUEVO |
+        </span>
+        <span class="font-weight-light" i18n>
+          Registrar un nuevo artículo o item.
+        </span>
+      </div>
+    </div>
+    <br> -->
+    <nb-tabset>
+      <nb-tab tabTitle="Datos Generales" tabIcon="grid-outline" responsive>
+        <nb-card>
+          <nb-card-body>
+
+            <form [formGroup]="editarForm">
+              <div class="row">
+                <div class="col-md-4">
+                  <nb-card class="open-card-image" status="small" status="primary">
+                    <nb-card-body>
+                      <img *ngIf="!editarForm.get('img_url')?.value;else existImage" [src]="'assets/default/empty.jpeg'"
+                        class="img-fluid rounded mx-auto d-block">
+                      <ng-template #existImage>
+                        <img class="img-fluid rounded mx-auto d-block" [src]="editarForm.get('img_url')?.value" alt="">
+                      </ng-template>
+                      <input #inputFile style="display: none" type="file" accept=".jpg, .png, .jpeg" (change)="onFileChange($event)">
+                    </nb-card-body>
+                    <nb-card-footer class="text-center">
+                      <p>
+                        <small i18n>(Formatos: .jpg, .png, .jpeg, tamaño máximo: 8MB)</small>
+                      </p>
+                      <button nbButton outline status="primary" (click)="inputFile.click()" size="small" nbTooltip="Adjuntar imagen">
+                        <nb-icon nbPrefix icon="upload-outline" pack="eva">
+                        </nb-icon>
+                        <span i18n>Cambiar imagen</span>
+                      </button>
+                      &nbsp;
+                      <button nbButton outline status="primary" (click)="onDeleteArchivo()" size="small" nbTooltip="Eliminar imagen">
+                        <nb-icon nbPrefix icon="close-outline" pack="eva">
+                        </nb-icon>
+                        <span i18n>Eliminar</span>
+                      </button>
+                    </nb-card-footer>
+                  </nb-card>
+                </div>
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="mb-2">
+                        <label for="codigo" class="label required">Código (Desabilitado)</label>
+                        <input type="text" nbInput fullWidth fieldSize="small" name="codigo" id="codigo"
+                          formControlName="codigo">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="mb-2">
+                        <label for="codigo" class="label required">Clase (Desabilitado)</label>
+                        <nb-select placeholder="Clase" size="small" formControlName="id_clase" fullWidth name="id_clase"
+                          id="id_clase">
+                          <nb-option value="">-Seleccione-</nb-option>
+                          <nb-option *ngFor="let item of clases" [value]="item.id_clase">{{ item.nombre }}</nb-option>
+                        </nb-select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="mb-2">
+                        <label for="nombre" class="label required">Nombre</label>
+                        <input type="text" nbInput fullWidth fieldSize="small" name="nombre" id="nombre"
+                          formControlName="nombre" placeholder="">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="mb-2">
+                        <label for="id_unidad_medida" class="label required">Unidad de medida</label>
+                        <nb-select placeholder="Unidad de medida" size="small" formControlName="id_unidad_medida"
+                          fullWidth name="id_unidad_medida" id="id_unidad_medida">
+                          <nb-option value="">-Seleccione-</nb-option>
+                          <nb-option *ngFor="let item of unidadMedidas" [value]="item.id_unidad_medida">{{ item.nombre
+                            }}
+                            ({{
+                            item.codigo_sunat }})</nb-option>
+                        </nb-select>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="mb-2">
+                        <label for="id_marca" class="label">Marca </label>
+                        <nb-select placeholder="Marca" size="small" formControlName="id_marca" fullWidth name="id_marca"
+                          id="id_marca">
+                          <nb-option value="">-Seleccione-</nb-option>
+                          <nb-option *ngFor="let item of marcas" [value]="item.id_marca">{{ item.nombre }}</nb-option>
+                        </nb-select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="mb-2">
+                        <label for="activo" class="label">Activo</label>
+                        <nb-radio-group formControlName="activo" status="warning">
+                          <nb-radio [value]="true">Si</nb-radio>
+                          <nb-radio [value]="false">No</nb-radio>
+                        </nb-radio-group>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </nb-card-body>
+          <nb-card-footer class="text-end open-button-end">
+            <button nbButton status="basic" size="small" (click)="onBack()">
+              <nb-icon icon="close-outline"></nb-icon>
+              Regresar
+            </button>
+        
+            <button nbButton status="primary" size="small" (click)="onSave()">
+              <nb-icon icon="save-outline"></nb-icon>
+              Guardar
+            </button>
+          </nb-card-footer>
+        </nb-card>
+
+      </nb-tab>
+      <!-- <nb-tab tabTitle="Código en barra" tabIcon="menu-2-outline" responsive>
+        <p>List of <strong>orders</strong>.</p>
+      </nb-tab> -->
+      <nb-tab tabTitle="Existencia en almacenes" tabIcon="email-outline" responsive>
+        <p>List of <strong>transactions</strong>.</p>
+      </nb-tab>
+    </nb-tabset>
+  </nb-card-body>
+  <!-- <nb-card-footer class="text-end open-button-end">
+    <button nbButton status="basic" size="small" (click)="onClose()">
+      <nb-icon icon="close-outline"></nb-icon>
+      Cancelar
+    </button>
+
+    <button nbButton status="primary" size="small" (click)="onSave()">
+      <nb-icon icon="save-outline"></nb-icon>
+      Guardar
+    </button>
+  </nb-card-footer> -->
+</nb-card>

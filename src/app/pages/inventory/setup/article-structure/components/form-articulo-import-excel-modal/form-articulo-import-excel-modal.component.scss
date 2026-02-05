@@ -1,0 +1,32 @@
+@import 'themes';
+
+.lamb-button-examinar {
+    margin-top: 0.6rem;
+    [hidden] {
+        display: none !important;
+    }
+}
+// ::ng-deep .drop-zone {
+::ng-deep .ngx-file-drop__drop-zone {
+    border: 2px dotted nb-theme(color-primary-500) !important;
+    // border-radius: 1px !important;
+}
+
+nb-list-item {
+    border-radius: 15px;
+    padding: 0.2rem 1rem;
+    .label {
+        margin-right: 2rem;
+    }
+}
+
+.es-button-end {
+    button {
+        margin-right: 0.3rem;
+    }
+}
+
+nb-card-header{
+    display: flex;
+    justify-content: space-between;
+}

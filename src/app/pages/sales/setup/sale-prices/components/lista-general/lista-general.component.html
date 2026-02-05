@@ -1,0 +1,246 @@
+<nb-card>
+  <nb-card-header>
+    <div class="lh-sm">
+      <table>
+        <tr>
+          <td>
+            <nb-icon status="primary" style="font-size: 1.6rem;" icon="settings-outline" pack="eva"></nb-icon> &nbsp;
+          </td>
+          <td class="border-start ps-2">
+            <div>
+              <span i18n>
+                LISTA DE PRECIOS
+              </span>
+            </div>
+            <div class="fw-light">Asignación de precios a los artículos de venta</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <form [formGroup]="searchForm" (ngSubmit)="submitFormSearch()">
+      <div class="row g-1">
+        <div class="col-md-3">
+          <label for="id_almacen" class="label form-label">Mis centros de venta</label>
+          <nb-select placeholder="Almacen" fullWidth [size]="'small'" formControlName="id_almacen" id="id_almacen">
+            <nb-option *ngFor="let item of misAlmacenes$ | async" [value]="item.id_almacen">
+              {{ item.id_almacen }} - {{ item.almacen_nombre }}</nb-option>
+          </nb-select>
+        </div>
+        <div class="col-md-3">
+          <label for="id_anho" class="label form-label">Año</label>
+          <nb-select placeholder="Año" fullWidth [size]="'small'" formControlName="id_anho" id="id_anho">
+            <nb-option *ngFor="let item of anhos$ | async" [value]="item.id_anho">
+              {{ item.id_anho }} </nb-option>
+          </nb-select>
+        </div>
+        <div class="col-md-3">
+          <label for="text_search" class="label form-label">Buscar</label>
+          <nb-form-field>
+            <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+            <input formControlName="text_search" type="search" placeholder="Buscar..." nbInput fullWidth shape="round"
+              fieldSize="small">
+          </nb-form-field>
+        </div>
+        <div class="col-md-3 mt-md-auto">
+          <button nbButton class="me-1" type="submit" status="primary" size="small">
+            <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+            Buscar
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <nb-tabset class="mt-3" (changeTab)="onTabChange($event)">
+      <!-- TAB AGREGADO -->
+      <nb-tab tabTitle="Productos Agregados" tabIcon="cube-outline">
+        <div class="row" [nbSpinner]="loadingSpinner" nbSpinnerStatus="primary">
+          <div class="col-md-12 d-flex justify-content-end mb-2">
+            <button nbButton class="me-1" type="button" (click)="onSincronizarArticulos()" status="info" size="small" nbTooltip="Esta opción permite sincronizar todos los artículos definidos en el almacén (Tipo AGREGADO)">
+              <nb-icon nbPrefix icon="save-outline" pack="eva"></nb-icon>
+              Sincronizar artículos
+            </button>
+
+            <button nbButton class="me-1" type="button" (click)="onGuardarAllAgregados()" status="primary" size="small">
+              <nb-icon nbPrefix icon="save-outline" pack="eva"></nb-icon>
+              Guardar cambios
+            </button>
+          </div>
+          <div class="col-md-12">
+            <table class="table table-sm table-hover">
+              <thead>
+                <tr>
+                  <th class="text-center">N</th>
+                  <th class="text-center">CÓDIGO</th>
+                  <th>ARTÍCULO</th>
+                  <th class="text-center">STOCK</th>
+                  <th>PRECIO (PEN)</th>
+                  <th>PRECIO (USD)</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="ventaPreciosAgregados.length > 0; else emptyListAgregados">
+                <tr *ngFor="let item of ventaPreciosAgregados; let i=index">
+                  <td class="text-center">{{ (i+1) }}</td>
+                  <td class="fw-bold text-center">{{ item.codigo_almacen }}</td>
+                  <td><span class="fw-bold">{{ item.nombre }}</span> - ({{ item.codigo }})</td>
+                  <td class="text-center">{{ item.stock_actual }}</td>
+                  <td style="width: 150px;">
+                    <input type="number" fullWidth class="text-end" fieldSize="small" nbInput
+                      [(ngModel)]="item.precio_inicial_pen" placeholder="0.00">
+                  </td>
+                  <td style="width: 150px;">
+                    <input type="number" fullWidth class="text-end" fieldSize="small" nbInput
+                      [(ngModel)]="item.precio_inicial_usd" placeholder="0.00">
+                  </td>
+                </tr>
+              </tbody>
+              <ng-template #emptyListAgregados>
+                <tbody>
+                  <tr>
+                    <td colspan="6" class="text-center">
+                      <span class="label">No hay productos agregados para mostrar</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </ng-template>
+            </table>
+          </div>
+        </div>
+      </nb-tab>
+
+      <!-- TAB UNIDAD -->
+      <nb-tab tabTitle="Productos por Unidad" tabIcon="layers-outline">
+        <div class="row" [nbSpinner]="loadingSpinner" nbSpinnerStatus="primary">
+          <div class="col-md-12 d-flex justify-content-between align-items-center mb-2">
+            <div class="d-flex align-items-center">
+              <nb-form-field class="me-2">
+                <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
+                <input type="search" [(ngModel)]="busquedaUnidades" placeholder="Buscar por nombre, lote o serie..."
+                  nbInput shape="round" fieldSize="small" style="width: 300px;">
+              </nb-form-field>
+              <small class="text-muted" *ngIf="busquedaUnidades">
+                {{ unidadesFiltradas.length }} de {{ ventaPreciosUnidades.length }} artículos
+              </small>
+            </div>
+            <button nbButton type="button" (click)="onGuardarAllUnidades()" status="primary" size="small">
+              <nb-icon nbPrefix icon="save-outline" pack="eva"></nb-icon>
+              Guardar cambios
+            </button>
+          </div>
+          <div class="col-md-12">
+            <table class="table table-sm">
+              <thead>
+                <tr class="text-center">
+                  <th></th>
+                  <th>CÓDIGO</th>
+                  <th>ARTÍCULO</th>
+                  <th>LOTES/UNIDADES</th>
+                  <th>PRECIO GENERAL (PEN)</th>
+                  <th>PRECIO GENERAL (USD)</th>
+                  <th>ACCIONES</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="unidadesFiltradas.length > 0; else emptyListUnidades">
+                <ng-container *ngFor="let item of unidadesFiltradas; let i=index">
+                  <!-- Fila principal del artículo -->
+                  <tr class="table-light" [class.match-row]="tieneCoincidenciaArticulo(item)">
+                    <td class="text-center">
+                      <button nbButton size="tiny" status="info" (click)="toggleExpand(item)">
+                        <nb-icon [icon]="item.expanded ? 'chevron-down-outline' : 'chevron-right-outline'"></nb-icon>
+                      </button>
+                    </td>
+                    <td class="fw-bold text-center" [innerHTML]="highlightText(item.codigo_almacen)"></td>
+                    <td>
+                      <span class="fw-bold" [innerHTML]="highlightText(item.articulo_nombre)"></span> -
+                      (<span [innerHTML]="highlightText(item.articulo_codigo)"></span>)
+                    </td>
+                    <td class="text-center">
+                      {{ item.total_unidades + ' unidades' }}
+                    </td>
+                    <td style="width: 150px;">
+                      <input type="number" fullWidth class="text-end" fieldSize="small" nbInput
+                        [(ngModel)]="item.precio_inicial_pen" placeholder="0.00">
+                    </td>
+                    <td style="width: 150px;">
+                      <input type="number" fullWidth class="text-end" fieldSize="small" nbInput
+                        [(ngModel)]="item.precio_inicial_usd" placeholder="0.00">
+                    </td>
+                    <td class="text-center">
+                      <button nbButton size="tiny" status="info" ghost
+                        nbTooltip="Guardar y aplicar precio a todas las unidades"
+                        (click)="onGuardarPrecioArticulo(item)">
+                        <nb-icon icon="save-outline"></nb-icon>
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Filas expandidas de lotes/unidades -->
+                  <ng-container *ngIf="item.expanded && item.lotes">
+                    <ng-container *ngFor="let lote of item.lotes">
+                      <!-- Fila del lote -->
+                      <tr class="table-secondary" [class.match-lote]="tieneCoincidenciaLote(lote)">
+                        <td></td>
+                        <td colspan="2" class="ps-4">
+                          <nb-icon icon="archive-outline" class="me-1"></nb-icon>
+                          <strong>Lote:</strong> <span [innerHTML]="highlightText(lote.lote_numero) || 'Sin lote'"></span>
+                          <small class="text-muted ms-2">({{ lote.unidades?.length || 0 }} unidades)</small>
+                        </td>
+                        <td class="text-center">
+                          <small *ngIf="lote.lote_fecha_vencimiento">Vence: {{ lote.lote_fecha_vencimiento }}</small>
+                        </td>
+                        <td>
+                          <input type="number" fullWidth class="text-end" fieldSize="small" nbInput status="warning"
+                            [(ngModel)]="lote.precio_promedio_lote" placeholder="Precio lote">
+                        </td>
+                        <td>
+                          <input type="number" fullWidth class="text-end" fieldSize="small" nbInput status="warning"
+                            [(ngModel)]="lote.precio_promedio_lote_me" placeholder="Precio lote">
+                        </td>
+                        <td class="text-center">
+                          <button nbButton size="tiny" status="warning" ghost
+                            nbTooltip="Guardar y aplicar a unidades del lote" (click)="onGuardarPrecioLote(item, lote)">
+                            <nb-icon icon="save-outline"></nb-icon>
+                          </button>
+                        </td>
+                      </tr>
+                      <!-- Filas de unidades individuales -->
+                      <tr *ngFor="let unidad of lote.unidades" class="small" [class.match-unidad]="tieneCoincidenciaUnidad(unidad)">
+                        <td></td>
+                        <td></td>
+                        <td class="ps-5">
+                          <nb-icon icon="pricetags-outline" class="me-1 text-muted"></nb-icon>
+                          Serie: <strong [innerHTML]="highlightText(unidad.serie) || '-'"></strong> |
+                          Modelo: <strong [innerHTML]="highlightText(unidad.modelo) || '-'"></strong>
+
+                        </td>
+                        <td>{{ unidad.id_estado_unidad }}</td>
+                        <td>
+                          <input type="number" fullWidth class="text-end" fieldSize="small" nbInput
+                            [(ngModel)]="unidad.precio_uni" placeholder="0.00">
+                        </td>
+                        <td>
+                          <input type="number" fullWidth class="text-end" fieldSize="small" nbInput
+                            [(ngModel)]="unidad.precio_uni_me" placeholder="0.00">
+                        </td>
+                        <td></td>
+                      </tr>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </tbody>
+              <ng-template #emptyListUnidades>
+                <tbody>
+                  <tr>
+                    <td colspan="7" class="text-center">
+                      <span class="label">No hay productos por unidad para mostrar</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </ng-template>
+            </table>
+          </div>
+        </div>
+      </nb-tab>
+    </nb-tabset>
+  </nb-card-body>
+</nb-card>

@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Input } from
 import { NB_WINDOW } from '@nebular/theme';
 
 @Component({
-  selector: 'open-search',
+  selector: 'inverso-search',
   styleUrls: ['./search.component.scss'],
   templateUrl: './search.component.html',
   // changeDetection: ChangeDetectionStrategy.OnPush,

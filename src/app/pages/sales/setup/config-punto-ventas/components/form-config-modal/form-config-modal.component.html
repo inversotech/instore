@@ -1,0 +1,202 @@
+<nb-card [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary" size="large">
+  <nb-card-header class="d-flex justify-content-between align-items-center">
+    <div>
+      <h5 class="mb-0">{{ adata?.nombre }}</h5>
+      <p class="mb-0">Información del Punto de Venta</p>
+    </div>
+    <button nbButton ghost status="basic" size="tiny" (click)="onClose()" nbTooltip="Cerrar">
+      <nb-icon icon="close-outline"></nb-icon>
+    </button>
+  </nb-card-header>
+
+  <nb-card-body class="p-4">
+
+    <!-- Información del Punto de Venta -->
+    <div class="mb-2 pb-3 border-bottom">
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <div class="flex-grow-1">
+          <!-- <h5 class="mb-0">{{ adata?.nombre }}</h5>
+          <p class="mb-4">Información del Punto de Venta</p> -->
+
+          <div class="row g-3 mb-2">
+            <div class="col-md-6">
+              <div class="d-flex align-items-center mb-2">
+                <nb-icon icon="briefcase-outline" pack="eva" class="me-2"></nb-icon>
+                <div>
+                  <small class="opacity-75 d-block">Empresa</small>
+                  <span>{{ adata?.empresa_nombre_comercial }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex align-items-center mb-2">
+                <nb-icon icon="pin-outline" pack="eva" class="me-2"></nb-icon>
+                <div>
+                  <small class="opacity-75 d-block">Sucursal</small>
+                  <span>{{ adata?.sucursal_nombre }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-between pt-2 border-top">
+            <div class="d-flex align-items-center flex-grow-1">
+              <nb-icon icon="home-outline" status="info" pack="eva" class="me-2"></nb-icon>
+              <div class="flex-grow-1">
+                <small class="opacity-75 d-block">Almacén que controla el stock</small>
+                <span *ngIf="puntoVenta?.id_almacen">{{ puntoVenta?.almacen_nombre }}</span>
+                <small *ngIf="!puntoVenta?.id_almacen" class="opacity-50" i18n>Sin almacén asignado</small>
+              </div>
+            </div>
+            <button nbButton [status]="puntoVenta?.id_almacen ? 'basic' : 'primary'" size="tiny"
+              (click)="onAgregarAlmacen()" [nbTooltip]="puntoVenta?.id_almacen ? 'Cambiar almacén' : 'Asignar almacén'"
+              class="ms-2">
+              <nb-icon [icon]="puntoVenta?.id_almacen ? 'edit-outline' : 'plus-outline'"></nb-icon>
+              <span>{{ puntoVenta?.id_almacen ? 'Cambiar almacén' : 'Asignar almacén' }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="position-relative">
+          <nb-badge *ngIf="adata?.activo" status="success" text="Activo"></nb-badge>
+          <nb-badge *ngIf="!adata?.activo" status="danger" text="Inactivo"></nb-badge>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secciones Documentos y Usuarios -->
+    <div class="row g-4">
+
+      <!-- Sección Documentos -->
+      <div class="col-12 col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="d-flex align-items-center">
+            <nb-icon icon="file-text-outline" status="basic" pack="eva"></nb-icon>
+            <span class="ms-2">Documentos</span>
+          </div>
+          <button nbButton status="primary" size="tiny" (click)="onAgregarDocumento()" nbTooltip="Agregar documento"
+            class="mx-2">
+            <nb-icon icon="plus-outline"></nb-icon>
+            Agregar documento
+          </button>
+        </div>
+
+        <div *ngIf="puntoVentaDocumentos.length > 0; else noDocumentos" class="ps-4">
+          <div *ngFor="let item of puntoVentaDocumentos; let last = last, let i = index" class="py-1"
+            [class.border-bottom]="!last">
+            <div class="d-flex align-items-center justify-content-between">
+              <span>{{ item.serie }} {{ item.nombre }}</span>
+              <div class="d-flex align-items-center">
+                <span class="opacity-75 mx-4">N° {{ item.contador | number:'1.0-0' }}</span>
+                <button nbButton ghost status="danger" size="tiny" (click)="onEliminarDocumento(item)"
+                  nbTooltip="Eliminar"><nb-icon icon="trash-2-outline"></nb-icon></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #noDocumentos>
+          <div class="ps-4 py-2 opacity-50">
+            <small i18n>No hay documentos configurados</small>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Sección Usuarios -->
+      <div class="col-12 col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="d-flex align-items-center">
+            <nb-icon icon="people-outline" status="basic" pack="eva"></nb-icon>
+            <span class="ms-2">Usuarios</span>
+          </div>
+          <button class="mx-2" nbButton status="primary" size="tiny" (click)="onAgregarUsuario()"
+            nbTooltip="Agregar usuario">
+            <nb-icon icon="plus-outline"></nb-icon>
+            Agregar usuario
+          </button>
+        </div>
+
+        <div *ngIf="puntoVentaUsuarios.length > 0; else noUsuarios" class="ps-4">
+          <div *ngFor="let item of puntoVentaUsuarios; let last = last" class="py-2" [class.border-bottom]="!last">
+            <div class="d-flex align-items-center justify-content-between">
+              <div>
+                <nb-icon icon="person-outline" pack="eva" class="me-2"></nb-icon>
+                <span>{{ item.email }}</span>
+              </div>
+
+
+              <!-- <div class="d-flex align-items-center justify-content-between">
+                <small>{{ item.serie }} {{ item.nombre }}</small>
+                <div class="d-flex align-items-center">
+                  <small class="opacity-75 mx-4">N° {{ item.contador | number:'1.0-0' }}</small> -->
+              <button nbButton ghost status="danger" size="tiny" (click)="onEliminarUsuario(item)"
+                nbTooltip="Eliminar"><nb-icon icon="trash-2-outline"></nb-icon></button>
+              <!-- </div>
+              </div>
+            </div> -->
+
+
+            </div>
+          </div>
+        </div>
+        <ng-template #noUsuarios>
+          <div class="ps-4 py-2 opacity-50">
+            <small i18n>No hay usuarios asignados</small>
+          </div>
+        </ng-template>
+      </div>
+
+
+
+      <!-- Sección Cajas -->
+      <!-- <div class="col-12 col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="d-flex align-items-center">
+            <nb-icon icon="credit-card-outline" status="basic" pack="eva"></nb-icon>
+            <span class="ms-2">Cajas</span>
+          </div>
+          <button class="mx-2" nbButton status="primary" size="tiny" (click)="onAgregarCajas()"
+            nbTooltip="Agregar usuario">
+            <nb-icon icon="plus-outline"></nb-icon>
+            Agregar caja
+          </button>
+        </div>
+
+        <div *ngIf="puntoVentaCajas.length > 0; else noDocumentos" class="ps-4">
+          <div *ngFor="let item of puntoVentaCajas; let last = last, let i = index" class="py-1"
+            [class.border-bottom]="!last">
+            <div class="d-flex align-items-center justify-content-between">
+              <span>{{ item.nombre }} - {{ item.medio_pago_nombre }}
+                <span class="fw-bold text-success" *ngIf="item.activo">Activo</span>
+                <span class="fw-bold text-danger" *ngIf="!item.activo">Inactivo</span>
+              </span>
+              <div class="d-flex align-items-center">
+                <span class="opacity-75 mx-4">Doc: {{ item.conta_documento_nombre }} ({{ item.conta_documento_serie }}-{{ item.conta_documento_contador }})</span>
+                <span class="opacity-75 mx-4">Moneda: {{ item.moneda_currency }}</span>
+                <button nbButton ghost status="primary" size="tiny" (click)="onEditarCajas(item)"
+                  nbTooltip="Editar"><nb-icon icon="edit-outline"></nb-icon></button>
+                <button nbButton ghost status="danger" size="tiny" (click)="onEliminarCaja(item)"
+                  nbTooltip="Eliminar"><nb-icon icon="trash-2-outline"></nb-icon></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noCajas>
+          <div class="ps-4 py-2 opacity-50">
+            <small i18n>No hay cajas asignados</small>
+          </div>
+        </ng-template>
+      </div> -->
+
+    </div>
+
+
+  </nb-card-body>
+
+  <nb-card-footer class="d-flex justify-content-center">
+    <button nbButton status="basic" size="small" (click)="onClose()">
+      <nb-icon icon="close-outline"></nb-icon>
+      <span class="ms-1">Cerrar</span>
+    </button>
+  </nb-card-footer>
+</nb-card>

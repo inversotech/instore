@@ -1,0 +1,85 @@
+<nb-card [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary" status="primary">
+  <nb-card-header>
+    <div class="text-center">
+      <span i18n>
+        NUEVO |
+      </span>
+      <span class="font-weight-light" i18n>
+        Nuevo almacén
+      </span>
+    </div>
+    <div>
+      <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer"></nb-icon>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <form [formGroup]="documentoForm">
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-2">
+            <label for="id_empresa" class="label required">Empresa</label>
+            <nb-select placeholder="Empresa" fullWidth [size]="'small'" formControlName="id_empresa" id="id_empresa">
+              <nb-option *ngFor="let item of empresas$ | async" [value]="item.id_empresa">
+                {{ item.id_empresa }} - {{ item.empresa_nombrecomercial }}</nb-option>
+            </nb-select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-2">
+            <label for="id_tipo_voucher" class="label required">Tipo voucher</label>
+            <nb-select placeholder="Tipo voucher" fullWidth [size]="'small'" formControlName="id_tipo_voucher"
+              id="id_tipo_voucher">
+              <nb-option *ngFor="let item of tipoVouchers$ | async" [value]="item.id_tipo_voucher">
+                {{ item.id_tipo_voucher }} - {{ item.nombre }} </nb-option>
+            </nb-select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-2">
+            <label for="id_tipo_asiento" class="label required">Tipo asiento</label>
+            <nb-select placeholder="Tipo asiento" fullWidth [size]="'small'" formControlName="id_tipo_asiento"
+              id="id_tipo_asiento">
+              <nb-option *ngFor="let item of tipoAsientos$ | async" [value]="item.id_tipo_asiento">
+                {{ item.id_tipo_asiento }} - {{ item.nombre }} </nb-option>
+            </nb-select>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="mb-2">
+            <label for="nombre" class="label required">Nombre</label>
+            <input type="text" nbInput fullWidth fieldSize="small" name="nombre" id="nombre" formControlName="nombre"
+              placeholder="">
+          </div>
+        </div>
+
+      </div>
+
+
+
+      <div class="mb-2">
+        <label for="automatico" class="label">Automatico</label>
+        <nb-radio-group formControlName="automatico" status="warning">
+          <nb-radio [value]="true">Si</nb-radio>
+          <nb-radio [value]="false">No</nb-radio>
+        </nb-radio-group>
+      </div>
+
+
+    </form>
+
+  </nb-card-body>
+  <nb-card-footer class="text-end">
+    <button nbButton class="me-1" status="basic" size="small" (click)="onClose()">
+      <nb-icon icon="close-outline"></nb-icon>
+      Cancelar
+    </button>
+
+    <button nbButton class="me-1" status="primary" size="small" (click)="onSave()">
+      <nb-icon icon="save-outline"></nb-icon>
+      Guardar
+    </button>
+
+  </nb-card-footer>
+</nb-card>

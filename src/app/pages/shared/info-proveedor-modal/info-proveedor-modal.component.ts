@@ -15,7 +15,7 @@ export class InfoProveedorModalComponent implements OnInit {
   public contribuyente: any;
   public loadingMoreInfoProveedor: boolean = false;
   public proveedorStatus: any;
-  @Input() ruc_id: any;
+  @Input() id_ruc: any;
 
   constructor(private dialogRef: NbDialogRef<InfoProveedorModalComponent>,
     private personaConsultasService: PersonaConsultasService,
@@ -35,9 +35,9 @@ export class InfoProveedorModalComponent implements OnInit {
   }
 
   public getMasters() {
-    if (!this.ruc_id) return;
+    if (!this.id_ruc) return;
     this.loadingMoreInfoProveedor = true;
-    this.personaConsultasService.getRuc$({ ruc: this.ruc_id })
+    this.personaConsultasService.getRuc$({ ruc: this.id_ruc })
       .pipe(map(res => res.data),
         takeUntil(this.destroy$),
         finalize(() => this.loadingMoreInfoProveedor = false),
@@ -65,7 +65,7 @@ export class InfoProveedorModalComponent implements OnInit {
 
     // if (estado !== 'ACTIVO') {
     //   this.nbToastrService.show(
-    //     `El ruc ${data?.ruc_id} tiene estado ${estado}, tome sus precauciones.`,
+    //     `El ruc ${data?.id_ruc} tiene estado ${estado}, tome sus precauciones.`,
     //     'Un momento',
     //     { status: "warning", icon: "alert-circle-outline" }
     //   );
@@ -73,7 +73,7 @@ export class InfoProveedorModalComponent implements OnInit {
 
     // if (condicion !== 'HABIDO') {
     //   this.nbToastrService.show(
-    //     `El ruc ${data?.ruc_id} esta en condición ${condicion}, tome sus precauciones.`,
+    //     `El ruc ${data?.id_ruc} esta en condición ${condicion}, tome sus precauciones.`,
     //     'Un momento',
     //     { status: "warning", icon: "alert-circle-outline" }
     //   );

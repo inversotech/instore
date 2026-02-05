@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  moduleCode: '01060000',
+  moduleCode: '01030000',
   // payonline: {
   //   matricula: '22',
   //   cuotaingreso: '33',
@@ -8,17 +8,17 @@ export const environment = {
   // },
   authStrategy: {
     // name: 'email',
-    name: '_open_auth_strategy',
+    name: '_inverso_auth_strategy',
     // clientId: 'wTKFzoBY5zSzdTejs4FfJKLNGnsDXpNRYjNjPQh4',
     // baseEndpoint: 'https://oauth.upeu.edu.pe',
     // redirectUri: `${window.location.origin}/callback`,
     redirectUri: `pages/callback`,
     success: 'pages/dashboard'
   },
-  shellApp: 'https://vopen.org',
+  shellApp: `${window.location.origin}`,
   apiUrls: {
-    openAccounting: 'https://vopen.org/vopen/backs/accounting',
-    openFacturation: 'https://vopen.org/vopen/backs/accounting',
-    openMain: 'https://vopen.org/vopen/backs/accounting',
+    openAccounting: 'https://app101.adventistas.pe/php80/vopen/dev/open-accounting-api/public',
+    openFacturation: 'https://app101.adventistas.pe/php80/vopen/dev/open-accounting-api/public',
+    openMain: 'https://app101.adventistas.pe/php80/vopen/dev/open-accounting-api/public',
   },
 };

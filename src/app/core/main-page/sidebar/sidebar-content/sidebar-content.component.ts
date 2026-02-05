@@ -3,7 +3,7 @@ import { NbSidebarService } from '@nebular/theme';
 import { AppDataService } from 'src/app/core/providers/app-data.service';
 
 @Component({
-  selector: 'open-sidebar-content',
+  selector: 'inverso-sidebar-content',
   templateUrl: './sidebar-content.component.html',
   styleUrls: ['./sidebar-content.component.scss'],
 })

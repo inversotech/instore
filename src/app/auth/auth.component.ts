@@ -1,0 +1,19 @@
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'open-auth',
+  templateUrl: './auth.component.html',
+  styleUrls: ['./auth.component.scss']
+})
+export class AuthComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+  get year() {
+    return new Date().getFullYear();
+  }
+
+}

@@ -1,0 +1,76 @@
+<nb-card [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary" status="primary">
+  <nb-card-header>
+    <div class="text-center">
+      <span i18n>
+        NUEVO DESCUENTO
+      </span>
+      <span class="font-weight-light" i18n>
+        Formulario
+      </span>
+    </div>
+    <div>
+      <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer"></nb-icon>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <!-- {{ formulario.value | json }}
+    <br>
+    <br> -->
+    <form [formGroup]="formulario">
+      <div class="row">
+        <div class="col-md-6 mb-1">
+          <label for="id_empresa" class="label required">Empresa</label>
+          <nb-select placeholder="Seleccionar" fullWidth [size]="'small'" formControlName="id_empresa" id="id_empresa">
+            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option *ngFor="let item of empresas$ | async" [value]="item.id_empresa">
+              {{ item.id_empresa }} - {{ item.empresa_nombrecomercial }}</nb-option>
+          </nb-select>
+        </div>
+
+        <div class="col-md-6 mb-1">
+          <label for="id_empresa_sucursal" class="label required">Sucursal</label>
+          <nb-select placeholder="Seleccionar" fullWidth [size]="'small'" formControlName="id_empresa_sucursal"
+            id="id_empresa_sucursal">
+            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option *ngFor="let item of empresaSucursales" [value]="item.id_empresa_sucursal">
+              {{ item.empresa_sucursal_nombre }}
+            </nb-option>
+          </nb-select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 mb-1">
+          <label for="nombre" class="label required">Nombre</label>
+          <nb-form-field>
+            <input nbInput fullWidth type="text" name="nombre" id="nombre" formControlName="nombre"
+              placeholder="Ingrese el nombre" fieldSize="small">
+          </nb-form-field>
+        </div>
+      </div>
+      <div class="row">
+
+        <div class="col-md-6 mb-1">
+          <label for="activo" class="label required">Activo</label>
+          <div>
+            <nb-toggle formControlName="activo" class="toggle-azul"></nb-toggle>
+          </div>
+        </div>
+      </div>
+
+    </form>
+
+  </nb-card-body>
+  <nb-card-footer class="text-end">
+    <button nbButton class="me-1" status="basic" size="small" (click)="onClose()">
+      <nb-icon icon="close-outline"></nb-icon>
+      Cancelar
+    </button>
+
+    <button nbButton class="me-1" status="primary" size="small" (click)="onSave()">
+      <nb-icon icon="save-outline"></nb-icon>
+      Guardar
+    </button>
+
+  </nb-card-footer>
+</nb-card>

@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 // import { TOKEN_OPEN_SHELL_APP_URL } from 'src/app/oauth/shared/utils';
 
 @Component({
-  selector: 'open-sidebar-footer',
+  selector: 'inverso-sidebar-footer',
   templateUrl: './sidebar-footer.component.html',
   styleUrls: ['./sidebar-footer.component.scss'],
 })
@@ -25,7 +25,7 @@ export class SidebarFooterComponent implements OnInit {
     return new Date().getFullYear();
   }
   get devTeam() {
-    return 'vOpen';
+    return 'Inverso';
   }
 
   get version() {

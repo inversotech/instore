@@ -1,0 +1,240 @@
+<div class="row g-2" [nbSpinner]="loading">
+  <!-- Panel izquierdo: Años contables -->
+  <div class="col-md-5">
+    <nb-card accent="primary" class="mb-0">
+      <nb-card-header class="py-2 px-3">
+        <div class="d-flex align-items-center">
+          <nb-icon status="primary" icon="calendar-outline" pack="eva" class="fs-4"></nb-icon>
+          <div class="ms-2 lh-base">
+            <div class="fw-semibold">PERIODOS CONTABLES</div>
+            <div class="fw-light">Configuración de años y lotes</div>
+          </div>
+        </div>
+      </nb-card-header>
+
+      <nb-card-body class="py-2 px-3">
+        <!-- Filtros -->
+        <form [formGroup]="filterForm" class="pb-2 mb-2 border-bottom">
+          <div class="row g-2 align-items-end">
+            <div class="col">
+              <label class="form-label small mb-1">Empresa</label>
+              <nb-select placeholder="Seleccionar empresa" fullWidth size="small" formControlName="id_empresa">
+                <nb-option *ngFor="let item of empresas$ | async" [value]="item.id_empresa">
+                  {{ item.empresa_nombrecomercial }}
+                </nb-option>
+              </nb-select>
+            </div>
+            <div class="col-auto">
+              <div class="btn-group">
+                <button nbButton class="me-1" size="small" status="primary" (click)="onBuscarInformacionPeriodo()"
+                  nbTooltip="Buscar">
+                  <nb-icon icon="search-outline"></nb-icon>
+                  Buscar
+                </button>
+                <button nbButton class="me-1" size="small" status="success" (click)="periodConfigOpening()"
+                  nbTooltip="Nuevo año contable">
+                  <nb-icon icon="plus-outline"></nb-icon>
+                  Nuevo
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- Lista de años -->
+        <div class="d-flex flex-column gap-1">
+          <div *ngFor="let item of anhosConfig"
+            class="border rounded p-2 d-flex align-items-center gap-2 cursor-pointer"
+            [class.bg-primary]="anhoConfigSelected?.id_anho == item.id_anho"
+            [class.bg-opacity-10]="anhoConfigSelected?.id_anho == item.id_anho"
+            [class.border-primary]="anhoConfigSelected?.id_anho == item.id_anho"
+            [class.border-success]="item?.estado == '1' && anhoConfigSelected?.id_anho != item.id_anho"
+            [class.border-secondary]="item?.estado == '2'"
+            [class.border-warning]="item?.estado == '0' && anhoConfigSelected?.id_anho != item.id_anho"
+            style="cursor: pointer;" (click)="showMesConfig(item)">
+
+            <!-- Año y estado -->
+            <div class="d-flex align-items-center gap-1">
+              <span class="fw-bold fs-5">{{ item?.id_anho }} </span>
+              <!-- <span class="rounded-circle d-inline-block badge bg-opacity-50" [class.bg-success]="item?.estado == '1'"
+                [class.bg-primary]="item?.estado == '2'" [class.bg-warning]="item?.estado == '0'"
+                [nbTooltip]="item?.estado == '2' ? 'Cerrado' : (item?.estado == '1' ? 'Abierto' : 'Creado')">
+              </span> -->
+            </div>
+
+            <!-- Empresa y fechas -->
+            <div class="flex-grow-1 overflow-hidden">
+              <div class="text-truncate small fw-medium">{{ item?.empresa_nombre_comercial }}
+
+                <small [class.text-success]="item?.estado == '1'" [class.text-warning]="item?.estado == '0'"
+                  [class.text-secondary]="item?.estado == '2'" class="fw-bold">
+                  ({{ item?.estado == '2' ? 'Cerrado' : (item?.estado == '1' ? 'Abierto' : 'Creado') }})
+                </small>
+              </div>
+              <small class="text-muted">{{ item?.fecha_inicio | date: 'dd/MM/yyyy' }} - {{ item?.fecha_fin | date:
+                'dd/MM/yyyy' }}</small>
+            </div>
+
+            <!-- Acciones -->
+            <div class="d-flex gap-1 flex-shrink-0">
+              <button *ngIf="item?.estado == '0'" (click)="changeAnhoConfig(item); $event.stopPropagation()" nbButton
+                ghost size="tiny" status="success" nbTooltip="Abrir año">
+                <nb-icon icon="unlock-outline"></nb-icon>
+                Abrir
+              </button>
+              <button *ngIf="item?.estado == '1'" (click)="changeAnhoConfig(item); $event.stopPropagation()" nbButton
+                ghost size="tiny" status="basic" nbTooltip="Cerrar año">
+                <nb-icon icon="lock-outline"></nb-icon>
+                Cerrar
+              </button>
+              <button *ngIf="item?.estado == '2'" (click)="changeAnhoConfig(item); $event.stopPropagation()" nbButton
+                ghost size="tiny" status="warning" nbTooltip="Reiniciar año">
+                <nb-icon icon="lock-outline"></nb-icon>
+                Reiniciar
+              </button>
+              <button (click)="showMesConfig(item); $event.stopPropagation()" nbButton ghost size="tiny"
+                status="primary" nbTooltip="Ver períodos">
+                <nb-icon icon="layers-outline"></nb-icon>
+                Ver
+              </button>
+            </div>
+          </div>
+
+          <!-- Estado vacío -->
+          <div *ngIf="anhosConfig?.length == 0" class="text-center text-muted py-4 bg-light rounded border">
+            <nb-icon icon="calendar-outline" class="d-block mb-2 opacity-50"></nb-icon>
+            <span class="small">Sin años configurados</span>
+          </div>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+
+  <!-- Panel derecho: Períodos del año seleccionado -->
+  <div class="col-md-7" *ngIf="anhoConfigSelected">
+    <nb-card accent="primary" class="mb-0">
+      <nb-card-header class="py-2 px-3">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div class="d-flex align-items-center gap-2">
+            <span class="fs-5 fw-bold px-2 py-1">{{ anhoConfigSelected?.id_anho }}</span>
+            <div class="lh-base">
+              <div class="fw-medium">{{ anhoConfigSelected?.empresa_nombre_comercial }}</div>
+              <div class="fw-light">
+                {{ anhoConfigSelected?.fecha_inicio | date: 'dd/MM/yyyy' }} - {{ anhoConfigSelected?.fecha_fin | date:
+                'dd/MM/yyyy' }}
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <span class="text-uppercase small">PCGE</span>
+            <span class="d-flex align-items-center gap-1">
+              <nb-icon
+                [status]="anhoConfigSelected?.estado == '2' ? 'danger' : (anhoConfigSelected?.estado == '1' ? 'success' : 'warning')"
+                [icon]="anhoConfigSelected?.estado == '2' ? 'lock-outline' : (anhoConfigSelected?.estado == '1' ? 'unlock-outline' : 'edit-outline')"></nb-icon>
+              {{ anhoConfigSelected?.estado == '2' ? 'Cerrado' : (anhoConfigSelected?.estado == '1' ? 'Abierto' :
+              'Creado') }}
+            </span>
+          </div>
+        </div>
+      </nb-card-header>
+
+      <nb-card-body class="py-2 px-3">
+        <!-- Selector de tipo de asiento -->
+        <div class="row g-2 align-items-end mb-2">
+          <div class="col-md-8">
+            <label class="form-label small mb-1">Tipo de Asiento / Voucher</label>
+            <nb-select placeholder="Seleccionar tipo de asiento" fullWidth size="small" [formControl]="id_tipo_asiento">
+              <nb-option *ngFor="let item of tipoAsientos$ | async" [value]="item.id_tipo_asiento">
+                {{ item.id_tipo_asiento }} - {{ item.nombre }} ({{ item.elemento_referencia }})
+              </nb-option>
+            </nb-select>
+          </div>
+          <div class="col-md-4">
+            <button *ngIf="mesesConfig.length == 0 && id_tipo_asiento.valid" nbButton size="small" status="warning"
+              (click)="generateMesConfig()" class="w-100">
+              <nb-icon icon="flash-outline" class="me-1"></nb-icon>
+              Generar períodos
+            </button>
+          </div>
+        </div>
+
+        <!-- Tabla de períodos -->
+        <div *ngIf="mesesConfig.length > 0" class="border rounded">
+          <table class="table table-hover mb-0 small">
+            <thead class="table-light sticky-top">
+              <tr>
+                <th class="text-muted text-uppercase" style="width: 40px;">#</th>
+                <th class="text-muted text-uppercase">Período</th>
+                <th class="text-muted text-uppercase">Abierto por</th>
+                <th class="text-muted text-uppercase">Cerrado por</th>
+                <th class="text-muted text-uppercase" style="width: 80px;">Estado</th>
+                <th class="text-muted text-uppercase text-center" style="width: 70px;">Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mesesConfig" [class.table-success]="item?.estado == '1'"
+                [class.table-secondary]="item?.estado == '2'">
+                <td class="text-muted">{{ item.id_mes | number: '2.0-0' }}</td>
+                <td class="fw-medium">{{ item.mes_nombre }}</td>
+                <td class="text-muted">{{ item.user_opened || '-' }}</td>
+                <td class="text-muted">{{ item.user_closed || '-' }}</td>
+                <td>
+                  <span class="badge" [class.bg-success]="item?.estado == '1'"
+                    [class.bg-secondary]="item?.estado == '2'" [class.bg-warning]="item?.estado == '0'"
+                    [class.text-dark]="item?.estado == '0'">
+                    {{ item?.estado == '2' ? 'Cerrado' : (item?.estado == '1' ? 'Abierto' : 'Creado') }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <button *ngIf="item.estado == '0'" nbButton size="tiny" status="primary" outline
+                    (click)="closeMesConfig(item.id_mes, item.estado)" nbTooltip="Abrir período">
+                    <nb-icon icon="book-open-outline"></nb-icon>
+                  </button>
+                  <button *ngIf="item.estado == '1'" nbButton size="tiny" status="success" outline
+                    (click)="closeMesConfig(item.id_mes, item.estado)" nbTooltip="Cerrar período">
+                    <nb-icon icon="checkmark-circle-outline"></nb-icon>
+                  </button>
+                  <button *ngIf="item.estado == '2'" nbButton size="tiny" status="danger" outline
+                    (click)="closeMesConfig(item.id_mes, item.estado)" nbTooltip="Reabrir período">
+                    <nb-icon icon="refresh-outline"></nb-icon>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Estados vacíos -->
+        <div *ngIf="mesesConfig.length == 0 && id_tipo_asiento.valid" class="text-center text-muted py-4 border">
+          <div>
+            <nb-icon icon="layers-outline" class="mb-2 opacity-50 fs-3"></nb-icon>
+          </div>
+          <div>
+            <span class="small">No hay períodos generados para este tipo de asiento</span>
+          </div>
+        </div>
+
+        <div *ngIf="id_tipo_asiento.invalid" class="text-center text-muted py-4 border">
+          <div>
+            <nb-icon icon="arrow-upward-outline" class="mb-2 opacity-50 fs-3"></nb-icon>
+          </div>
+          <div>
+            <span class="small">Seleccione un tipo de asiento para ver los períodos</span>
+          </div>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+
+  <!-- Estado cuando no hay año seleccionado -->
+  <div class="col-md-7" *ngIf="!anhoConfigSelected && anhosConfig.length > 0">
+    <nb-card accent="primary" class="mb-0 h-100">
+      <nb-card-body class="d-flex align-items-center justify-content-center">
+        <div class="text-center">
+          <nb-icon icon="arrow-back-outline" class="fs-3 mb-2 opacity-50"></nb-icon>
+          <p class="mb-0">Seleccione un año contable para ver sus períodos</p>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

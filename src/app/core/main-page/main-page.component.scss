@@ -33,7 +33,7 @@
       ::ng-deep nb-sidebar-footer {
         padding-left: 0;
         padding-right: 0;
-        open-sidebar-footer {
+        inverso-sidebar-footer {
           justify-content: center;
         }
         .info-version {
@@ -58,8 +58,8 @@
       }
         
       /** Mi code para sidenav de nebular para los estilos del menu en compact */
-      ::ng-deep open-sidebar-content {
-        open-menu {
+      ::ng-deep inverso-sidebar-content {
+        inverso-menu {
           .lamb-menu-item a.active {
               position: relative;
               &::before {
@@ -116,7 +116,7 @@
   // @include media-breakpoint-down(xs) {}
   // @include media-breakpoint-down(is) {}
   @include media-breakpoint-down(sm) {
-    open-identity-iasd-logo ::ng-deep .logo-iasd {
+    inverso-identity-iasd-logo ::ng-deep .logo-iasd {
       width: 4.5rem;
     }
   }

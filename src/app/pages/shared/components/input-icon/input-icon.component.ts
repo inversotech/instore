@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'open-input-icon',
+  selector: 'inverso-input-icon',
   styleUrls: ['./input-icon.component.scss'],
   templateUrl: './input-icon.component.html',
 })

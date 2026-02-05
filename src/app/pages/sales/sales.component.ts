@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'open-sales',
+  selector: 'inverso-sales',
   template: '<router-outlet></router-outlet>',
   styles: ['']
 })

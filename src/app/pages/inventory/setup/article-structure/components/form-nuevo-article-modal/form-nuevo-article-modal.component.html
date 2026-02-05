@@ -1,0 +1,99 @@
+<nb-card [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary" status="primary">
+  <nb-card-body>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="mb-2 text-center">
+          <label for="codigo" class="label">Producto Padre</label>
+          <h4>10101803</h4>
+          <h6>Mejillones vivos</h6>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="card-header col-md-12">
+        <span i18n>
+          NUEVO |
+        </span>
+        <span class="font-weight-light" i18n>
+          Registrar un nuevo artículo o item.
+        </span>
+      </div>
+    </div>
+    <br>
+    <div class="container">
+      <form [formGroup]="nuevoForm">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-2">
+              <label for="codigo" class="label">Código (Desabilitado)</label>
+              <input type="text" nbInput fullWidth fieldSize="small" name="codigo" id="codigo" formControlName="codigo">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-2">
+              <label for="codigo" class="label">Clase (Desabilitado)</label>
+              <nb-select placeholder="Clase" size="small" formControlName="id_clase" fullWidth name="id_clase"
+                id="id_clase">
+                <nb-option value="">-Seleccione-</nb-option>
+                <nb-option *ngFor="let item of clases" [value]="item.id_clase">{{ item.nombre }}</nb-option>
+              </nb-select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="mb-2">
+              <label for="nombre" class="label required">Nombre</label>
+              <input type="text" nbInput fullWidth fieldSize="small" name="nombre" id="nombre" formControlName="nombre"
+                placeholder="">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-2">
+              <label for="id_unidad_medida" class="label required">Unidad de medida</label>
+              <nb-select placeholder="Unidad de medida" size="small" formControlName="id_unidad_medida" fullWidth
+                name="id_unidad_medida" id="id_unidad_medida">
+                <nb-option value="">-Seleccione-</nb-option>
+                <nb-option *ngFor="let item of unidadMedidas" [value]="item.id_unidad_medida">{{ item.nombre }} ({{
+                  item.codigo_sunat }})</nb-option>
+              </nb-select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-2">
+              <label for="id_marca" class="label">Marca </label>
+              <nb-select placeholder="Marca" size="small" formControlName="id_marca" fullWidth name="id_marca"
+                id="id_marca">
+                <nb-option value="">-Seleccione-</nb-option>
+                <nb-option *ngFor="let item of marcas" [value]="item.id_marca">{{ item.nombre }}</nb-option>
+              </nb-select>
+            </div>
+          </div>
+        </div>
+        <div class="mb-2">
+          <label for="activo" class="label">Activo</label>
+          <nb-radio-group formControlName="activo" status="warning">
+            <nb-radio [value]="true">Si</nb-radio>
+            <nb-radio [value]="false">No</nb-radio>
+          </nb-radio-group>
+        </div>
+      </form>
+    </div>
+
+  </nb-card-body>
+  <nb-card-footer class="text-end open-button-end">
+    <button nbButton status="basic" size="small" (click)="onClose()">
+      <nb-icon icon="close-outline"></nb-icon>
+      Cancelar
+    </button>
+
+    <button nbButton status="primary" size="small" (click)="onSave()">
+      <nb-icon icon="save-outline"></nb-icon>
+      Guardar
+    </button>
+
+  </nb-card-footer>
+</nb-card>

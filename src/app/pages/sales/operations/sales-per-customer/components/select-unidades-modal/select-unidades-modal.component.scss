@@ -1,0 +1,28 @@
+.select-unidades-modal {
+  min-width: 500px;
+  max-width: 600px;
+}
+
+.unidades-lista {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.unidad-item {
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  &.selected {
+    background-color: rgba(0, 149, 255, 0.1);
+  }
+}
+
+.unidad-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}

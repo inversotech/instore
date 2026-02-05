@@ -1,0 +1,108 @@
+<nb-card [nbSpinner]="loadingSpinnerSave" nbSpinnerStatus="primary" status="primary">
+  <nb-card-header class="d-flex justify-content-between">
+    <div class="text-center">
+      <span i18n>
+        NUEVA SALIDA |
+      </span>
+      <span class="font-weight-light" i18n>
+        Movimientos de almacenes de tipo salida.
+      </span>
+    </div>
+    <div>
+      <nb-icon icon="close-outline" (click)="onClose()" style="cursor: pointer"></nb-icon>
+    </div>
+  </nb-card-header>
+  <nb-card-body>
+    <form [formGroup]="newForm">
+
+      <div class="row">
+        <div class="col-md-12 mb-1">
+          <label for="tipo_gestion" i18n class="form-label label required">Selecciona el tipo de gestión de la
+            operación</label>
+          <div class="row g-1">
+            <div class="col" *ngFor="let item of tipoGestions" (click)="seleccionar(item)">
+              <nb-card class="border-0 shadow-sm rounded-2 mb-2 h-100 card-selectable"
+                [ngClass]="{ 'selected': item.id === seleccionado }">
+                <nb-card-body class="d-flex align-items-center p-2">
+                  <div class="px-2 py-3">
+                    <!-- <nb-icon class="fs-3" [status]="item.color" [icon]="item.icon" pack="eva"></nb-icon> -->
+                  </div>
+                  <div class="ms-1">
+                    <div class="fw-bold">{{ item.id }}</div>
+                    <div class="text-muted">{{ item.descripcion }}</div>
+                  </div>
+                </nb-card-body>
+              </nb-card>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 mb-1">
+          <small>Considere que según el tipo de gestión que seleccione, solo podrá registrar artículos de ese tipo en el
+            movimiento</small>
+        </div>
+      </div>
+
+      <div class="row g-1">
+        <!-- <div class="col-md-6 mb-1">
+          <label for="tipo_movimiento" class="label form-label required">Tipo movimiento</label>
+          <nb-select placeholder="Seleccionar almacén" fullWidth [size]="'small'" formControlName="tipo_movimiento"
+            id="tipo_movimiento">
+            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option *ngFor="let item of tipoMovimientos" [value]="item.codigo"> {{ item.label }} </nb-option>
+          </nb-select>
+        </div> -->
+        <div class="col-md-12 mb-1">
+          <label for="id_almacen" class="label required">Almacén</label>
+          <nb-select placeholder="Seleccionar almacén" fullWidth [size]="'small'" formControlName="id_almacen"
+            id="id_almacen">
+            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option *ngFor="let item of misAlmacenes" [value]="item.id_almacen"> {{ item.almacen_nombre }}
+            </nb-option>
+          </nb-select>
+        </div>
+      </div>
+
+      <div class="row g-1">
+        <div class="col-md-6 mb-1">
+          <label for="id_tipo_operacion" class="label required">Tipo operación</label>
+          <nb-select placeholder="Seleccionar tipo de operación" fullWidth [size]="'small'"
+            formControlName="id_tipo_operacion" id="id_tipo_operacion">
+            <nb-option value="-1">-Seleccione-</nb-option>
+            <nb-option *ngFor="let item of tipoOperacions" [value]="item.id_tipo_operacion"> {{ item.id_tipo_operacion
+              }}-{{ item.nombre }} ({{ item.tipo_movimiento }}) </nb-option>
+          </nb-select>
+        </div>
+        <div class="col-md-6 mb-1">
+          <label for="fecha" class="label required">Fecha</label>
+          <nb-form-field>
+            <input type="text" autocomplete="off" name="fecha" placeholder="00/00/0000" id="fecha"
+              formControlName="fecha" [nbDatepicker]="nfecha2" fullWidth fieldSize="small" nbInput>
+            <nb-icon nbSuffix icon="calendar-outline" pack="eva"></nb-icon>
+          </nb-form-field>
+          <nb-datepicker #nfecha2></nb-datepicker>
+        </div>
+      </div>
+
+      <div class="row g-1">
+        <div class="col-md-12 mb-1">
+          <label for="detalle" class="label required">Detalle</label>
+          <input type="text" name="detalle" id="detalle" formControlName="detalle" fullWidth fieldSize="small" nbInput>
+        </div>
+      </div>
+
+    </form>
+
+  </nb-card-body>
+  <nb-card-footer class="text-end">
+    <button nbButton class="me-1" status="basic" size="small" (click)="onClose()">
+      <nb-icon icon="close-outline"></nb-icon>
+      Cancelar
+    </button>
+
+    <button nbButton class="me-1" status="primary" size="small" (click)="onSave()">
+      <nb-icon icon="save-outline"></nb-icon>
+      Guardar
+    </button>
+
+  </nb-card-footer>
+</nb-card>

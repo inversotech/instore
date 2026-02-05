@@ -73,14 +73,18 @@ export class CatchInterceptorService implements HttpInterceptor {
   }
 
   private catchError(err: any, req: any) {
+    let skipToast = false;
     if (err instanceof HttpErrorResponse) {
-      this.catchHttpError(err);
+      skipToast = this.catchHttpError(err);
     } else {
       console.error(err.message);
     }
-    setTimeout(() => {
-      this.showErros(err);
-    }, 0);
+
+    if (!skipToast) {
+      setTimeout(() => {
+        this.showErros(err);
+      }, 0);
+    }
 
 
     // switch (err.status) {
@@ -98,7 +102,7 @@ export class CatchInterceptorService implements HttpInterceptor {
     // return throwError(err);
   }
 
-  private catchHttpError(err: HttpErrorResponse) {
+  private catchHttpError(err: HttpErrorResponse): boolean {
     switch (err.status) {
       // case 422:
       //     // if (req.method === 'GET') {
@@ -109,29 +113,32 @@ export class CatchInterceptorService implements HttpInterceptor {
       //     break;
       case 401:
         this.catchUnauthorized();
-        break;
+        return true; // Skip toast, handled by redirect
       case 403:
-        this.manageError403(err);
-        break;
+        return this.manageError403(err); // Returns true if it's a special 403 case
       default:
         console.warn(err.statusText);
-        break;
+        return false;
     }
   }
 
-  private manageError403(err: HttpErrorResponse) {
+  private manageError403(err: HttpErrorResponse): boolean {
     if (err.error && err.error.error && err.error.error.email_notverified) {
       console.log('send-email-verify-page');
-      this.router.navigate(['/pages/extra/send-email-verify-page'])
+      this.router.navigate(['/auth-adds/send-email-verify-page']);
+      return true; // Skip toast for email not verified
     }
     if (err.error.error && err.error.error.user_notactived) {
       console.log('send-email-desactive-page');
-      this.router.navigate(['/pages/extra/user-desactive-page'])
+      this.router.navigate(['/auth-adds/user-desactive-page']);
+      return true; // Skip toast for user not activated
     }
     if (err.error.error && err.error.error.email_notcompany) {
       console.log('send-email-uncompany-page');
-      this.router.navigate(['/pages/extra/user-uncompany-page'])
+      this.router.navigate(['/auth-adds/user-uncompany-page']);
+      return true; // Skip toast for user without company
     }
+    return false; // Show toast for other 403 errors
   }
 
   private catchUnauthorized() {

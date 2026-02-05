@@ -14,7 +14,7 @@ import { ChangeEnterpriseModalComponent } from './change-enterprise-modal/change
 import { AuthService } from '../../providers/auth.service';
 
 @Component({
-  selector: 'open-header',
+  selector: 'inverso-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })

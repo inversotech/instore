@@ -15,7 +15,7 @@ export const environment = {
   // },
   authStrategy: {
     // name: 'email',
-    name: '_open_auth_strategy',
+    name: '_inverso_auth_strategy',
     // clientId: 'wTKFzoBY5zSzdTejs4FfJKLNGnsDXpNRYjNjPQh4',
     // baseEndpoint: 'https://oauth.upeu.edu.pe',
     // redirectUri: `${window.location.origin}/callback`,

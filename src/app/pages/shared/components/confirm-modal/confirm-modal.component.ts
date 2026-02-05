@@ -5,7 +5,7 @@ import {
 import { NbDialogRef } from '@nebular/theme';
 
 @Component({
-  selector: 'open-confirm-modal',
+  selector: 'inverso-confirm-modal',
   styleUrls: ['./confirm-modal.component.scss'],
   templateUrl: './confirm-modal.component.html',
 })

@@ -8,7 +8,7 @@ import { StoreUserActionsService } from './store-user-actions.service';
 import { ManageAutorizationService } from './manage-autorization.service';
 import { AccessService } from '../access.service';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AutorizationGuardService implements CanActivate, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
 
