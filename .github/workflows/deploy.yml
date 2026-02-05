@@ -33,6 +33,9 @@ jobs:
       - name: Build
         run: npm run build:gh-pages
 
+      - name: Copy index.html to 404.html for SPA routing
+        run: cp dist/inverso-store-src/index.html dist/inverso-store-src/404.html
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
