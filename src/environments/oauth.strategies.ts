@@ -67,7 +67,7 @@ export const config = {
                 endpoint: '/api/auth/login',
                 method: 'post',
                 redirect: {
-                    success: '/pages/dashboard',
+                    success: 'pages/dashboard',
                     // success: '/dashboard',
                     failure: null,
                 },
@@ -89,7 +89,7 @@ export const config = {
                 endpoint: '/api/auth/logout',
                 method: 'delete',
                 redirect: {
-                    success: '/auth/login',
+                    success: 'auth/login',
                     failure: null,
                 },
             },
