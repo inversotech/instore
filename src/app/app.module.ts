@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { NbAuthJWTInterceptor, NbAuthModule, NbTokenStorage, NB_AUTH_TOKEN_INTERCEPTOR_FILTER } from '@nebular/auth';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { NbThemeModule, NbToastrModule } from '@nebular/theme';
@@ -26,6 +27,7 @@ import { AuthStorageService } from './core/providers/interceptors/auth-storage.s
     NbAuthModule.forRoot(config),
   ],
   providers: [
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
     {
       provide: NB_AUTH_TOKEN_INTERCEPTOR_FILTER,
       useValue: function (req: HttpRequest<any>) {
