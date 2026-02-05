@@ -1,11 +1,6 @@
 export const environment = {
   production: true,
   moduleCode: '01030000',
-  // payonline: {
-  //   matricula: '22',
-  //   cuotaingreso: '33',
-  //   mensualidades: '23',
-  // },
   authStrategy: {
     // name: 'email',
     name: '_inverso_auth_strategy',
