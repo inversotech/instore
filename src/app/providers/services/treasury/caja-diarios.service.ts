@@ -27,6 +27,10 @@ export class CajaDiariosService extends EntityDataService<any> {
         return this.httpClient.post<any>(`${this.endPoint}/${id_caja_diario}/close`, data);
     }
 
+    public getMediosPago$(): Observable<any> {
+        return this.httpClient.get<any>(`${this.endPoint}/medios-pagos`);
+    }
+
     // // Para configuracion contable
     // public getByQuery2$(params: any): Observable<any> {
     //     return this.httpClient.get<any>(`${this.endPoint}/accounting/conta-documentos`, { params: params });

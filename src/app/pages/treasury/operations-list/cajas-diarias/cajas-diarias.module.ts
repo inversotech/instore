@@ -17,11 +17,13 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SharedModule } from '../../../shared/shared.module';
 import { FormOpenCajaModalComponent } from './components/form-open-caja-modal/form-open-caja-modal.component';
+import { FormCloseCajaModalComponent } from './components/form-close-caja-modal/form-close-caja-modal.component';
 
 const COMPONENTS: any[] = [
   CajasDiariasComponent,
   MainComponent,
   FormOpenCajaModalComponent,
+  FormCloseCajaModalComponent,
 ];
 
 const NB_MODULES: any[] = [

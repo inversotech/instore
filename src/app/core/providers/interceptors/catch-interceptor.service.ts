@@ -183,11 +183,11 @@ export class CatchInterceptorService implements HttpInterceptor {
         if (err.error && err.error.error && err.error.error.message) {
           const errorMsg = err.error.error.message || err.statusText;
           // this.toast(`${err.status} ${errorMsg}`, err.statusText);
-          this.toast(`${errorMsg}`, `${err.status} ${err.statusText}`);
+          this.toast(`${errorMsg}`, `Contenido no procesable`);
         } else {
           const errorMsg = err.error.message || err.statusText;
           // this.toast(`${err.status} ${errorMsg}`, err.statusText);
-          this.toast(`${errorMsg}`, `${err.status} ${err.statusText}`, 'warning');
+          this.toast(`${errorMsg}`, `Contenido no procesable`, 'warning');
         }
       }
     }

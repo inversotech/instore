@@ -20,8 +20,17 @@
               {{ item.id_empresa }} - {{ item.empresa_nombrecomercial }}</nb-option>
           </nb-select>
         </div>
+        <div class="col-md-3">
+          <label for="id_medio_pago" class="label form-label">Medio de Pago</label>
+          <nb-select placeholder="Medio de Pago" fullWidth [size]="'small'" formControlName="id_medio_pago"
+            id="id_medio_pago">
+            <nb-option [value]="-1">-Todos-</nb-option>
+            <nb-option *ngFor="let item of mediosPagos$ | async" [value]="item.id_medio_pago">
+              {{ item.id_medio_pago }} - {{ item.nombre }}</nb-option>
+          </nb-select>
+        </div>
 
-        <div class="col-md-6">
+        <div class="col-md-3">
           <label for="text_search" class="label form-label">Buscar</label>
           <nb-form-field>
             <nb-icon nbPrefix icon="search-outline" pack="eva"></nb-icon>
@@ -54,10 +63,11 @@
               <th rowspan="2">PERIODO</th>
               <th rowspan="2">MEDIOPAGO</th>
               <th rowspan="2">APERTURA</th>
-              <th rowspan="2">CERRADO</th>
               <th rowspan="2">MONEDA</th>
               <th class="text-center" colspan="3">IMPORTES</th>
               <th rowspan="2">RESPONSABLE</th>
+              <th rowspan="2">CERRADO</th>
+              <th rowspan="2" class="text-center">ACCIONES</th>
               <!-- <th>ACCIONES</th> -->
             </tr>
             <tr>
@@ -79,11 +89,7 @@
               <td> {{ item.id_anho }}-{{ item.id_mes }}</td>
               <td> {{ item.medio_pago_nombre }}</td>
               <td> {{ item.fecha_apertura | date: 'dd/MM/yyyy HH:mm' }}</td>
-              <td>
-                <span *ngIf="item.fecha_cierre">
-                  <nb-icon icon="checkmark-circle-outline" status="success" pack="eva" class="fs-6"></nb-icon>
-                  {{ item.fecha_cierre | date: 'dd/MM/yyyy HH:mm' }}</span>
-              </td>
+
               <td> {{ item.moneda_currency }}</td>
               <td class="text-end">
                 {{ item.movimientos_apertura_total | number: '1.2-2' }}
@@ -96,15 +102,26 @@
               </td>
               <td class="">
                 <nb-icon icon="people-outline" status="info" pack="eva" class="fs-6"></nb-icon>
-                {{ item.responsable_nombres }} {{ item.responsable_ap_paterno }} {{ item.responsable_ap_materno }}
+                {{ item.responsable_nombres | slice:0:8}} {{ item.responsable_ap_paterno }} {{
+                item.responsable_ap_materno }}
               </td>
-              <!-- <td>
-                <button class="me-1" nbButton size="small" status="info" nbTooltip="Cerrar Caja"
+              <td>
+                <span *ngIf="item.fecha_cierre">
+                  <nb-icon icon="checkmark-circle-outline" status="success" pack="eva" class="fs-6"></nb-icon>
+                  {{ item.fecha_cierre | date: 'dd/MM/yyyy HH:mm' }}</span>
+              </td>
+              <td class="text-center">
+                <button class="me-1" nbButton [disabled]="item.fecha_cierre != null" size="tiny" status="info" nbTooltip="Cerrar Caja"
                   (click)="onCloseCaja(item)">
                   <nb-icon icon="paper-plane-outline" pack="eva"></nb-icon>
                   Cerrar
                 </button>
-              </td> -->
+                <button class="me-1" nbButton size="tiny" status="danger" nbTooltip="Eliminar" (click)="onDelete(item)"
+                  [disabled]="item.fecha_cierre != null || item.fecha_cierre != undefined || item.depositos_count > 0">
+                  <nb-icon icon="trash-outline" pack="eva"></nb-icon>
+                  Eliminar
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
